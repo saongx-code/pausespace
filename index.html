@@ -180,6 +180,10 @@ var LINE_ID = '@010ievox';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
 var IMG = {
   tools: 'L:tools.jpg',
+  hero_services: 'https://lh3.googleusercontent.com/d/11g1xpAXi0OwSeuxePfL7czGK4cXADfwz=w1400',
+  hero_events: 'https://lh3.googleusercontent.com/d/1qmNaP1ffom2iAYBuYLBnk_v6kfpm3Ctu=w1400',
+  hero_gifts: 'https://lh3.googleusercontent.com/d/1cm3l4i_dmsg9KsXhlsAshnPyBHCahPnj=w1400',
+  hero_member: 'https://lh3.googleusercontent.com/d/1Ahnr0BF5P01RUFkrq_TG-6_aayahoa7f=w1400',
   beauty: 'assets/beauty.jpg', reset: 'assets/reset.jpg', soul: 'assets/soul.jpg', metime: 'assets/me-time.jpg', pick: 'assets/selection.jpg',
   mens: 'assets/benefits-mens-lab.webp', oil: 'assets/benefits-100-aroma.webp', indiba: 'assets/benefits-interbo-neck.webp', sumei: 'assets/benefits-su-beauty.webp',
   face: 'assets/course-face.jpg', photo: 'assets/course-photo.jpg', body: 'assets/course-body.jpg', heal: 'assets/course-heal.jpg', moon: 'assets/event-full-moon.jpeg',
@@ -276,6 +280,7 @@ function vServices() {
   }).join('');
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1><p class="lead">從身體、情緒到內在，找到此刻適合你的照顧方式。</p>' +
+    '<img class="heroimg" src="' + img('hero_services') + '" alt="島上服務" style="max-width:560px">' + 
     '<div class="pills"><a class="pill" href="#/time">直接選時段預約 ↗</a><a class="pill ghost" href="#/report">已預約・回報匯款</a></div>' +
     '<div class="grid">' + cards + '</div>');
 }
@@ -475,6 +480,7 @@ function vTools() {
 /* ---------- 島日嶼祭 ---------- */
 function vEvents() {
   page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。把方法帶回生活，也在儀式裡和島上的人相遇。</p>' +
+    '<img class="heroimg" src="' + img('hero_events') + '" alt="島日嶼祭" style="max-width:560px">' + 
     '<div class="grid">' + EVENTS.map(function (x) {
       return '<a class="card' + (x.tag === '籌備中' ? ' soon' : '') + '" href="#/events/' + x.id + '"><img class="pic" src="' + img(x.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + x.kind + '</span><span class="chip">' + x.tag + '</span></div><h3>' + x.title + '</h3><p>' + x.sub + '</p><span class="more">看內容 →</span></div></a>';
     }).join('') + '</div>');
@@ -489,6 +495,7 @@ function vEvent(id) {
 /* ---------- 遇島有禮 ---------- */
 function vGifts() {
   page('gifts', 'ISLAND GIFTS', '<div class="eyebrow">Discover / Pause Space</div><h1>遇島有禮</h1><p class="lead">島上的限定體驗與專屬提案，找到今天適合你的一份照顧。</p>' +
+    '<img class="heroimg" src="' + img('hero_gifts') + '" alt="遇島有禮" style="max-width:560px">' + 
     '<div class="grid">' + GIFTS.map(function (g) {
       return '<a class="card" href="#/gifts/' + g.id + '"><img class="pic" src="' + img(g.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + g.tag + '</span></div><h3>' + g.title + '</h3><p>' + g.sub + '</p><span class="more">看內容 →</span></div></a>';
     }).join('') + '</div><p class="note" style="margin-top:14px">限定資格、招募名額與時段由島主透過官方 LINE 確認，收到確認後預約才正式成立。</p>');
@@ -506,6 +513,7 @@ var ME = null;
 function vMember() {
   if (ME) return drawMe();
   page('member', 'ISLAND MEMBER', '<div class="eyebrow">Members / Pause Space</div><h1>駐島會員</h1><p class="lead">用手機和生日登入，查看儲值餘額、會員效期與消費紀錄。</p>' +
+    '<img class="heroimg" src="' + img('hero_member') + '" alt="駐島會員" style="max-width:560px">' + 
     '<div class="panel"><h3>會員登入</h3><label for="mlPhone">手機</label><input id="mlPhone" inputmode="tel" autocomplete="tel"><label for="mlBirth">生日（8 碼，例如 19900102）</label><input id="mlBirth" inputmode="numeric" maxlength="8">' +
     '<p class="err" id="mlErr" hidden></p><button class="btn" id="mlSend" type="button" style="margin-top:12px">登入</button></div>' +
     '<div class="panel"><h3>第一次來，註冊會員</h3><label for="mjName">姓名</label><input id="mjName" autocomplete="name"><label for="mjPhone">手機</label><input id="mjPhone" inputmode="tel" autocomplete="tel">' +
