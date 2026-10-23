@@ -179,6 +179,7 @@ var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_
 var LINE_ID = '@010ievox';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
 var IMG = {
+  tools: 'L:tools.jpg',
   beauty: 'assets/beauty.jpg', reset: 'assets/reset.jpg', soul: 'assets/soul.jpg', metime: 'assets/me-time.jpg', pick: 'assets/selection.jpg',
   mens: 'assets/benefits-mens-lab.webp', oil: 'assets/benefits-100-aroma.webp', indiba: 'assets/benefits-interbo-neck.webp', sumei: 'assets/benefits-su-beauty.webp',
   face: 'assets/course-face.jpg', photo: 'assets/course-photo.jpg', body: 'assets/course-body.jpg', heal: 'assets/course-heal.jpg', moon: 'assets/event-full-moon.jpeg',
@@ -465,7 +466,7 @@ function vTools() {
   var s = svc('skincheck');
   page('tools', 'SKIN BUTLER',
     '<div class="eyebrow">Skin Butler / Pause Space</div><h1>肌智管家</h1><p class="lead">不懂保養、懶得研究也沒關係。先讓島主看看你的皮膚，再幫你排出專屬的保養順序。</p>' +
-    '<div class="herot"><b>皮膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div>' +
+    '<img class="heroimg" src="' + img('tools') + '" alt="肌智管家 Skin Butler" style="max-width:560px">' + '<div class="herot"><b>皮膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div>' +
     '<div class="panel"><h3>怎麼進行</h3><ul class="steps"><li>現場肌膚檢測，了解目前膚況</li><li>看看你手上的保養品，排出早晚使用順序</li><li>整理成你的個人保養手冊，帶回家照著做</li></ul>' +
     '<p class="note">之後會開放：拍下保養品照片，由島主的保養知識庫幫你排順序，島主確認後送到你手上。</p></div>' +
     (s && s.online ? '<a class="btn coral" href="#/book/skincheck">預約皮膚檢測</a>' : '<a class="btn coral" href="' + lineMsg('我想預約皮膚檢測／保養順序諮詢') + '">LINE 預約皮膚檢測</a>'));
