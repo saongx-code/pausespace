@@ -261,7 +261,7 @@ function renderNav(active) {
 function page(active, sub, html) {
   document.body.classList.remove('mbmode'); renderNav(active); $('topSub').textContent = sub; $('app').innerHTML = html; window.scrollTo(0, 0);
 }
-function needBoot() { document.body.classList.remove('mbmode'); $('app').innerHTML = typeof BOOTFAIL !== 'undefined' && BOOTFAIL ? '<div class="loading">暫時讀不到預約資料。<br><a href="javascript:location.reload()">重新整理</a>，或直接 <a href="https://line.me/R/ti/p/' + LINE_ID + '">LINE 島主</a>。</div>' : '<div class="loading">上島中…</div>'; }
+function needBoot() { document.body.classList.remove('mbmode'); var r0 = (location.hash || '#/').slice(2).split('/')[0] || 'services'; renderNav(r0 === 'book' || r0 === 'time' || r0 === 'report' ? 'services' : r0 === 'benefits' ? 'gifts' : r0); $('app').innerHTML = typeof BOOTFAIL !== 'undefined' && BOOTFAIL ? '<div class="loading">暫時讀不到預約資料。<br><a href="javascript:location.reload()">重新整理</a>，或直接 <a href="https://line.me/R/ti/p/' + LINE_ID + '">LINE 島主</a>。</div>' : '<div class="loading">上島中…</div>'; }
 
 /* ---------- 島上服務 ---------- */
 function vServices() {
@@ -573,8 +573,9 @@ window.addEventListener('hashchange', route);
   var g = (location.search.match(/[?&]go=(\w+)/) || [])[1];
   if (g && !location.hash) { history.replaceState(null, '', location.pathname + '#/' + (g === 'benefits' ? 'gifts' : g)); }
   route();
+  try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}
   function boot(n) {
-    api('getBootstrap', []).then(function (d) { B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { IMG[k] = d.images[k]; }); route(); })
+    api('getBootstrap', []).then(function (d) { try { localStorage.setItem('ps_boot', JSON.stringify({t: Date.now(), d: d})); } catch (e) {} var first = !B; B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { IMG[k] = d.images[k]; }); if (first || !/^#\/(book|time|member|report)/.test(location.hash)) route(); })
       .catch(function () { if (n < 3) return setTimeout(function () { boot(n + 1); }, 1500 * n); BOOTFAIL = true; route(); });
   }
   boot(1);
