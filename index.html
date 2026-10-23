@@ -8,7 +8,7 @@
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Klee+One&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Serif+TC:wght@500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap">
 <style>
 :root{
   --deep:#17332f; --deep2:#24453f; --mist:#dfe9e4; --mist2:#eef3ef; --card:#f7f5ef; --line:#cfdad4;
@@ -44,8 +44,9 @@ h3{font-family:var(--serif);font-weight:600;font-size:19px;margin:0 0 6px}
 @media(max-width:640px){.grid{grid-template-columns:1fr}h1{font-size:28px}}
 .card{display:block;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 10px 30px rgba(23,51,47,.08);transition:transform .2s}
 .card:active{transform:scale(.99)}
-.card .pic{aspect-ratio:4/3;background:var(--deep2) center/cover no-repeat}
-.card .pic.wide{aspect-ratio:16/9}
+.card .pic{width:100%;height:auto;background:var(--deep2)}
+.heroimg{width:100%;height:auto;border-radius:20px;margin:0 0 10px;box-shadow:0 10px 30px rgba(23,51,47,.12)}
+.herot{margin:0 0 12px}.herot b{display:block;font-family:var(--serif);font-size:24px;font-weight:600}.herot span{color:var(--muted);font-size:14px}
 .card .body{padding:16px 18px 18px}
 .card .en{font-family:var(--latin);font-size:24px;line-height:1.1}
 .card .tag{font-weight:700;font-size:14px;margin:4px 0 8px}
@@ -119,13 +120,49 @@ ul.steps{margin:6px 0;padding-left:20px}
 .loading{padding:40px 0;text-align:center;color:var(--muted)}
 .soon{opacity:.75}
 #formBox,#fitBox,#barTabs{scroll-margin-top:110px}
-.barhero{max-width:420px;margin:0 auto 6px;border-radius:18px;overflow:hidden;box-shadow:0 10px 30px rgba(23,51,47,.12)}
-.paper{background:#f4ece0;border-color:#e3d6c4}
-.hand{font-family:"Klee One","Noto Serif TC",serif;color:#c4562a;font-size:14px;margin:4px 0}
-.cathead{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}.cathead b{font-family:var(--serif);font-size:30px;color:#3a2418}.cathead span{font-family:var(--serif);font-size:18px}.cathead em{margin-left:auto;font-style:normal;font-family:var(--latin);font-size:17px;color:#c4562a}
-.drink .x i{display:block;font-family:var(--latin);font-style:normal;font-size:15px;color:var(--muted)}
-.drink .x span{display:block}
-.opts{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.opt{border:1px solid #d9c7b0;background:#fff;border-radius:999px;padding:2px 10px;font-size:13px;cursor:pointer}.opt.on{background:#c4562a;border-color:#c4562a;color:#fff}
+body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.16) 1px,transparent 1px);background-size:16px 16px}
+.mb{background:#f8f2e8;border:1px solid #eadfcd;border-radius:22px;padding:22px 18px 26px;color:#2b211b;background-image:radial-gradient(rgba(120,90,60,.12) 1px,transparent 1px);background-size:14px 14px}
+.mb-top{display:flex;justify-content:space-between;align-items:baseline}.mb-logo{font-family:"Playfair Display","Noto Serif TC",serif;font-weight:700;font-size:30px;color:#2b1d14}.mb-logo small{font-size:17px;font-family:var(--serif)}
+.mb-top span{font-size:11px;letter-spacing:.2em;font-weight:700;color:#4a3a2e}
+.mb-moon{display:flex;align-items:center;gap:12px;margin:6px 0 18px;color:#6b4f3d;font-size:13px}.mb-moon i{flex:1;height:1px;background:#6b4f3d}
+.mb-eyebrow{text-align:center;font-size:12px;letter-spacing:.18em;font-weight:700;color:#8a6a55}
+.mb-h1{text-align:center;font-family:var(--serif);font-size:34px;font-weight:600;margin:8px 0 6px;color:#2b1d14}
+.mb-lead{text-align:center;color:#5d4a3d;font-size:14px;margin:0 0 16px}
+.mb-rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mb-rules div{border:1px solid #d9c5ae;border-radius:16px;padding:12px 14px;background:#fbf6ee}
+.mb-rules b{display:block;font-family:var(--serif);font-size:16px}.mb-rules span{font-size:12px;color:#7a6556}
+.mb-spa{display:flex;align-items:center;gap:8px;border:1px solid #d9c5ae;border-radius:16px;padding:12px 14px;background:#fbf6ee;margin:10px 0 0;font-weight:700;color:#2b1d14;font-size:15px}
+.mb-spa input{width:20px;height:20px;accent-color:#e8694a;margin:0}
+.mb-notes{margin:14px 4px 0}.mb-notes p{margin:2px 0;font-family:"Klee One","Noto Serif TC",serif;color:#c4562a;font-size:14px}
+.mb-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:22px 0 0;padding:6px 0 10px;border-bottom:1px solid #6b4f3d;position:sticky;top:104px;background:#f8f2e8;z-index:5;scroll-margin-top:110px}
+.mb-tabs button{border:0;background:none;border-radius:12px;padding:8px 0;cursor:pointer;color:#2b1d14}.mb-tabs b{display:block;font-family:var(--serif);font-size:22px;line-height:1.1}.mb-tabs span{font-size:11px;color:#6b5848}
+.mb-tabs button.on{background:#e8694a;color:#fff}.mb-tabs button.on span{color:#fff}
+.mb-cat{display:flex;align-items:baseline;gap:8px;padding:18px 4px 10px;border-top:1px solid #6b4f3d;margin-top:18px;border-bottom:1px solid #d9c5ae}
+.mb-cat b{font-family:var(--serif);font-size:44px;line-height:1;color:#2b1d14}.mb-cat span{font-family:var(--serif);font-size:19px}.mb-cat em{margin-left:auto;font-style:normal;font-weight:700;color:#b5532f;font-size:15px}
+.mb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #d9c5ae;cursor:pointer}
+.mb-row img{width:52px;height:52px;object-fit:contain;flex:none}
+.mb-t{flex:1;min-width:0}.mb-t b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:#2b1d14}.mb-t b small{font-family:var(--sans);font-size:13px;color:#e8694a}.mb-t span{font-size:12px;color:#6b5848}
+.mb-row em{font-style:normal;font-weight:700;color:#b5532f;font-size:16px;flex:none}
+.mb-circle{width:34px;height:34px;border-radius:50%;border:1.5px solid #6b4f3d;background:none;font-size:20px;line-height:1;color:#4a3a2e;cursor:pointer;flex:none}
+.mb-card{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;border:1px solid #e3a689;border-radius:18px;padding:18px;margin:10px 0 12px;background:#fbf6ee}
+@media(max-width:600px){.mb-card{grid-template-columns:1fr}}
+.mb-art{display:flex;align-items:center;justify-content:center;position:relative;min-height:220px;overflow:hidden}.mb-art:before{content:"";position:absolute;width:76%;aspect-ratio:1;border-radius:50%;background:#eadcc6}.mb-art img{position:relative;width:100%;max-width:260px}
+.mb-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #cdbba6;padding-bottom:6px}.mb-h b{font-family:var(--serif);font-size:28px;font-weight:600}.mb-h em{font-style:normal;font-weight:700;color:#b5532f;font-size:18px}
+.mb-sub{font-weight:700;color:#8a4b30;font-size:14px;margin:8px 0 2px}.mb-info p{margin:0 0 10px;color:#4a3a2e;font-size:14px}
+.mb-lbl{font-size:12px;color:#6b5848;margin:6px 0 4px}
+.mb-chips{display:flex;gap:6px;flex-wrap:wrap}.mb-chip{border:1px solid #cdb39a;background:#fff;border-radius:999px;padding:4px 14px;font-size:14px;cursor:pointer}.mb-chip.on{background:#e8694a;border-color:#e8694a;color:#fff}
+.mb-step{display:inline-flex;align-items:center;gap:18px;border:1.5px solid #b5532f;border-radius:999px;padding:4px;margin-top:12px}
+.mb-step button{width:36px;height:36px;border-radius:50%;border:1.5px solid #b5532f;background:#fff;color:#b5532f;font-size:20px;cursor:pointer}.mb-step button:disabled{opacity:.35}.mb-step span{min-width:18px;text-align:center;font-weight:700}
+.mb-form{border:1px solid #cdbba6;border-radius:18px;padding:12px 16px 16px;margin:26px 0 0;background:#fbf6ee}
+.mb-form legend{font-family:var(--serif);font-size:22px;font-weight:600;padding:0 8px;color:#2b1d14}
+.mb-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:520px){.mb-2{grid-template-columns:1fr}}
+.mb-form label{font-weight:700;color:#2b1d14;font-size:13px}.mb-form input,.mb-form select{border-color:#cdb39a;background:#fffdf8}
+.mb-bar{position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));margin:18px 0 0;background:#2f2622;color:#fff;border-radius:16px;padding:12px 12px 12px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 12px 30px rgba(0,0,0,.25);z-index:15}
+.mb-bar small{display:block;font-size:12px;opacity:.85}.mb-bar b{font-size:22px;font-weight:700}
+.mb-bar button{border:0;background:#e8694a;color:#fff;font-weight:700;font-size:16px;border-radius:999px;padding:12px 22px;cursor:pointer}
+.mb-sheet{position:fixed;inset:0;background:rgba(30,20,15,.45);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.mb-pane{background:#f8f2e8;width:100%;max-width:560px;border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+.mb-sum div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed #d9c5ae;font-size:15px}.mb-sum .tot{border-bottom:0;font-weight:700;font-size:17px}
+.mb-pay{display:flex;gap:10px;align-items:flex-start;border:1px solid #d9c5ae;border-radius:14px;padding:10px 12px;margin:6px 0;background:#fbf6ee;color:#2b1d14;font-size:15px}.mb-pay input{width:18px;margin:3px 0 0;accent-color:#e8694a}.mb-pay small{display:block;color:#7a6556;font-size:12px}
 
 </style>
 </head>
@@ -175,33 +212,31 @@ var GIFTS = [
   {id: 'sumei', img: 'sumei', tag: '肌膚照顧提案', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
 ];
 var BAR = {
-  intro: 'Moon Bar 沐吧・月・食祭隨筆 · Lunar Feast Notes',
-  rules: ['純入場 NT$200', '點一杯飲品，即包含入場費', 'SPA 來客免收入場費', '不限時間，不收服務費', '續點依菜單價格計費'],
-  notes: ['註記：遇見島主，可以點一杯換一題。', '傳聞：點滿兩杯，可解鎖闆娘可喬的奧修占卜。'],
-  cats: [{k: 'wake', n: '醒', d: '無酒特調', p: 'NT$250／杯'}, {k: 'tipsy', n: '醺', d: '微醺亂調', p: 'NT$300／杯'}, {k: 'drunk', n: '醉', d: '杜康純飲', p: 'NT$400／杯', sub: '不管何時來，都有人陪你喝一杯。'}, {k: 'eat', n: '吃', d: '私廚秘製', p: 'NT$100／份'}],
+  cats: [{n: '醒', d: '無酒特調', p: 250}, {n: '醺', d: '微醺亂調', p: 300}, {n: '醉', d: '杜康純飲', p: 400}, {n: '吃', d: '私廚秘製', p: 100, unit: '份'}],
+  art: {wine: 'rocks', sake: 'tea'},
   items: [
-    {id: 'citrus-fizz', cat: 'wake', name: '清橙泡', en: 'Morning Citrus Fizz', desc: '紅橙・柳橙・南非國寶茶・康普茶', price: 250, img: 'coupe'},
-    {id: 'peachy', cat: 'wake', name: '桃桃氣', en: 'Peachy Fizz', desc: '針葉櫻桃・葡萄・康普茶', price: 250, img: 'coupe'},
-    {id: 'dingbu', cat: 'wake', name: '丁布奶茶', en: 'Dingbu Milk Tea', desc: '奶茶・椪糖', price: 250, img: 'dalgona', opts: ['冷', '熱']},
-    {id: 'coffee', cat: 'wake', name: '現磨咖啡', en: 'Fresh Ground Coffee', desc: '現點現磨・沐漢味', price: 250, img: 'coffee'},
-    {id: 'mint', cat: 'wake', name: '薄荷冰茶', en: 'Mint Iced Tea', desc: '薄荷新葉・紅橙・冰茶', price: 250, img: 'leaf'},
-    {id: 'orange-tea', cat: 'wake', name: '甜橙果茶', en: 'Sweet Orange Fruit Tea', desc: '甜橙・南非國寶茶・柚子', price: 250, img: 'leaf', opts: ['冷', '熱']},
-    {id: 'tea-champ', cat: 'wake', name: '茶香檳', en: 'Tea Champagne', desc: '台灣高山茶・自然發酵・桂花', price: 250, img: 'leaf', story: '第三十七次長壽實驗。我們嘗試讓台灣高山茶發酵。觀測結果：開始冒泡。'},
-    {id: 'harvest', cat: 'tipsy', name: '豐年祭', en: 'Harvest Festival', desc: '小米酒・韓國米酒・康普茶・藍莓', price: 300, img: 'sorghum'},
-    {id: 'meigaomei', cat: 'tipsy', name: '美高梅', en: 'Mei Gao Mei', desc: '高粱酒・梅酒・南非國寶茶', price: 300, img: 'sorghum', story: '傳言高粱的兄弟味兒，在這裡變ㄇㄟˊ了。'},
-    {id: 'bluepeach', cat: 'tipsy', name: '藍桃一嘶', en: 'Blue Peach Hiss', desc: '藍莓・針葉櫻桃・琴酒・康普茶・胡椒', price: 300, img: 'sorghum'},
-    {id: 'taurus', cat: 'tipsy', name: '金牛座', en: 'Taurus', desc: '蘭姆酒・琴酒・南非國寶茶', price: 300, img: 'sorghum'},
-    {id: 'islander', cat: 'tipsy', name: '島主特調', en: "Islander's Special", desc: '即興配方', price: 380, img: 'coupe'},
-    {id: 'whisky', cat: 'drunk', name: '威士忌', en: 'Whisky', desc: '', price: 400, img: 'whisky'},
-    {id: 'redwine', cat: 'drunk', name: '紅酒', en: 'Red Wine', desc: '', price: 400, img: 'whisky'},
-    {id: 'sake', cat: 'drunk', name: '清酒', en: 'Sake', desc: '', price: 400, img: 'whisky'},
-    {id: 'gin', cat: 'drunk', name: '琴酒', en: 'Gin', desc: '', price: 400, img: 'whisky'},
-    {id: 'mulled', cat: 'drunk', name: '熱紅酒', en: 'Mulled Wine', desc: '', price: 400, img: 'whisky'},
-    {id: 'icecream', cat: 'eat', name: '健身冰淇淋', en: 'Fitness Ice Cream', desc: 'BodyKey 高蛋白冰淇淋', price: 100, img: 'icecream', opts: ['莓果', '咖啡', '香蕉', '奶茶', '巧克力']},
-    {id: 'wings', cat: 'eat', name: '青花驕雞翅', en: 'Green Peppercorn Chicken Wings', desc: '', price: 100, img: 'icecream'}
+    {id: 'morning-citrus', name: '清橙泡', subtitle: '紅橙・柳橙・南非國寶茶・康普茶', category: '醒', price: 250, illustration: 'fizz', description: '明亮柑橘在細緻氣泡裡展開，酸甜清爽，尾韻帶著淡淡茶香。'},
+    {id: 'peachy-fizz', name: '桃桃氣', subtitle: '針葉櫻桃・葡萄・康普茶', category: '醒', price: 250, illustration: 'fizz', description: '莓果般的酸香在氣泡中輕輕綻放，清新、圓潤又帶一點俏皮。'},
+    {id: 'dingbu-milk-tea', name: '丁布奶茶', subtitle: '奶茶・椪糖', category: '醒', price: 250, illustration: 'milk-tea', choices: ['冰', '熱'], choiceLabel: '溫度', description: '滑順奶茶配上一小片焦香椪糖，熟悉的味道多了一點脆甜。'},
+    {id: 'fresh-coffee', name: '現磨咖啡', subtitle: '現點現磨・沐漢風味', category: '醒', price: 250, illustration: 'coffee', choices: ['冰', '熱'], choiceLabel: '溫度', description: '現點現磨，保留咖啡豆乾淨的香氣與溫柔厚度。'},
+    {id: 'mint-iced-tea', name: '薄荷冰茶', subtitle: '薄荷新葉・紅橙・冰茶', category: '醒', price: 250, illustration: 'tea', description: '新鮮薄荷與紅橙交錯，冰涼清透，適合慢慢喝。'},
+    {id: 'sweet-orange-tea', name: '甜橙果茶', subtitle: '甜橙・南非國寶茶・柚子', category: '醒', price: 250, illustration: 'tea', choices: ['冰', '熱'], choiceLabel: '溫度', description: '甜橙與柚子的果香包住溫柔國寶茶，清甜而不膩。'},
+    {id: 'tea-champagne', name: '茶香檳', subtitle: '台灣高山茶・自然發酵・桂花', category: '醒', price: 250, illustration: 'coupe', description: '高山茶自然發酵後浮起細緻氣泡，桂花留下輕盈香氣。'},
+    {id: 'harvest-festival', name: '豐年祭', subtitle: '小米酒・韓國米酒・康普茶・藍莓', category: '醺', price: 300, illustration: 'coupe', description: '穀物的圓潤與藍莓果香相遇，是帶著氣泡感的微醺祝酒。'},
+    {id: 'mei-gao-mei', name: '美高梅', subtitle: '高粱酒・梅酒・南非國寶茶', category: '醺', price: 300, illustration: 'highball', description: '高粱的俐落被梅香與國寶茶接住，酒感清楚，尾韻柔和。'},
+    {id: 'blue-peach-hiss', name: '藍桃一嘶', subtitle: '藍莓・針葉櫻桃・琴酒・康普茶・胡椒', category: '醺', price: 300, illustration: 'fizz', description: '藍莓與針葉櫻桃的酸香先到，琴酒與一點胡椒讓尾韻醒來。'},
+    {id: 'taurus', name: '金牛座', subtitle: '蘭姆酒・琴酒・南非國寶茶', category: '醺', price: 300, illustration: 'rocks', description: '雙基酒帶出紮實酒感，國寶茶讓尾韻慢慢拉長。'},
+    {id: 'islander-special', name: '島主特調', subtitle: '即興配方・依今天的你調一杯', category: '醺', price: 380, illustration: 'coupe', description: '說說你喜歡的方向，島主用當日材料即興完成一杯。'},
+    {id: 'whisky', name: '威士忌', subtitle: 'Straight Pour', category: '醉', price: 400, illustration: 'rocks', description: '單杯純飲。當日酒款請向島主確認。'},
+    {id: 'red-wine', name: '紅酒', subtitle: 'Red Wine', category: '醉', price: 400, illustration: 'wine', description: '單杯純飲。當日酒款請向島主確認。'},
+    {id: 'sake', name: '清酒', subtitle: 'Sake', category: '醉', price: 400, illustration: 'sake', choices: ['冷', '熱'], choiceLabel: '飲用方式', description: '單杯純飲，可依當日酒款選擇冷飲或溫飲。'},
+    {id: 'gin', name: '琴酒', subtitle: 'Gin', category: '醉', price: 400, illustration: 'rocks', description: '單杯純飲。當日酒款請向島主確認。'},
+    {id: 'mulled-wine', name: '熱紅酒', subtitle: 'Mulled Wine', category: '醉', price: 400, illustration: 'wine', description: '紅酒與溫暖香料慢慢煮開香氣，適合想慢慢坐久一點的人。'},
+    {id: 'fitness-icecream', name: '健身冰淇淋', subtitle: 'BodyKey 高蛋白冰淇淋', category: '吃', price: 100, illustration: 'icecream', choices: ['莓果', '咖啡', '香蕉', '奶茶', '巧克力'], choiceLabel: '口味', description: '一份剛剛好的高蛋白冰淇淋，替今天補上一口甜。'},
+    {id: 'peppercorn-wings', name: '青花驕雞翅', subtitle: 'Green Peppercorn Chicken Wings', category: '吃', price: 100, illustration: 'wings', description: '微麻帶香的雞翅，適合配著手上的酒慢慢吃。'}
   ],
   seats: ['戶外桌 1', '戶外桌 2', '窗邊座位 1', '窗邊座位 2', '吧台座位 1', '吧台座位 2', '月亮茶几區', '長桌 1', '長桌 2', '長桌 3', '長桌 4', '長桌 5', '長桌 6', '牆邊桌 1', '牆邊桌 2', '牆邊桌 3', '沙發區'],
-  pays: ['LINE Pay（現場付款）', '現場付款', '銀行轉帳']
+  pays: [['LINE Pay（現場付款）', '送出後在現場用 LINE Pay 付款'], ['現場付款', '送出後在店內付款'], ['銀行轉帳', '送出後向現場取得轉帳資訊']]
 };
 
 /* ---------- 共用 ---------- */
@@ -224,7 +259,7 @@ function renderNav(active) {
   var on = $('nav').querySelector('.on'); if (on) on.scrollIntoView({inline: 'center', block: 'nearest'});
 }
 function page(active, sub, html) {
-  renderNav(active); $('topSub').textContent = sub; $('app').innerHTML = html; window.scrollTo(0, 0);
+  document.body.classList.remove('mbmode'); renderNav(active); $('topSub').textContent = sub; $('app').innerHTML = html; window.scrollTo(0, 0);
 }
 function needBoot(fn) { if (B) fn(); else $('app').innerHTML = '<div class="loading">上島中…</div>'; }
 
@@ -233,7 +268,7 @@ function vServices() {
   var cards = ['beauty', 'reset', 'soul', 'metime', 'pick'].map(function (k) {
     var c = cat(k) || {name: k, tagline: '', desc: ''};
     var name = k === 'pick' ? '島主代購・季風保養包' : c.name;
-    return '<a class="card" href="#/services/' + k + '"><div class="pic" style="background-image:url(' + img(k) + ')"></div><div class="body">' +
+    return '<a class="card" href="#/services/' + k + '"><img class="pic" src="' + img(k) + '" alt="" loading="lazy"><div class="body">' +
       '<div class="en">' + esc(EN[k]) + '</div><div class="tag">' + (k === 'pick' ? esc(name) + '・' : '') + esc(c.tagline || '') + '</div>' +
       '<div class="lbl">適合處理</div><div class="chips">' + CAT_CHIPS[k].map(function (x) { return '<span class="chip">' + x + '</span>'; }).join('') + '</div>' +
       '<p>' + esc(c.desc || '') + '</p><span class="more">看療程與預約 →</span></div></a>';
@@ -253,7 +288,7 @@ function vCategory(k) {
   }).join('') || '<div class="svc"><div class="d">療程整理中，請先 LINE 島主。</div></div>';
   page('services', 'ISLAND SERVICE',
     '<a class="back" href="#/services">← 島上服務</a>' +
-    '<div class="hero" style="background-image:url(' + img(k) + ')"><div class="t"><b>' + esc(EN[k]) + '</b><span>' + esc(name) + '・' + esc(c.tagline) + '</span></div></div>' +
+    '<img class="heroimg" src="' + img(k) + '" alt=""><div class="herot"><b>' + esc(EN[k]) + '</b><span>' + esc(name) + '・' + esc(c.tagline) + '</span></div>' +
     '<p class="lead">' + esc(c.desc || '') + '</p>' +
     (k === 'pick' ? '<p class="note">流程：店內儲值 → 肌膚檢測 → 個人保養手冊 → 討論每季額度 → 季度調整與寄送。僅限店內儲值會員。</p>' : '') +
     '<div class="list">' + rows + '</div><p class="note" style="margin-top:12px">價格為原價，儲值會員依會員方案折抵。送出預約後，島主核對訂金與時段，預約才正式成立。</p>');
@@ -348,61 +383,81 @@ function report(code, phone, last5, err, btn, ok) {
 }
 
 /* ---------- Moon Bar ---------- */
-var CART = {}, BARCAT = 'wake';
-function cartKey(i) { return i.id + (i.opts ? ':' + (ST.opt && ST.opt[i.id] || i.opts[0]) : ''); }
-function vBar() {
-  ST.opt = ST.opt || {};
-  var c = BAR.cats.filter(function (x) { return x.k === BARCAT; })[0];
-  var tabs = BAR.cats.map(function (x) { return '<button type="button" class="tab' + (x.k === BARCAT ? ' on' : '') + '" data-bc="' + x.k + '">' + x.n + '・' + x.d + '</button>'; }).join('');
-  var items = BAR.items.filter(function (i) { return i.cat === BARCAT; });
-  page('bar', 'MOON BAR 沐吧',
-    '<div class="barhero"><img src="' + img('barcover') + '" alt="Moon Bar 沐吧"></div>' +
-    '<h1 style="text-align:center">今天，想喝點什麼？</h1>' +
-    '<div class="panel paper"><h3>觀測守則</h3><ul class="steps" style="margin:0 0 8px">' + BAR.rules.map(function (r) { return '<li>' + r + '</li>'; }).join('') + '</ul>' +
-    BAR.notes.map(function (n) { return '<p class="hand">' + n + '</p>'; }).join('') + '</div>' +
-    '<div class="tabs" id="barTabs">' + tabs + '</div>' +
-    '<div class="panel paper"><div class="cathead"><b>' + c.n + '</b><span>' + c.d + '</span><em>' + c.p + '</em></div>' + (c.sub ? '<p class="note">' + c.sub + '</p>' : '') +
-    items.map(function (i) {
-      var k = cartKey(i);
-      return '<div class="drink"><img src="' + img(i.img) + '" alt="" loading="lazy"><div class="x"><b>' + esc(i.name) + (i.price !== Number(c.p.replace(/\D/g, '')) ? '｜' + money(i.price) : '') + '</b><i>' + esc(i.en) + '</i>' + (i.desc ? '<span>' + esc(i.desc) + '</span>' : '') +
-        (i.story ? '<span class="hand">' + esc(i.story) + '</span>' : '') +
-        (i.opts ? '<div class="opts">' + i.opts.map(function (o) { return '<button type="button" class="opt' + ((ST.opt[i.id] || i.opts[0]) === o ? ' on' : '') + '" data-oi="' + i.id + '" data-ov="' + o + '">' + o + '</button>'; }).join('') + '</div>' : '') +
-        '</div><div class="qty"><button type="button" data-q="' + i.id + '" data-d="-1">−</button><span>' + (CART[k] || 0) + '</span><button type="button" data-q="' + i.id + '" data-d="1">＋</button></div></div>';
-    }).join('') + '</div>' +
-    '<div class="panel"><label for="bName">點單姓名</label><input id="bName" value="' + esc(ST.bName || '') + '">' +
-    '<label for="bSeat">座位</label><select id="bSeat">' + BAR.seats.map(function (s) { return '<option' + (s === ST.bSeat ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select>' +
-    '<label for="bPay">付款方式</label><select id="bPay">' + BAR.pays.map(function (s) { return '<option>' + s + '</option>'; }).join('') + '</select>' +
-    '<label for="bNote">備註（甜度、冰量、過敏、今天有做 SPA）</label><input id="bNote"><p class="err" id="bErr" hidden></p><div id="cartList" class="note"></div></div>' +
-    '<div class="cartbar"><span id="cartSum"></span><button class="btn coral sm" id="bSend" type="button">確認訂單 →</button></div>');
-  drawCart();
-}
+var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
+function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] || (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
+function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
+function bKey(i) { return i.id + (i.choices ? '|' + (MB.choice[i.id] || i.choices[0]) : ''); }
+function bQty(i) { var n = 0; Object.keys(CART).forEach(function (k) { if (k.split('|')[0] === i.id) n += CART[k]; }); return n; }
 function cartLines() {
-  var out = [];
-  Object.keys(CART).forEach(function (k) {
-    var q = CART[k]; if (!q) return;
-    var p = k.split(':'), i = BAR.items.filter(function (x) { return x.id === p[0]; })[0]; if (!i) return;
-    out.push({name: i.name + (p[1] ? '（' + p[1] + '）' : ''), qty: q, price: i.price});
+  return Object.keys(CART).filter(function (k) { return CART[k] > 0; }).map(function (k) {
+    var p = k.split('|'), i = bItem(p[0]);
+    return {id: i.id, name: i.name + (p[1] ? '（' + p[1] + '）' : ''), qty: CART[k], price: i.price};
   });
-  return out;
 }
-function drawCart() {
+function barTotal() {
   var l = cartLines(), n = 0, t = 0; l.forEach(function (x) { n += x.qty; t += x.qty * x.price; });
-  $('cartSum').textContent = n ? n + ' 份・' + money(t) : '純入場 ' + money(200);
-  $('cartList').innerHTML = l.length ? '已點：' + l.map(function (x) { return esc(x.name) + '×' + x.qty; }).join('、') : '';
+  return {n: n, t: n ? t : (MB.spa ? 0 : 200), label: n ? '已點 ' + n + ' 份' : (MB.spa ? 'SPA 來客・免入場費' : '純入場')};
 }
-function sendBar() {
-  var e = $('bErr'), b = $('bSend');
-  var items = cartLines();
-  if (!items.length) items = [{name: '純入場', qty: 1, price: 200}];
-  var p = {name: $('bName').value.trim(), seat: $('bSeat').value, pay: $('bPay').value, note: $('bNote').value.trim(), items: items};
-  if (!p.name) { e.hidden = false; e.textContent = '請填寫點單姓名。'; return; }
-  e.hidden = true; b.disabled = true; b.textContent = '送出中…';
-  api('barOrder', [p]).then(function (r) {
-    b.disabled = false; b.textContent = '確認訂單 →';
-    if (r && r.ok === false) { e.hidden = false; e.textContent = r.error || '送出失敗'; return; }
-    CART = {};
-    page('bar', 'MOON BAR 沐吧', '<div class="eyebrow">Order received</div><h1>點單收到了</h1><div class="panel"><p>吧台已經收到你的單，稍等一下就為你送上。</p><p class="note">' + esc(p.seat) + '・' + esc(p.pay) + '</p></div><a class="btn ghost" href="#/bar">再點一杯</a>');
-  }).catch(function () { b.disabled = false; b.textContent = '確認訂單 →'; e.hidden = false; e.textContent = '送出失敗，請再按一次，或直接告訴吧台。'; });
+function vBar() {
+  document.body.classList.add('mbmode'); renderNav('bar'); $('topSub').textContent = 'MOON BAR 沐吧';
+  var c = BAR.cats.filter(function (x) { return x.n === BARCAT; })[0];
+  var rows = BAR.items.filter(function (i) { return i.category === BARCAT; }).map(function (i) {
+    var open = MB.open === i.id, q = bQty(i), k = bKey(i);
+    var h = '<div class="mb-row' + (open ? ' open' : '') + '" data-mbopen="' + i.id + '"><img src="' + barArt(i.illustration) + '" alt="" loading="lazy">' +
+      '<div class="mb-t"><b>' + esc(i.name) + (q ? ' <small>×' + q + '</small>' : '') + '</b><span>' + esc(i.subtitle) + '</span></div><em>' + money(i.price) + '</em>' +
+      '<button type="button" class="mb-circle" data-mbtoggle="' + i.id + '" aria-label="展開">' + (open ? '−' : '+') + '</button></div>';
+    if (open) {
+      h += '<div class="mb-card"><div class="mb-art"><img src="' + barArt(i.illustration) + '" alt=""></div><div class="mb-info">' +
+        '<div class="mb-h"><b>' + esc(i.name) + '</b><em>' + money(i.price) + '</em></div><div class="mb-sub">' + esc(i.subtitle) + '</div><p>' + esc(i.description) + '</p>' +
+        (i.choices ? '<div class="mb-lbl">' + esc(i.choiceLabel) + '</div><div class="mb-chips">' + i.choices.map(function (o) { return '<button type="button" class="mb-chip' + ((MB.choice[i.id] || i.choices[0]) === o ? ' on' : '') + '" data-mbc="' + i.id + '" data-v="' + o + '">' + o + '</button>'; }).join('') + '</div>' : '') +
+        '<div class="mb-step"><button type="button" data-mbq="' + i.id + '" data-d="-1"' + ((CART[k] || 0) ? '' : ' disabled') + '>−</button><span>' + (CART[k] || 0) + '</span><button type="button" data-mbq="' + i.id + '" data-d="1">+</button></div>' +
+        (q && i.choices ? '<div class="mb-lbl" style="margin-top:8px">已點：' + cartLines().filter(function (x) { return x.id === i.id; }).map(function (x) { return esc(x.name) + ' ×' + x.qty; }).join('、') + '</div>' : '') +
+        '</div></div>';
+    }
+    return h;
+  }).join('');
+  var tot = barTotal();
+  $('app').innerHTML = '<div class="mb">' +
+    '<div class="mb-top"><div class="mb-logo">Moon Bar <small>沐吧</small></div><span>PAUSE SPACE</span></div><div class="mb-moon"><i></i><span>◐ • ◑</span><i></i></div>' +
+    '<div class="mb-eyebrow">月・食祭隨筆 ・ LUNAR FEAST NOTES</div><h1 class="mb-h1">今天，想喝點什麼？</h1>' +
+    '<p class="mb-lead">選一杯飲品就包含入場費；也可以只付場地費。不限時間、不收服務費，想續杯就繼續點。</p>' +
+    '<div class="mb-rules"><div><b>純入場 NT$200</b><span>今天只付場地費也可以</span></div><div><b>點一杯即含入場</b><span>續點依菜單價格計費</span></div></div>' +
+    '<label class="mb-spa"><input type="checkbox" id="mbSpa"' + (MB.spa ? ' checked' : '') + '> 我是今日 SPA 來客（免入場費）</label>' +
+    '<div class="mb-notes"><p>註記：遇見島主，可以點一杯換一題。</p><p>傳聞：點滿兩杯，可解鎖闆娘可喬的奧修占卜。</p></div>' +
+    '<div class="mb-tabs" id="mbTabs">' + BAR.cats.map(function (x) { return '<button type="button" class="' + (x.n === BARCAT ? 'on' : '') + '" data-mbcat="' + x.n + '"><b>' + x.n + '</b><span>' + x.d + '</span></button>'; }).join('') + '</div>' +
+    '<div class="mb-cat"><b>' + c.n + '</b><span>' + c.d + '</span><em>' + money(c.p) + ' / ' + (c.unit || '杯') + '</em></div>' + rows +
+    '<fieldset class="mb-form"><legend>點單資料</legend><div class="mb-2"><div><label for="mbName">點單姓名</label><input id="mbName" placeholder="例如：小喬" value="' + esc(MB.name) + '"></div>' +
+    '<div><label for="mbSeat">座位</label><select id="mbSeat"><option value="">請選擇座位</option>' + BAR.seats.map(function (x) { return '<option' + (x === MB.seat ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select></div></div><p class="err" id="mbErr" hidden></p></fieldset>' +
+    '</div><div class="mb-bar"><div><small>' + tot.label + '</small><b>' + money(tot.t) + '</b></div><button type="button" id="mbGo">確認訂單 →</button></div>';
+  window.scrollTo(0, MB.y || 0); MB.y = 0;
+}
+function mbKeep() { if ($('mbName')) { MB.name = $('mbName').value; MB.seat = $('mbSeat').value; } MB.y = window.scrollY; }
+function mbConfirm() {
+  mbKeep();
+  var e = $('mbErr');
+  if (!MB.name.trim()) { e.hidden = false; e.textContent = '請填寫點單姓名。'; $('mbName').focus(); return; }
+  if (!MB.seat) { e.hidden = false; e.textContent = '請選擇座位。'; $('mbSeat').focus(); return; }
+  e.hidden = true;
+  var l = cartLines(), tot = barTotal();
+  var sheet = document.createElement('div'); sheet.className = 'mb-sheet'; sheet.id = 'mbSheet';
+  sheet.innerHTML = '<div class="mb-pane"><h3>確認訂單</h3><div class="mb-sum">' + (l.length ? l.map(function (x) { return '<div><span>' + esc(x.name) + ' × ' + x.qty + '</span><b>' + money(x.qty * x.price) + '</b></div>'; }).join('') : '<div><span>' + tot.label + '</span><b>' + money(tot.t) + '</b></div>') +
+    '<div class="tot"><span>合計</span><b>' + money(tot.t) + '</b></div></div><p class="note">' + esc(MB.name) + '・' + esc(MB.seat) + (MB.spa ? '・SPA 來客' : '') + '</p>' +
+    '<div class="mb-lbl">付款方式</div>' + BAR.pays.map(function (p, ix) { return '<label class="mb-pay"><input type="radio" name="mbPay" value="' + p[0] + '"' + (ix ? '' : ' checked') + '><span><b>' + p[0] + '</b><small>' + p[1] + '</small></span></label>'; }).join('') +
+    '<p class="err" id="mbErr2" hidden></p><button type="button" class="btn coral" id="mbSend">送出訂單</button><button type="button" class="btn ghost" id="mbBack" style="margin-top:8px">再看看</button></div>';
+  document.body.appendChild(sheet);
+}
+function mbSend(b) {
+  var e = $('mbErr2'), pay = document.querySelector('input[name=mbPay]:checked').value, tot = barTotal();
+  var items = cartLines(); if (!items.length) items = MB.spa ? [{name: 'SPA 來客入場', qty: 1, price: 0}] : [{name: '純入場', qty: 1, price: 200}];
+  b.disabled = true; b.textContent = '送出中…';
+  api('barOrder', [{name: MB.name.trim(), seat: MB.seat, pay: pay, note: MB.spa ? '今日 SPA 來客' : '', items: items}]).then(function (r) {
+    if (r && r.ok === false) throw new Error(r.error || '');
+    CART = {}; var spa = MB.spa; MB.spa = false; var sh = $('mbSheet'); if (sh) sh.remove();
+    $('app').innerHTML = '<div class="mb"><div class="mb-top"><div class="mb-logo">Moon Bar <small>沐吧</small></div><span>PAUSE SPACE</span></div>' +
+      '<div class="mb-eyebrow" style="margin-top:30px">ORDER RECEIVED</div><h1 class="mb-h1">點單收到了</h1><p class="mb-lead">吧台已經收到你的單，稍等一下就為你送上。<br>' + esc(MB.seat) + '・' + esc(pay) + '・' + money(tot.t) + '</p>' +
+      '<button type="button" class="btn coral" data-mbcat="醒" style="max-width:320px;margin:20px auto">再點一杯</button></div>';
+    window.scrollTo(0, 0);
+  }).catch(function () { b.disabled = false; b.textContent = '送出訂單'; e.hidden = false; e.textContent = '送出失敗，請再按一次，或直接告訴吧台。'; });
 }
 
 /* ---------- 肌智管家 ---------- */
@@ -410,7 +465,7 @@ function vTools() {
   var s = svc('skincheck');
   page('tools', 'SKIN BUTLER',
     '<div class="eyebrow">Skin Butler / Pause Space</div><h1>肌智管家</h1><p class="lead">不懂保養、懶得研究也沒關係。先讓島主看看你的皮膚，再幫你排出專屬的保養順序。</p>' +
-    '<div class="hero" style="background-image:url(' + img('pick') + ')"><div class="t"><b>皮膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div></div>' +
+    '<div class="herot"><b>皮膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div>' +
     '<div class="panel"><h3>怎麼進行</h3><ul class="steps"><li>現場肌膚檢測，了解目前膚況</li><li>看看你手上的保養品，排出早晚使用順序</li><li>整理成你的個人保養手冊，帶回家照著做</li></ul>' +
     '<p class="note">之後會開放：拍下保養品照片，由島主的保養知識庫幫你排順序，島主確認後送到你手上。</p></div>' +
     (s && s.online ? '<a class="btn coral" href="#/book/skincheck">預約皮膚檢測</a>' : '<a class="btn coral" href="' + lineMsg('我想預約皮膚檢測／保養順序諮詢') + '">LINE 預約皮膚檢測</a>'));
@@ -420,12 +475,12 @@ function vTools() {
 function vEvents() {
   page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。把方法帶回生活，也在儀式裡和島上的人相遇。</p>' +
     '<div class="grid">' + EVENTS.map(function (x) {
-      return '<a class="card' + (x.tag === '籌備中' ? ' soon' : '') + '" href="#/events/' + x.id + '"><div class="pic wide" style="background-image:url(' + img(x.img) + ')"></div><div class="body"><div class="chips"><span class="chip">' + x.kind + '</span><span class="chip">' + x.tag + '</span></div><h3>' + x.title + '</h3><p>' + x.sub + '</p><span class="more">看內容 →</span></div></a>';
+      return '<a class="card' + (x.tag === '籌備中' ? ' soon' : '') + '" href="#/events/' + x.id + '"><img class="pic" src="' + img(x.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + x.kind + '</span><span class="chip">' + x.tag + '</span></div><h3>' + x.title + '</h3><p>' + x.sub + '</p><span class="more">看內容 →</span></div></a>';
     }).join('') + '</div>');
 }
 function vEvent(id) {
   var x = EVENTS.filter(function (e) { return e.id === id; })[0]; if (!x) return go('#/events');
-  page('events', 'ISLAND DAYS', '<a class="back" href="#/events">← 島日嶼祭</a><div class="hero" style="background-image:url(' + img(x.img) + ')"><div class="t"><b>' + x.title + '</b><span>' + x.kind + '・' + x.tag + '</span></div></div>' +
+  page('events', 'ISLAND DAYS', '<a class="back" href="#/events">← 島日嶼祭</a><img class="heroimg" src="' + img(x.img) + '" alt=""><div class="herot"><b>' + x.title + '</b><span>' + x.kind + '・' + x.tag + '</span></div>' +
     '<p class="lead">' + x.sub + '</p><div class="panel">' + x.body + '</div>' +
     '<a class="btn coral" href="' + lineMsg(x.cta[1]) + '">' + x.cta[0] + '</a>' + (x.cta2 ? '<a class="btn ghost" style="margin-top:10px" href="' + lineMsg(x.cta2[1]) + '">' + x.cta2[0] + '</a>' : ''));
 }
@@ -434,13 +489,13 @@ function vEvent(id) {
 function vGifts() {
   page('gifts', 'ISLAND GIFTS', '<div class="eyebrow">Discover / Pause Space</div><h1>遇島有禮</h1><p class="lead">島上的限定體驗與專屬提案，找到今天適合你的一份照顧。</p>' +
     '<div class="grid">' + GIFTS.map(function (g) {
-      return '<a class="card" href="#/gifts/' + g.id + '"><div class="pic" style="background-image:url(' + img(g.img) + ')"></div><div class="body"><div class="chips"><span class="chip">' + g.tag + '</span></div><h3>' + g.title + '</h3><p>' + g.sub + '</p><span class="more">看內容 →</span></div></a>';
+      return '<a class="card" href="#/gifts/' + g.id + '"><img class="pic" src="' + img(g.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + g.tag + '</span></div><h3>' + g.title + '</h3><p>' + g.sub + '</p><span class="more">看內容 →</span></div></a>';
     }).join('') + '</div><p class="note" style="margin-top:14px">限定資格、招募名額與時段由島主透過官方 LINE 確認，收到確認後預約才正式成立。</p>');
 }
 function vGift(id) {
   var g = GIFTS.filter(function (x) { return x.id === id; })[0]; if (!g) return go('#/gifts');
   var s = svc(g.svc);
-  page('gifts', 'ISLAND GIFTS', '<a class="back" href="#/gifts">← 遇島有禮</a><div class="hero" style="background-image:url(' + img(g.img) + ')"><div class="t"><b>' + g.title + '</b><span>' + g.tag + '</span></div></div>' +
+  page('gifts', 'ISLAND GIFTS', '<a class="back" href="#/gifts">← 遇島有禮</a><img class="heroimg" src="' + img(g.img) + '" alt=""><div class="herot"><b>' + g.title + '</b><span>' + g.tag + '</span></div>' +
     '<p class="lead">' + g.sub + '</p><div class="panel">' + g.body + '</div>' +
     (s && s.online ? '<a class="btn coral" href="#/book/' + s.key + '">選時段預約</a>' : '<a class="btn coral" href="' + lineMsg('我想預約「' + g.title + '」') + '">LINE 預約</a>'));
 }
@@ -488,7 +543,9 @@ function route() {
   if (r === 'member') return vMember();
   vServices();
 }
+document.addEventListener('change', function (ev) { if (ev.target.id === 'mbSpa') { mbKeep(); MB.spa = ev.target.checked; vBar(); } });
 document.addEventListener('click', function (ev) {
+  var row = ev.target.closest('.mb-row'); if (row && !ev.target.closest('button')) { mbKeep(); MB.open = MB.open === row.dataset.mbopen ? '' : row.dataset.mbopen; return vBar(); }
   var t = ev.target.closest('button'); if (!t) return;
   if (t.dataset.d && t.classList.contains('dt')) { ST.date = t.dataset.d; ST.start = null; drawDates(); loadTimes(); if ($('formBox')) $('formBox').hidden = true; if ($('fitBox')) $('fitBox').innerHTML = ''; return; }
   if (t.dataset.t) {
@@ -500,10 +557,13 @@ document.addEventListener('click', function (ev) {
   if (t.id === 'copyBank') { var txt = $('bank').textContent; if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = '已複製'; }); return; }
   if (t.id === 'dSend') return report(ST.last.code, ST.last.phone, $('dLast5').value.trim(), $('dErr'), t, function () { $('dOk').hidden = false; t.hidden = true; });
   if (t.id === 'rSend') return report($('rCode').value.trim().toUpperCase(), $('rPhone').value.trim(), $('rLast5').value.trim(), $('rErr'), t, function () { $('rOk').hidden = false; });
-  if (t.dataset.bc) { ST.bName = $('bName').value; ST.bSeat = $('bSeat').value; BARCAT = t.dataset.bc; vBar(); $('barTabs').scrollIntoView({block: 'start'}); return; }
-  if (t.dataset.oi) { ST.opt[t.dataset.oi] = t.dataset.ov; ST.bName = $('bName').value; ST.bSeat = $('bSeat').value; var y = window.scrollY; vBar(); window.scrollTo(0, y); return; }
-  if (t.dataset.q) { var it = BAR.items.filter(function (x) { return x.id === t.dataset.q; })[0], ck = cartKey(it); var q = Math.max(0, (CART[ck] || 0) + Number(t.dataset.d)); CART[ck] = q; t.parentNode.querySelector('span').textContent = q; drawCart(); return; }
-  if (t.id === 'bSend') return sendBar();
+  if (t.dataset.mbcat) { mbKeep(); BARCAT = t.dataset.mbcat; MB.open = BAR.items.filter(function (x) { return x.category === BARCAT; })[0].id; MB.y = 0; vBar(); var tb = $('mbTabs'); if (tb) tb.scrollIntoView({block: 'start'}); return; }
+  if (t.dataset.mbtoggle) { mbKeep(); MB.open = MB.open === t.dataset.mbtoggle ? '' : t.dataset.mbtoggle; return vBar(); }
+  if (t.dataset.mbc) { mbKeep(); MB.choice[t.dataset.mbc] = t.dataset.v; return vBar(); }
+  if (t.dataset.mbq) { mbKeep(); var bi = bItem(t.dataset.mbq), bk = bKey(bi); CART[bk] = Math.max(0, (CART[bk] || 0) + Number(t.dataset.d)); return vBar(); }
+  if (t.id === 'mbGo') return mbConfirm();
+  if (t.id === 'mbBack') { var sh = $('mbSheet'); if (sh) sh.remove(); return; }
+  if (t.id === 'mbSend') return mbSend(t);
   if (t.id === 'mlSend') return member('memberLogin', {phone: $('mlPhone').value, birthday: $('mlBirth').value}, $('mlErr'), t);
   if (t.id === 'mjSend') return member('memberJoin', {name: $('mjName').value, phone: $('mjPhone').value, birthday: $('mjBirth').value}, $('mjErr'), t);
   if (t.id === 'mOut') { ME = null; return vMember(); }
