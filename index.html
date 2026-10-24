@@ -178,18 +178,15 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
+var KV_V = '?v=1';
 var IMG = {
-  tools: 'L:tools.jpg',
-  hero_services: 'https://lh3.googleusercontent.com/d/11g1xpAXi0OwSeuxePfL7czGK4cXADfwz=w1400',
-  hero_events: 'https://lh3.googleusercontent.com/d/1qmNaP1ffom2iAYBuYLBnk_v6kfpm3Ctu=w1400',
-  hero_gifts: 'https://lh3.googleusercontent.com/d/1cm3l4i_dmsg9KsXhlsAshnPyBHCahPnj=w1400',
-  hero_member: 'https://lh3.googleusercontent.com/d/1Ahnr0BF5P01RUFkrq_TG-6_aayahoa7f=w1400',
-  beauty: 'assets/beauty.jpg', reset: 'assets/reset.jpg', soul: 'assets/soul.jpg', metime: 'assets/me-time.jpg', pick: 'assets/selection.jpg',
-  mens: 'assets/benefits-mens-lab.webp', oil: 'assets/benefits-100-aroma.webp', indiba: 'assets/benefits-interbo-neck.webp', sumei: 'assets/benefits-su-beauty.webp',
-  face: 'assets/course-face.jpg', photo: 'assets/course-photo.jpg', body: 'assets/course-body.jpg', heal: 'assets/course-heal.jpg', moon: 'assets/event-full-moon.jpeg',
+  beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
+  mens: 'L:kv/mens.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
+  face: 'L:kv/courses.jpg', photo: 'L:kv/courses.jpg', body: 'L:kv/courses.jpg', heal: 'L:kv/courses.jpg', moon: 'L:kv/events.jpg',
+  hero_services: 'L:kv/page_services.jpg', hero_events: 'L:kv/page_events.jpg', hero_gifts: 'L:kv/page_gifts.jpg', hero_member: 'L:kv/page_member.jpg',
   coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/cover.jpg'
 };
-function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
+function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : v.indexOf('L:kv/') === 0 ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
 
 /* ---------- 內容（GPT 網站搬過來的文字） ---------- */
 var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset: ['情緒堆積', '承接他人', '說不出口'], soul: ['人生迷路', '內在空白', '反覆卡關'], metime: ['身體疲憊', '需要暫停', '想獨處'], pick: ['不懂保養', '懶得研究', '需要方法']};
@@ -582,9 +579,9 @@ window.addEventListener('hashchange', route);
   var g = (location.search.match(/[?&]go=(\w+)/) || [])[1];
   if (g && !location.hash) { history.replaceState(null, '', location.pathname + '#/' + (g === 'benefits' ? 'gifts' : g)); }
   route();
-  try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}
+  try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}
   function boot(n) {
-    api('getBootstrap', []).then(function (d) { try { localStorage.setItem('ps_boot', JSON.stringify({t: Date.now(), d: d})); } catch (e) {} var first = !B; B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { IMG[k] = d.images[k]; }); if (first || !/^#\/(book|time|member|report)/.test(location.hash)) route(); })
+    api('getBootstrap', []).then(function (d) { try { localStorage.setItem('ps_boot', JSON.stringify({t: Date.now(), d: d})); } catch (e) {} var first = !B; B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = d.images[k]; }); if (first || !/^#\/(book|time|member|report)/.test(location.hash)) route(); })
       .catch(function () { if (n < 3) return setTimeout(function () { boot(n + 1); }, 1500 * n); BOOTFAIL = true; route(); });
   }
   boot(1);
