@@ -1,0 +1,103 @@
+
+/* ---------- 島主每日靈感：每天 9:30 前由排程寫進雲端「島主每日靈感/每日存檔/YYYY-MM-DD.json」 ---------- */
+const INSP_DAILY = '1H0Eqyqv0b_0VyHmil4k2zx29a1qh2PUN';
+const INSP_USED = '1GQXHCywAm8Q-s0IncmXhxGthqBrmlIOw';
+const INSP_USAGES = ['Threads', '輪播', '短影音', '限動'];
+const INSP_USAGE_DIR = {'Threads': 'Threads', '輪播': '輪播貼文', '短影音': '短影音', '限動': '限動'};
+
+function inspLatest_() {
+  const it = DriveApp.getFolderById(INSP_DAILY).getFiles();
+  let best = null, bestName = '';
+  while (it.hasNext()) {
+    const f = it.next(), n = f.getName();
+    if (/^\d{4}-\d{2}-\d{2}\.json$/.test(n) && n > bestName) { best = f; bestName = n; }
+  }
+  return best;
+}
+function inspFile_(date) {
+  const it = DriveApp.getFolderById(INSP_DAILY).getFilesByName(date + '.json');
+  return it.hasNext() ? it.next() : null;
+}
+function inspRead_(f) {
+  const cache = CacheService.getScriptCache(), ck = 'insp_' + f.getId() + '_' + f.getLastUpdated().getTime();
+  let s = cache.get(ck);
+  if (!s) { s = f.getBlob().getDataAsString('UTF-8'); if (s.length < 90000) cache.put(ck, s, 21600); }
+  return JSON.parse(s);
+}
+function inspireToday(key) {
+  checkKey_(key);
+  const today = Utilities.formatDate(new Date(), CONFIG.TZ, 'yyyy-MM-dd');
+  const f = inspFile_(today) || inspLatest_();
+  if (!f) return {ok: false, today: today};
+  const d = inspRead_(f);
+  const saved = JSON.parse(PropertiesService.getScriptProperties().getProperty('INSP_SAVED') || '{}');
+  return {ok: true, today: today, data: d, saved: saved[d.date] || {}};
+}
+function inspSub_(parent, name) {
+  const it = parent.getFoldersByName(name);
+  return it.hasNext() ? it.next() : parent.createFolder(name);
+}
+function inspireSave(key, date, id, usage) {
+  checkKey_(key);
+  if (INSP_USAGES.indexOf(usage) < 0) throw new Error('用途不對');
+  const f = inspFile_(String(date));
+  if (!f) throw new Error('找不到這天的靈感');
+  const d = inspRead_(f), x = (d.items || []).filter(function (i) { return i.id === id; })[0];
+  if (!x) throw new Error('找不到這則');
+  const proj = (x.projects || [])[0] || '未分類';
+  const lines = ['【' + (x.projects || []).join('｜') + '】' + x.title, '日期：' + d.date + '　用途：' + usage, '', '為什麼可以用：' + x.why, '', '開頭：' + (x.hook || '')];
+  if (x.threads) lines.push('', '— Threads 文案 —', x.threads);
+  if ((x.carousel || []).length) lines.push('', '— 輪播 —', x.carousel.join('\n'));
+  if ((x.reel || []).length) lines.push('', '— 短影音分鏡 —', x.reel.join('\n'));
+  lines.push('', '法規提醒：' + (x.compliance || ''), '來源：' + ((x.source || {}).title || '') + ' ' + ((x.source || {}).url || ''));
+  const dir = inspSub_(DriveApp.getFolderById(INSP_USED), INSP_USAGE_DIR[usage]);
+  const file = dir.createFile('【' + proj + '】' + d.date + '｜' + x.title + '.txt', lines.join('\n'), MimeType.PLAIN_TEXT);
+  const props = PropertiesService.getScriptProperties();
+  const saved = JSON.parse(props.getProperty('INSP_SAVED') || '{}');
+  const keep = {}; Object.keys(saved).sort().slice(-30).forEach(function (k) { keep[k] = saved[k]; });
+  keep[d.date] = keep[d.date] || {}; keep[d.date][id + '|' + usage] = file.getUrl();
+  props.setProperty('INSP_SAVED', JSON.stringify(keep));
+  return {ok: true, url: file.getUrl(), saved: keep[d.date]};
+}
+
+const INSP_CSS = `
+.trend{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:8px}
+.trend span{flex:none;background:#fffdf8;border:1px solid #e3dccd;border-radius:999px;padding:4px 10px;font-size:12px;color:#7a7468}
+.trend b{color:#2b2a26;font-weight:600;margin-right:4px}
+.ins{background:#fffdf8;border:1px solid #e3dccd;border-radius:16px;padding:14px;margin-bottom:10px}
+.ins .k{display:inline-block;font-size:11px;border-radius:6px;padding:1px 7px;margin-right:6px;vertical-align:2px}
+.ins .k.hot{background:#FC9C8A;color:#fff}.ins .k.new{background:#549096;color:#fff}
+.ins h3{display:inline;font-size:16px;margin:0}.ins .why{color:#5c574d;font-size:14px;margin:6px 0}
+.ins .hook{border-left:3px solid #FC9C8A;padding:2px 0 2px 10px;margin:8px 0;font-size:15px}
+.ins .pj{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0}.ins .pj i{font-style:normal;font-size:12px;background:#e7f0f0;color:#3f6f74;border-radius:6px;padding:1px 7px}
+.ins details{margin-top:6px;font-size:14px}.ins summary{color:#549096;cursor:pointer}
+.ins pre{white-space:pre-wrap;font:inherit;background:#f7f3ec;border-radius:10px;padding:10px;margin:6px 0}
+.ins ol{margin:6px 0;padding-left:20px}.ins .cp{border:1px solid #e3dccd;background:#fff;border-radius:8px;font-size:12px;padding:3px 10px}
+.ins .use{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}.ins .use small{color:#a39b8e;font-size:12px}
+.ins .use button{border:1px solid #549096;color:#549096;background:#fff;border-radius:999px;font-size:13px;padding:4px 12px}
+.ins .use button.on{background:#549096;color:#fff}.ins .use button[disabled]{opacity:.5}
+.ins .lw{font-size:12px;color:#a39b8e;margin-top:8px}.ins .src{font-size:12px;color:#a39b8e}.ins .src a{color:#a39b8e}`;
+const INSP_HTML = `<h2 id="insTitle">💡 今日靈感</h2><div class="trend" id="trend"></div><div id="ins"><p class="empty">讀取中…</p></div>`;
+const INSP_JS = `
+var INS=null;
+function insCard(x){var sv=INS.saved||{};
+ var h='<div class="ins"><span class="k '+(x.kind==='熱門借勢'?'hot':'new')+'">'+esc(x.kind)+'</span><h3>'+esc(x.title)+'</h3>';
+ h+='<p class="why">'+esc(x.why)+'</p>';if(x.hook)h+='<div class="hook">'+esc(x.hook)+'</div>';
+ h+='<div class="pj">'+(x.projects||[]).map(function(p){return '<i>'+esc(p)+'</i>'}).join('')+'</div>';
+ if(x.threads)h+='<details><summary>Threads 文案</summary><pre>'+esc(x.threads)+'</pre><button class="cp" data-cp="'+x.id+'|threads">複製</button></details>';
+ if((x.carousel||[]).length)h+='<details><summary>輪播 '+x.carousel.length+' 張</summary><ol>'+x.carousel.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol><button class="cp" data-cp="'+x.id+'|carousel">複製</button></details>';
+ if((x.reel||[]).length)h+='<details><summary>短影音分鏡</summary><ol>'+x.reel.map(function(s){return '<li>'+esc(s)+'</li>'}).join('')+'</ol><button class="cp" data-cp="'+x.id+'|reel">複製</button></details>';
+ h+='<div class="use"><small>要用這則 →</small>'+(x.usage||[]).map(function(u){var on=sv[x.id+'|'+u];return '<button type="button" class="'+(on?'on':'')+'" data-use="'+x.id+'|'+esc(u)+'">'+(on?'✓ ':'')+esc(u)+'</button>'}).join('')+'</div>';
+ if(x.compliance)h+='<div class="lw">⚖️ '+esc(x.compliance)+'</div>';
+ if(x.source&&x.source.url)h+='<div class="src">來源：<a target="_blank" href="'+esc(x.source.url)+'">'+esc(x.source.title||x.source.url)+'</a></div>';
+ return h+'</div>'}
+function insRender(){var d=INS.data;$('insTitle').textContent='💡 '+(d.date===INS.today?'今日靈感':nice(d.date)+'的靈感');
+ $('trend').innerHTML=(d.trends||[]).map(function(t){return '<span title="'+esc(t.use||'')+'"><b>'+esc(t.kw)+'</b>'+esc(t.vol||'')+'</span>'}).join('');
+ $('ins').innerHTML=(d.items||[]).map(insCard).join('')||'<p class="empty">今天沒有靈感</p>'}
+function loadInspire(){google.script.run.withSuccessHandler(function(r){if(!r.ok){$('ins').innerHTML='<p class="empty">今天的靈感 9:30 會送到</p>';return}INS=r;insRender()}).withFailureHandler(function(e){$('ins').innerHTML='<p class="empty">靈感讀取失敗：'+esc(e.message)+'</p>'}).inspireToday(KEY)}
+document.addEventListener('click',function(e){var c=e.target.closest('[data-cp]'),u=e.target.closest('[data-use]');
+ if(c){var a=c.dataset.cp.split('|'),x=INS.data.items.filter(function(i){return i.id===a[0]})[0],t=a[1]==='threads'?x.threads:(x[a[1]]||[]).join('\\n');
+  var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();c.textContent='已複製 ✓';setTimeout(function(){c.textContent='複製'},1500);return}
+ if(u){if(u.classList.contains('on'))return;var b=u.dataset.use.split('|');u.disabled=true;u.textContent='存檔中…';
+  google.script.run.withSuccessHandler(function(r){INS.saved=r.saved;insRender()}).withFailureHandler(function(er){u.disabled=false;u.textContent=b[1]+'（失敗：'+er.message+'）'}).inspireSave(KEY,INS.data.date,b[0],b[1])}});
+`;
