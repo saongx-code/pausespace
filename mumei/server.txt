@@ -1,0 +1,153 @@
+
+/* ---------- 沐渼空間預約頁：名冊在試算表「沐渼名冊」，預約寫進「沐渼＆P Space」行事曆 ---------- */
+const MM_CAL = '沐渼＆P Space';
+const MM_ROOMS = [
+  {id: '1F', name: '1F 交誼廳', color: 'ORANGE', hex: '#F4511E', keys: ['1F', '交誼']},
+  {id: '2S', name: '2F 單人房', color: 'PALE_GREEN', hex: '#33B679', keys: ['單人']},
+  {id: '2D', name: '2F 雙人房', color: 'YELLOW', hex: '#F6BF26', keys: ['雙人', '岩盤浴']},
+  {id: '3F', name: '3F 微風花園', color: 'BLUE', hex: '#3F51B5', keys: ['3F', '微風']}
+];
+const MM_HEAD = ['名字', '專屬顏色', '生日密碼（六碼）', '是否為管理者'];
+const MM_COLORS = {'橘': '#F4511E', '橘色': '#F4511E', '紅': '#D50000', '紅色': '#D50000', '粉': '#E67C73', '粉紅': '#E67C73', '黃': '#F6BF26', '黃色': '#F6BF26',
+  '綠': '#0B8043', '綠色': '#0B8043', '藍': '#3F51B5', '藍色': '#3F51B5', '水藍': '#039BE5', '紫': '#8E24AA', '紫色': '#8E24AA', '灰': '#616161', '咖啡': '#795548', '白': '#FFFFFF', '黑': '#212121'};
+
+function mmBook_() {
+  const props = PropertiesService.getScriptProperties();
+  let id = props.getProperty('MM_ROSTER_ID'), ss = null;
+  if (id) { try { ss = SpreadsheetApp.openById(id); } catch (e) { ss = null; } }
+  if (!ss) {
+    ss = SpreadsheetApp.create('沐渼名冊｜沐渼空間預約頁');
+    const sh = ss.getSheets()[0].setName('名冊');
+    sh.getRange(1, 1, 1, MM_HEAD.length).setValues([MM_HEAD]).setFontWeight('bold');
+    sh.setFrozenRows(1);
+    sh.getRange('C:C').setNumberFormat('@');
+    sh.getRange(2, 1, 2, 4).setValues([['項項', '橘色', '', true], ['可喬', '紫色', '', true]]);
+    props.setProperty('MM_ROSTER_ID', ss.getId());
+  }
+  return ss;
+}
+function mmSecret_() {
+  const props = PropertiesService.getScriptProperties();
+  let s = props.getProperty('MM_SECRET');
+  if (!s) { s = Utilities.getUuid() + Utilities.getUuid(); props.setProperty('MM_SECRET', s); }
+  return s;
+}
+function mmPeople_() {
+  const v = mmBook_().getSheetByName('名冊').getDataRange().getValues().slice(1);
+  return v.filter(function (r) { return String(r[0]).trim(); }).map(function (r) {
+    const c = String(r[1] || '').trim();
+    return {name: String(r[0]).trim(), color: /^#[0-9a-f]{6}$/i.test(c) ? c : (MM_COLORS[c] || MM_COLORS[c.replace('色', '')] || '#9E9E9E'),
+      pw: String(r[2] == null ? '' : r[2]).replace(/\D/g, ''), admin: r[3] === true || /^(true|是|y|yes|v|✓)$/i.test(String(r[3]).trim())};
+  });
+}
+function mmSign_(name, pw) {
+  return Utilities.base64EncodeWebSafe(Utilities.computeHmacSha256Signature(name + '|' + pw, mmSecret_())).slice(0, 22);
+}
+function mmWho_(token) {
+  const t = String(token || ''), i = t.lastIndexOf('.');
+  if (i < 1) throw new Error('請重新登入');
+  const name = t.slice(0, i), sig = t.slice(i + 1);
+  const p = mmPeople_().filter(function (x) { return x.name === name; })[0];
+  if (!p || !p.pw || mmSign_(p.name, p.pw) !== sig) throw new Error('請重新登入');
+  return p;
+}
+
+function mmRoster() {
+  return {rooms: MM_ROOMS.map(function (r) { return {id: r.id, name: r.name, hex: r.hex}; }),
+    people: mmPeople_().map(function (p) { return {name: p.name, color: p.color}; })};
+}
+function mmLogin(name, pw) {
+  name = String(name || '').trim(); pw = String(pw || '').replace(/\D/g, '');
+  const cache = CacheService.getScriptCache(), ck = 'mmfail_' + name;
+  const fails = Number(cache.get(ck) || 0);
+  if (fails >= 5) return {ok: false, error: '嘗試太多次了，請 10 分鐘後再試。'};
+  const p = mmPeople_().filter(function (x) { return x.name === name; })[0];
+  if (!p) return {ok: false, error: '名冊裡找不到這個名字。'};
+  if (!p.pw) return {ok: false, error: '還沒設定生日密碼，請找管理者在名冊填上。'};
+  if (p.pw !== pw) { cache.put(ck, String(fails + 1), 600); return {ok: false, error: '密碼不對，再試一次。'}; }
+  cache.remove(ck);
+  return {ok: true, token: p.name + '.' + mmSign_(p.name, p.pw), name: p.name, color: p.color, admin: p.admin};
+}
+
+function mmCal_() {
+  const c = CalendarApp.getCalendarsByName(MM_CAL)[0];
+  if (!c) throw new Error('找不到行事曆「' + MM_CAL + '」');
+  return c;
+}
+function mmRoomOf_(text) {
+  text = String(text || '');
+  for (let i = 0; i < MM_ROOMS.length; i++) {
+    if (MM_ROOMS[i].keys.some(function (k) { return text.indexOf(k) >= 0; })) return MM_ROOMS[i].id;
+  }
+  return '';
+}
+function mmMeta_(ev) {
+  const d = ev.getDescription() || '', m = d.match(/#mm(\{.*\})\s*$/);
+  if (m) { try { return JSON.parse(m[1]); } catch (e) {} }
+  return null;
+}
+function mmHm_(d) { return Utilities.formatDate(d, CONFIG.TZ, 'HH:mm'); }
+function mmDayRange_(date) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(date))) throw new Error('日期格式不對');
+  const s = new Date(date + 'T00:00:00+08:00'), e = new Date(s.getTime() + 864e5);
+  return [s, e];
+}
+function mmEvents_(date) {
+  const r = mmDayRange_(date);
+  return mmCal_().getEvents(r[0], r[1]).filter(function (ev) { return !ev.isAllDayEvent(); }).map(function (ev) {
+    const m = mmMeta_(ev) || {};
+    const title = ev.getTitle();
+    return {id: ev.getId(), room: m.room || mmRoomOf_(title + ' ' + (ev.getLocation() || '')),
+      start: mmHm_(ev.getStartTime()), end: mmHm_(ev.getEndTime()), endMs: ev.getEndTime().getTime(),
+      item: m.item || title, target: m.target || '', teacher: m.teacher || '', booker: m.booker || '',
+      helper: m.helper || '', note: m.note || (m.item ? '' : String(ev.getDescription() || '').slice(0, 300)), mm: !!m.item};
+  });
+}
+function mmDay(token, date) {
+  const me = mmWho_(token);
+  return {me: {name: me.name, color: me.color, admin: me.admin}, date: date, events: mmEvents_(date), now: Date.now()};
+}
+function mmToMin_(hm) { const a = String(hm).split(':'); return Number(a[0]) * 60 + Number(a[1]); }
+function mmBookIt(token, p) {
+  const me = mmWho_(token); p = p || {};
+  const room = MM_ROOMS.filter(function (r) { return r.id === p.room; })[0];
+  if (!room) throw new Error('請選擇房間');
+  const dur = Number(p.dur);
+  if ([60, 90, 120, 150].indexOf(dur) < 0) throw new Error('請選擇時長');
+  const item = String(p.item || '').trim().slice(0, 40), target = String(p.target || '').trim().slice(0, 40);
+  if (!item || !target) throw new Error('請填寫項目和對象');
+  const sm = mmToMin_(p.start);
+  if (!(sm >= 600 && sm % 30 === 0 && sm + dur <= 1320)) throw new Error('時間要在 10:00–22:00 之間');
+  let teacher = me.name;
+  if (me.admin && p.teacher) teacher = String(p.teacher).trim().slice(0, 30);
+  const people = mmPeople_().map(function (x) { return x.name; });
+  const helper = people.indexOf(String(p.helper || '')) >= 0 ? String(p.helper) : '';
+  const note = String(p.note || '').trim().slice(0, 500);
+  const r = mmDayRange_(p.date);
+  const start = new Date(r[0].getTime() + sm * 6e4), end = new Date(start.getTime() + dur * 6e4);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const clash = mmEvents_(p.date).filter(function (e) {
+      return e.room === room.id && mmToMin_(e.start) < sm + dur && mmToMin_(e.end) > sm;
+    })[0];
+    if (clash) throw new Error(room.name + ' 在 ' + clash.start + '–' + clash.end + ' 已經有「' + clash.item + '」，請換時間或房間。');
+    const meta = {room: room.id, item: item, target: target, teacher: teacher, booker: me.name, helper: helper, note: note};
+    const desc = '房間：' + room.name + '\n項目：' + item + '\n對象：' + target + '\n負責老師：' + teacher + '\n預約人：' + me.name +
+      (helper ? '\n幫忙：' + helper : '') + (note ? '\n備註：' + note : '') + '\n\n#mm' + JSON.stringify(meta);
+    const ev = mmCal_().createEvent('【' + room.name + '】' + item + '｜' + target + '（' + teacher + '）', start, end, {description: desc, location: room.name});
+    ev.setColor(CalendarApp.EventColor[room.color]);
+  } finally { lock.releaseLock(); }
+  return {ok: true};
+}
+function mmCancel(token, id) {
+  const me = mmWho_(token);
+  const ev = mmCal_().getEventById(String(id || ''));
+  if (!ev) throw new Error('找不到這筆預約');
+  const m = mmMeta_(ev) || {};
+  if (!me.admin && m.booker !== me.name) throw new Error('只有預約人或管理者可以取消');
+  ev.deleteEvent();
+  return {ok: true};
+}
+// 第一次：建立名冊（在編輯器執行一次即可）
+function setupMumei() { const ss = mmBook_(); mmSecret_(); console.log(ss.getUrl()); return ss.getUrl(); }

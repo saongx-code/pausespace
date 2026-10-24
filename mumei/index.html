@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#1f3b3d">
+<meta name="apple-mobile-web-app-title" content="沐渼空間">
+<title>沐渼空間｜預約</title>
+<style>
+:root{--ink:#1f3b3d;--lake:#549096;--coral:#fc9c8a;--paper:#f6f2ec;--line:#e2dcd2;--mute:#8a8578;--row:40px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+button{font:inherit;color:inherit}
+.top{position:sticky;top:0;z-index:20;background:var(--ink);color:#f6f2ec;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px}
+.brand{display:flex;justify-content:space-between;align-items:center;font-size:12px;letter-spacing:.2em;opacity:.8}
+.brand button{background:none;border:0;color:#f6f2ec;opacity:.8;font-size:12px;letter-spacing:.05em;padding:4px}
+.datebar{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.datebar button{background:none;border:0;color:#f6f2ec;font-size:22px;width:44px;height:40px}
+.datebar .d{text-align:center}
+.datebar .d b{display:block;font-size:20px;font-weight:600;letter-spacing:.04em}
+.datebar .d span{font-size:12px;opacity:.7}
+.today{font-size:11px;border:1px solid rgba(246,242,236,.4)!important;border-radius:20px;width:auto!important;padding:0 10px;height:26px!important}
+.helpbar{display:none;margin:10px 12px 0;background:#fff;border-radius:12px;padding:10px 14px;border-left:4px solid var(--coral);font-size:14px}
+.helpbar.on{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px 0}
+.chip{border:1px solid var(--line);background:#fff;border-radius:20px;padding:4px 10px;font-size:12px;display:flex;align-items:center;gap:6px}
+.chip i{width:9px;height:9px;border-radius:50%;display:inline-block}
+.chip.on{background:var(--ink);color:#f6f2ec;border-color:var(--ink)}
+.gridwrap{padding:10px 0 120px;overflow-x:auto}
+.grid{display:grid;position:relative;min-width:100%}
+.hcell{position:sticky;top:0;background:var(--paper);font-size:12px;text-align:center;padding:6px 2px;border-bottom:2px solid var(--line);z-index:5}
+.hcell i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.tcol{font-size:11px;color:var(--mute);text-align:right;padding-right:6px}
+.tcol div{height:var(--row);transform:translateY(-7px)}
+.col{position:relative;border-left:1px solid var(--line)}
+.slot{height:var(--row);border-bottom:1px dashed #ece6dc}
+.slot:nth-child(2n){border-bottom:1px solid var(--line)}
+.slot:active{background:rgba(84,144,150,.12)}
+.ev{position:absolute;left:3px;right:3px;border-radius:8px;padding:4px 6px;font-size:11px;line-height:1.3;overflow:hidden;color:#1f1f1f;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ev b{display:block;font-size:12px}
+.ev .tm{opacity:.75}
+.ev.mine{outline:2px solid var(--ink)}
+.dot{position:absolute;top:5px;right:5px;width:12px;height:12px;border-radius:50%;border:2px solid #fff}
+.dot.lit{animation:glow 1.6s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.9),0 0 6px 2px currentColor}50%{box-shadow:0 0 0 3px rgba(255,255,255,.6),0 0 12px 5px currentColor}}
+.flash{animation:fl 1.2s 2}
+@keyframes fl{50%{transform:scale(1.04);box-shadow:0 0 0 4px var(--coral)}}
+.nowline{position:absolute;left:0;right:0;height:2px;background:var(--coral);z-index:3;pointer-events:none}
+.empty{padding:40px 20px;text-align:center;color:var(--mute)}
+.sheet{position:fixed;inset:0;background:rgba(20,30,30,.45);display:none;z-index:50;align-items:flex-end}
+.sheet.on{display:flex}
+.panel{background:#fff;width:100%;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(env(safe-area-inset-bottom) + 18px)}
+.panel h3{margin:0 0 4px;font-size:18px}
+.sub{color:var(--mute);font-size:13px;margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--mute);margin:12px 0 4px}
+input,select,textarea{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfaf7}
+textarea{min-height:70px}
+.durs{display:flex;gap:8px}
+.durs button{flex:1;border:1px solid var(--line);background:#fbfaf7;border-radius:10px;padding:10px 0}
+.durs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.durs button:disabled{opacity:.3}
+.btn{display:block;width:100%;border:0;border-radius:12px;background:var(--ink);color:#fff;padding:14px;margin-top:16px;font-size:16px}
+.btn:disabled{opacity:.3}
+.btn.ghost{background:none;color:var(--mute);margin-top:6px}
+.btn.danger{background:#fff;color:#c0392b;border:1px solid #e6c4bd}
+.err{color:#c0392b;font-size:13px;margin-top:8px;min-height:1em}
+.kv{display:grid;grid-template-columns:72px 1fr;gap:6px 10px;font-size:14px}
+.kv span{color:var(--mute)}
+.note{background:#f6f2ec;border-radius:10px;padding:10px 12px;white-space:pre-wrap;margin-top:12px}
+.login{max-width:360px;margin:12vh auto;padding:0 24px;text-align:center}
+.login h1{font-size:22px;letter-spacing:.1em;margin:0 0 4px}
+.login p{color:var(--mute);margin:0 0 20px}
+.login label{text-align:left}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:20px;font-size:14px;opacity:0;transition:.3s;z-index:60}
+.toast.on{opacity:1}
+.loading{opacity:.5;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="sheet" id="sheet"><div class="panel" id="panel"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
+var START = 600, END = 1320, STEP = 30;
+var S = {token: get('mm_tok'), me: null, roster: null, date: today(), events: [], open: {}, now: Date.now()};
+function $(id) { return document.getElementById(id); }
+function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function put(k, v) { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function today() { var d = new Date(Date.now() + 8 * 36e5); return d.toISOString().slice(0, 10); }
+function addDay(s, n) { var d = new Date(s + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+function hm(m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+function mins(s) { var a = s.split(':'); return +a[0] * 60 + +a[1]; }
+function toast(t) { var e = $('toast'); e.textContent = t; e.classList.add('on'); setTimeout(function () { e.classList.remove('on'); }, 2400); }
+function api(fn, args) {
+  var url = EXEC + '?api=pub&fn=' + fn + '&args=' + encodeURIComponent(JSON.stringify(args || []));
+  return fetch(url, {redirect: 'follow'}).then(function (r) { return r.json(); }).then(function (j) {
+    if (j.error) throw new Error(j.error.replace(/^Error:\s*/, ''));
+    return j.result;
+  });
+}
+function room(id) { return (S.roster.rooms.filter(function (r) { return r.id === id; })[0]) || {id: id, name: '其他', hex: '#9E9E9E'}; }
+function person(n) { return (S.roster.people.filter(function (p) { return p.name === n; })[0]) || null; }
+function tint(hex, a) { var n = parseInt(hex.slice(1), 16); return 'rgba(' + (n >> 16) + ',' + (n >> 8 & 255) + ',' + (n & 255) + ',' + a + ')'; }
+
+/* ---------- 登入 ---------- */
+function loginView() {
+  $('app').innerHTML = '<div class="login"><h1>沐渼空間</h1><p>空間預約</p>' +
+    '<label>你是誰</label><select id="lgName"><option value="">選擇名字</option>' + S.roster.people.map(function (p) { return '<option>' + esc(p.name) + '</option>'; }).join('') + '</select>' +
+    '<label>生日密碼（六碼）</label><input id="lgPw" type="password" inputmode="numeric" maxlength="6" autocomplete="current-password">' +
+    '<div class="err" id="lgErr"></div><button class="btn" id="lgGo">進入</button></div>';
+  $('lgGo').onclick = function () {
+    var b = this; b.disabled = true; $('lgErr').textContent = '';
+    api('mmLogin', [$('lgName').value, $('lgPw').value]).then(function (r) {
+      if (!r.ok) { $('lgErr').textContent = r.error; b.disabled = false; return; }
+      S.token = r.token; put('mm_tok', r.token); load();
+    }).catch(function (e) { $('lgErr').textContent = e.message; b.disabled = false; });
+  };
+}
+
+/* ---------- 主畫面 ---------- */
+function load() {
+  document.body.classList.add('loading');
+  api('mmDay', [S.token, S.date]).then(function (r) {
+    document.body.classList.remove('loading');
+    S.me = r.me; S.events = r.events; S.now = r.now; draw();
+  }).catch(function (e) {
+    document.body.classList.remove('loading');
+    if (/登入/.test(e.message)) { put('mm_tok', null); S.token = null; return loginView(); }
+    toast(e.message); if (!S.me) $('app').innerHTML = '<div class="empty">讀取失敗：' + esc(e.message) + '<br><br><button class="btn" onclick="load()">再試一次</button></div>';
+  });
+}
+function dateLabel(s) {
+  var d = new Date(s + 'T12:00:00Z'), w = '日一二三四五六'[d.getUTCDay()];
+  return {big: (d.getUTCMonth() + 1) + ' 月 ' + d.getUTCDate() + ' 日', small: '星期' + w + (s === today() ? '・今天' : '')};
+}
+function draw() {
+  var L = dateLabel(S.date), mine = S.events.filter(function (e) { return e.helper === S.me.name; });
+  var used = {}; S.events.forEach(function (e) { used[e.room] = 1; });
+  var rooms = S.roster.rooms.filter(function (r) { return used[r.id] || S.open[r.id]; });
+  var idle = S.roster.rooms.filter(function (r) { return !(used[r.id] || S.open[r.id]); });
+  var h = '<div class="top"><div class="brand"><span>沐渼空間 ・ ' + esc(S.me.name) + (S.me.admin ? '（管理者）' : '') + '</span><button id="out">登出</button></div>' +
+    '<div class="datebar"><button id="prev">‹</button><div class="d"><b>' + L.big + '</b><span>' + L.small + '</span></div><button id="next">›</button></div>' +
+    (S.date !== today() ? '<div style="text-align:center"><button class="today" id="tdy" style="background:none;color:#f6f2ec">回到今天</button></div>' : '') + '</div>';
+  h += '<div class="helpbar' + (mine.length ? ' on' : '') + '" id="help">🔔 你今天有 <b>' + mine.length + '</b> 件要幫忙　<span style="color:var(--mute)">點我看第一件 →</span></div>';
+  if (idle.length) h += '<div class="chips">' + idle.map(function (r) { return '<button class="chip" data-open="' + r.id + '"><i style="background:' + r.hex + '"></i>' + esc(r.name) + ' ＋</button>'; }).join('') + '</div>';
+  if (!rooms.length) {
+    h += '<div class="empty">這天還沒有任何預約。<br>點上面的房間展開，再點空白時段就能預約。</div>';
+    $('app').innerHTML = h; bind(); return;
+  }
+  var cols = '52px ' + rooms.map(function () { return 'minmax(' + (rooms.length > 2 ? 110 : 140) + 'px,1fr)'; }).join(' ');
+  h += '<div class="gridwrap" id="gw"><div class="grid" style="grid-template-columns:' + cols + '">';
+  h += '<div class="hcell"></div>' + rooms.map(function (r) { return '<div class="hcell"><i style="background:' + r.hex + '"></i>' + esc(r.name) + '</div>'; }).join('');
+  h += '<div class="tcol">'; for (var m = START; m < END; m += 60) h += '<div style="height:calc(var(--row)*2)">' + hm(m) + '</div>'; h += '</div>';
+  var nowMin = S.date === today() ? (function () { var d = new Date(S.now + 8 * 36e5); return d.getUTCHours() * 60 + d.getUTCMinutes(); })() : -1;
+  rooms.forEach(function (r) {
+    h += '<div class="col" data-room="' + r.id + '">';
+    for (var m = START; m < END; m += STEP) h += '<div class="slot" data-t="' + m + '"></div>';
+    if (nowMin >= START && nowMin <= END) h += '<div class="nowline" style="top:calc(var(--row)*' + ((nowMin - START) / STEP) + ')"></div>';
+    S.events.filter(function (e) { return e.room === r.id; }).forEach(function (e) {
+      var s = Math.max(mins(e.start), START), en = Math.min(mins(e.end) || END, END);
+      if (en <= START || s >= END) return;
+      var hp = e.helper && person(e.helper), dotC = hp ? hp.color : '#ffffff';
+      var lit = S.now < e.endMs;
+      h += '<div class="ev' + (e.booker === S.me.name || e.teacher === S.me.name ? ' mine' : '') + '" id="ev-' + esc(e.id).replace(/[^\w-]/g, '') + '" data-ev="' + esc(e.id) + '" style="top:calc(var(--row)*' + ((s - START) / STEP) + ' + 1px);height:calc(var(--row)*' + ((en - s) / STEP) + ' - 3px);background:' + tint(r.hex, .28) + ';border-left:4px solid ' + r.hex + '">' +
+        '<span class="tm">' + e.start + '–' + e.end + '</span><b>' + esc(e.item) + '</b>' + (e.target ? esc(e.target) + '<br>' : '') + (e.teacher ? '<span class="tm">' + esc(e.teacher) + '</span>' : '') +
+        (e.note ? '<span class="dot' + (lit ? ' lit' : '') + '" style="background:' + dotC + ';color:' + dotC + '"></span>' : '') + '</div>';
+    });
+    h += '</div>';
+  });
+  h += '</div></div>';
+  $('app').innerHTML = h; bind();
+}
+function bind() {
+  $('out').onclick = function () { put('mm_tok', null); S.token = null; S.me = null; loginView(); };
+  $('prev').onclick = function () { go(-1); };
+  $('next').onclick = function () { go(1); };
+  if ($('tdy')) $('tdy').onclick = function () { S.date = today(); S.open = {}; load(); };
+  $('help').onclick = function () {
+    var e = S.events.filter(function (x) { return x.helper === S.me.name; }).sort(function (a, b) { return a.start < b.start ? -1 : 1; })[0];
+    if (!e) return; var el = $('ev-' + e.id.replace(/[^\w-]/g, ''));
+    if (el) { el.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'}); el.classList.add('flash'); setTimeout(function () { el.classList.remove('flash'); }, 2600); }
+  };
+  [].forEach.call(document.querySelectorAll('[data-open]'), function (b) { b.onclick = function () { S.open[b.dataset.open] = 1; draw(); }; });
+  [].forEach.call(document.querySelectorAll('.slot'), function (s) {
+    s.onclick = function () { bookSheet(s.parentNode.dataset.room, +s.dataset.t); };
+  });
+  [].forEach.call(document.querySelectorAll('.ev'), function (el) {
+    el.onclick = function (ev) { ev.stopPropagation(); detail(S.events.filter(function (x) { return x.id === el.dataset.ev; })[0]); };
+  });
+}
+function go(n) { S.date = addDay(S.date, n); S.open = {}; load(); }
+(function swipe() {
+  var x0 = null, y0 = null;
+  document.addEventListener('touchstart', function (e) { if ($('sheet').classList.contains('on')) return; x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, {passive: true});
+  document.addEventListener('touchend', function (e) {
+    if (x0 == null || !S.me) return; var dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0; x0 = null;
+    var gw = $('gw'), scrollable = gw && gw.scrollWidth > gw.clientWidth + 4;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.8 && !(scrollable && e.target.closest && e.target.closest('#gw'))) go(dx < 0 ? 1 : -1);
+  }, {passive: true});
+})();
+
+/* ---------- 預約 ---------- */
+function openSheet(html) { $('panel').innerHTML = html; $('sheet').classList.add('on'); }
+function closeSheet() { $('sheet').classList.remove('on'); }
+$('sheet').onclick = function (e) { if (e.target === this) closeSheet(); };
+function busyUntil(rid, start) {
+  var lim = END; S.events.forEach(function (e) { if (e.room === rid && mins(e.start) >= start + 1) lim = Math.min(lim, mins(e.start)); });
+  var inside = S.events.some(function (e) { return e.room === rid && mins(e.start) <= start && mins(e.end) > start; });
+  return inside ? start : lim;
+}
+function bookSheet(rid, t) {
+  var r = room(rid), lim = busyUntil(rid, t);
+  if (lim <= t) return toast('這個時段已經有預約了');
+  var others = S.roster.people.map(function (p) { return '<option>' + esc(p.name) + '</option>'; }).join('');
+  var h = '<h3>預約 ' + esc(r.name) + '</h3><div class="sub">' + dateLabel(S.date).big + '　' + hm(t) + ' 開始　・預約人：' + esc(S.me.name) + '</div>';
+  if (S.me.admin) h += '<label>負責老師</label><select id="bkT"><option value="">' + esc(S.me.name) + '（自己）</option>' +
+    S.roster.people.filter(function (p) { return p.name !== S.me.name; }).map(function (p) { return '<option>' + esc(p.name) + '</option>'; }).join('') +
+    '<option value="__ext">外部老師（手寫）</option></select><input id="bkTx" placeholder="外部老師名字" style="display:none;margin-top:6px">';
+  h += '<label>時長 *</label><div class="durs">' + [60, 90, 120, 150].map(function (d) { return '<button data-d="' + d + '"' + (t + d > lim ? ' disabled' : '') + '>' + d + '</button>'; }).join('') + '</div>' +
+    '<div class="sub" id="bkEnd" style="margin:6px 0 0"></div>' +
+    '<label>項目 *</label><input id="bkI" maxlength="40" placeholder="例如：岩盤浴、臉部護理">' +
+    '<label>對象 *</label><input id="bkO" maxlength="40" placeholder="客人或對象名字">' +
+    '<label>備註</label><textarea id="bkN" maxlength="500" placeholder="需要提醒的事（選填）"></textarea>' +
+    '<label>指定幫忙的人</label><select id="bkH"><option value="">不用</option>' + others + '</select>' +
+    '<div class="err" id="bkE"></div><button class="btn" id="bkGo" disabled>送出預約</button><button class="btn ghost" onclick="closeSheet()">取消</button>';
+  openSheet(h);
+  var dur = 0;
+  function check() {
+    var ext = $('bkT') && $('bkT').value === '__ext';
+    if ($('bkTx')) $('bkTx').style.display = ext ? 'block' : 'none';
+    $('bkEnd').textContent = dur ? '到 ' + hm(t + dur) + ' 結束' : '';
+    $('bkGo').disabled = !(dur && $('bkI').value.trim() && $('bkO').value.trim() && (!ext || $('bkTx').value.trim()));
+  }
+  [].forEach.call(document.querySelectorAll('.durs button'), function (b) {
+    b.onclick = function () { [].forEach.call(document.querySelectorAll('.durs button'), function (x) { x.classList.remove('on'); }); b.classList.add('on'); dur = +b.dataset.d; check(); };
+  });
+  ['bkI', 'bkO', 'bkT', 'bkTx'].forEach(function (id) { if ($(id)) $(id).oninput = $(id).onchange = check; });
+  $('bkGo').onclick = function () {
+    var b = this; b.disabled = true; $('bkE').textContent = '';
+    var tv = $('bkT') ? ($('bkT').value === '__ext' ? '外部：' + $('bkTx').value.trim() : ($('bkT').value || S.me.name)) : '';
+    api('mmBookIt', [S.token, {date: S.date, room: rid, start: hm(t), dur: dur, item: $('bkI').value, target: $('bkO').value, teacher: tv, helper: $('bkH').value, note: $('bkN').value}])
+      .then(function () { closeSheet(); toast('預約完成，已寫進行事曆'); S.open[rid] = 1; load(); })
+      .catch(function (e) { $('bkE').textContent = e.message; b.disabled = false; });
+  };
+}
+function detail(e) {
+  if (!e) return; var r = room(e.room);
+  var can = S.me.admin || e.booker === S.me.name;
+  var h = '<h3>' + esc(e.item) + '</h3><div class="sub">' + esc(r.name) + '　' + e.start + '–' + e.end + '</div><div class="kv">' +
+    '<span>對象</span><div>' + esc(e.target || '—') + '</div><span>負責老師</span><div>' + esc(e.teacher || '—') + '</div>' +
+    '<span>預約人</span><div>' + esc(e.booker || '—') + '</div><span>幫忙</span><div>' + esc(e.helper || '—') + '</div></div>' +
+    (e.note ? '<div class="note">' + esc(e.note) + '</div>' : '') +
+    (can && e.mm ? '<button class="btn danger" id="dlGo">取消這筆預約</button>' : '') + '<button class="btn ghost" onclick="closeSheet()">關閉</button>';
+  openSheet(h);
+  if ($('dlGo')) $('dlGo').onclick = function () {
+    var b = this;
+    if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = '再按一次確認取消'; return; }
+    b.disabled = true;
+    api('mmCancel', [S.token, e.id]).then(function () { closeSheet(); toast('已取消'); load(); }).catch(function (x) { toast(x.message); b.disabled = false; });
+  };
+}
+
+/* ---------- 啟動 ---------- */
+api('mmRoster', []).then(function (r) { S.roster = r; S.token ? load() : loginView(); })
+  .catch(function (e) { $('app').innerHTML = '<div class="empty">讀取失敗：' + esc(e.message) + '</div>'; });
+setInterval(function () { if (S.me && !$('sheet').classList.contains('on') && document.visibilityState === 'visible') load(); }, 120000);
+</script>
+</body>
+</html>
