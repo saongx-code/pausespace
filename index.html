@@ -139,13 +139,13 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .mb-cat{display:flex;align-items:baseline;gap:8px;padding:18px 4px 10px;border-top:1px solid #6b4f3d;margin-top:18px;border-bottom:1px solid #d9c5ae}
 .mb-cat b{font-family:var(--serif);font-size:44px;line-height:1;color:#2b1d14}.mb-cat span{font-family:var(--serif);font-size:19px}.mb-cat em{margin-left:auto;font-style:normal;font-weight:700;color:#b5532f;font-size:15px}
 .mb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #d9c5ae;cursor:pointer}
-.mb-row img{width:52px;height:52px;object-fit:contain;flex:none}
+.mb-row img{width:52px;height:52px;object-fit:cover;border-radius:12px;flex:none}
 .mb-t{flex:1;min-width:0}.mb-t b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:#2b1d14}.mb-t b small{font-family:var(--sans);font-size:13px;color:#e8694a}.mb-t span{font-size:12px;color:#6b5848}
 .mb-row em{font-style:normal;font-weight:700;color:#b5532f;font-size:16px;flex:none}
 .mb-circle{width:34px;height:34px;border-radius:50%;border:1.5px solid #6b4f3d;background:none;font-size:20px;line-height:1;color:#4a3a2e;cursor:pointer;flex:none}
 .mb-card{display:grid;grid-template-columns:1fr 1.2fr;gap:16px;border:1px solid #e3a689;border-radius:18px;padding:18px;margin:10px 0 12px;background:#fbf6ee}
 @media(max-width:600px){.mb-card{grid-template-columns:1fr}}
-.mb-art{display:flex;align-items:center;justify-content:center;position:relative;min-height:220px;overflow:hidden}.mb-art:before{content:"";position:absolute;width:76%;aspect-ratio:1;border-radius:50%;background:#eadcc6}.mb-art img{position:relative;width:100%;max-width:260px}
+.mb-art{display:flex;align-items:center;justify-content:center;position:relative;min-height:220px;overflow:hidden}.mb-art:before{display:none}.mb-hero{display:block;width:100%;height:auto;border-radius:18px;margin:14px 0 6px}.mb-art img{position:relative;width:100%;max-width:none;border-radius:16px}
 .mb-h{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #cdbba6;padding-bottom:6px}.mb-h b{font-family:var(--serif);font-size:28px;font-weight:600}.mb-h em{font-style:normal;font-weight:700;color:#b5532f;font-size:18px}
 .mb-sub{font-weight:700;color:#8a4b30;font-size:14px;margin:8px 0 2px}.mb-info p{margin:0 0 10px;color:#4a3a2e;font-size:14px}
 .mb-lbl{font-size:12px;color:#6b5848;margin:6px 0 4px}
@@ -184,9 +184,9 @@ var IMG = {
   mens: 'L:kv/mens.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
   face: 'L:kv/courses.jpg', photo: 'L:kv/courses.jpg', body: 'L:kv/courses.jpg', heal: 'L:kv/courses.jpg', moon: 'L:kv/events.jpg',
   hero_services: 'L:kv/page_services.jpg', hero_events: 'L:kv/page_events.jpg', hero_gifts: 'L:kv/page_gifts.jpg', hero_member: 'L:kv/page_member.jpg',
-  coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/cover.jpg'
+  coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/mb_cover.jpg', bar_coupe: 'L:bar/mb_coupe.jpg', bar_fizz: 'L:bar/mb_fizz.jpg', bar_highball: 'L:bar/mb_highball.jpg', bar_rocks: 'L:bar/mb_rocks.jpg', 'bar_milk-tea': 'L:bar/mb_milktea.jpg', bar_coffee: 'L:bar/mb_coffee.jpg', bar_tea: 'L:bar/mb_tea.jpg', bar_icecream: 'L:bar/mb_icecream.jpg', bar_wings: 'L:bar/mb_wings.jpg'
 };
-function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : v.indexOf('L:kv/') === 0 ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
+function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
 
 /* ---------- 內容（GPT 網站搬過來的文字） ---------- */
 var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset: ['情緒堆積', '承接他人', '說不出口'], soul: ['人生迷路', '內在空白', '反覆卡關'], metime: ['身體疲憊', '需要暫停', '想獨處'], pick: ['不懂保養', '懶得研究', '需要方法']};
@@ -387,7 +387,7 @@ function report(code, phone, last5, err, btn, ok) {
 
 /* ---------- Moon Bar ---------- */
 var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
-function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] || (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
+function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
 function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
 function bKey(i) { return i.id + (i.choices ? '|' + (MB.choice[i.id] || i.choices[0]) : ''); }
 function bQty(i) { var n = 0; Object.keys(CART).forEach(function (k) { if (k.split('|')[0] === i.id) n += CART[k]; }); return n; }
@@ -421,7 +421,7 @@ function vBar() {
   }).join('');
   var tot = barTotal();
   $('app').innerHTML = '<div class="mb">' +
-    '<div class="mb-top"><div class="mb-logo">Moon Bar <small>沐吧</small></div><span>PAUSE SPACE</span></div><div class="mb-moon"><i></i><span>◐ • ◑</span><i></i></div>' +
+    '<div class="mb-top"><div class="mb-logo">Moon Bar <small>沐吧</small></div><span>PAUSE SPACE</span></div><img class="mb-hero" src="' + img('barcover') + '" alt=""><div class="mb-moon"><i></i><span>◐ • ◑</span><i></i></div>' +
     '<div class="mb-eyebrow">月・食祭隨筆 ・ LUNAR FEAST NOTES</div><h1 class="mb-h1">今天，想喝點什麼？</h1>' +
     '<p class="mb-lead">選一杯飲品就包含入場費；也可以只付場地費。不限時間、不收服務費，想續杯就繼續點。</p>' +
     '<div class="mb-rules"><div><b>純入場 NT$200</b><span>今天只付場地費也可以</span></div><div><b>點一杯即含入場</b><span>續點依菜單價格計費</span></div></div>' +
