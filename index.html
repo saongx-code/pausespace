@@ -194,6 +194,26 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .sv-card .x{font-size:12.5px;color:var(--coral);margin:-4px 0 10px}
 .sv-card .go{display:block;text-align:center;background:var(--coral);color:#fff;border-radius:999px;padding:9px 0;text-decoration:none;font-weight:500;font-size:15px}
 .sv-card .go.line{background:transparent;color:var(--ink);border:1px solid var(--deep)}
+
+/* 療程卡（雜誌式） */
+.xc{background:#f6f3ec;border:1px solid var(--line);border-radius:18px;padding:22px 20px 20px;margin:0 0 14px}
+.xc .no{font-family:var(--latin);letter-spacing:.18em;font-size:13px;color:var(--muted)}
+.xc .rec{font-size:13px;color:#a2643f;margin:6px 0 0}
+.xc h3{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.35;margin:6px 0 4px;letter-spacing:.02em}
+.xc .mn{font-size:14px;color:var(--muted)}
+.xc .pr{font-family:var(--latin);font-weight:600;font-size:30px;margin:6px 0 10px;letter-spacing:.01em}
+.xc .lb{font-size:12px;color:var(--muted);letter-spacing:.1em;margin:0 0 6px}
+.xc .tg{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}.xc .tg span{font-size:13px;border:1px solid #b9c7c1;border-radius:999px;padding:2px 11px;background:#fbfaf6}
+.xc .ds{font-size:15.5px;line-height:1.75;margin:0 0 12px}
+.xc details{border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 0 16px}
+.xc summary{list-style:none;cursor:pointer;padding:11px 0;font-size:14.5px}.xc summary::-webkit-details-marker{display:none}
+.xc summary:before{content:'▶';font-size:11px;margin-right:8px;display:inline-block;transition:transform .2s}.xc details[open] summary:before{transform:rotate(90deg)}
+.xc .fl{font-size:14px;margin:0 0 6px}.xc ul{margin:0 0 12px;padding-left:18px;font-size:13px;color:var(--muted)}
+.xc .go{display:inline-flex;align-items:center;gap:22px;background:var(--deep);color:#f3efe6;text-decoration:none;border-radius:10px;padding:13px 22px;font-size:15.5px}
+.xc .go i{font-style:normal;font-size:18px}.xc .go.line{background:transparent;color:var(--ink);border:1px solid var(--deep)}
+.sv-bar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(238,243,239,.96);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-top:1px solid var(--line)}
+.sv-bar span{font-size:13px;color:var(--ink)}.sv-bar a{flex:none;display:inline-flex;align-items:center;gap:14px;background:var(--deep);color:#f3efe6;text-decoration:none;border-radius:10px;padding:11px 18px;font-size:15px}.sv-bar a i{font-style:normal}
+#svList{padding-bottom:70px}
 </style>
 </head>
 <body>
@@ -323,26 +343,28 @@ var SV_COPY = {
   skincheck: {what: '先認識現在的肌膚，再決定接下來怎麼保養。', incl: '確認需求 → 觀察膚況與保養習慣 → 提供保養方向', fit: ['膚況確認', '保養導航', '個人照護']}
 };
 var SV = {i: 0};
-function svCard(s) {
+var SV_REC = {stoneface: '初次上島推薦・膚體一起照顧', reset90: 'RESET 入門', subcon: '想往內走得更深', stone60: '一個人的安靜時間'};
+function svCard(s, ix) {
   var c = SV_COPY[s.key] || {what: s.desc, incl: '', fit: []};
   var href = s.online ? '#/book/' + s.key : lineMsg('我想詢問「' + s.name + '」');
-  var meta = (s.min ? s.min + ' 分鐘' : '時間依現場') + (s.deposit ? '｜預約需付訂金 NT$' + (B.deposit || 400) : '');
-  return '<div class="sv-card"><div class="top1"><b>' + esc(s.name) + '</b><span class="pr">' + priceText(s) + '</span></div>' +
-    '<div class="meta">' + meta + '</div>' +
-    '<p class="hook">' + esc(c.what) + '</p>' +
-    (c.incl ? '<div class="row2"><em>包含</em><span>' + esc(c.incl) + '</span></div>' : '') +
-    (c.fit.length ? '<div class="row2"><em>適合</em><span>' + c.fit.map(esc).join('／') + '</span></div>' : '') +
-    (c.x ? '<div class="x">' + esc(c.x) + '</div>' : '') +
-    (c.note ? '<div class="nt">' + esc(c.note) + '</div>' : '') +
-    '<a class="go' + (s.online ? '' : ' line') + '" href="' + href + '">' + (s.online ? '預約這個 →' : 'LINE 詢問 →') + '</a></div>';
+  var no = (ix < 9 ? '0' : '') + (ix + 1);
+  var remind = (s.deposit ? '<li>預約需付訂金 NT$' + (B.deposit || 400) + '，送出後由島主核對時段與訂金，預約才正式成立。</li>' : '<li>送出後由島主確認，預約才正式成立。</li>') + (c.note ? '<li>' + esc(c.note) + '</li>' : '') + (c.x ? '<li>' + esc(c.x) + '</li>' : '');
+  return '<div class="xc"><div class="no">' + no + ' / EXPERIENCE</div>' +
+    (SV_REC[s.key] ? '<div class="rec">' + SV_REC[s.key] + '</div>' : '') +
+    '<h3>' + esc(s.name) + '</h3><div class="mn">' + (s.min ? s.min + ' 分鐘' : '時間依現場評估') + '</div>' +
+    '<div class="pr">' + priceText(s) + '</div>' +
+    (c.fit.length ? '<div class="lb">適合處理</div><div class="tg">' + c.fit.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
+    '<p class="ds">' + esc(c.what) + '</p>' +
+    '<details><summary>服務流程與預約提醒</summary>' + (c.incl ? '<div class="fl">' + esc(c.incl) + '</div>' : '') + '<ul>' + remind + '</ul></details>' +
+    '<a class="go' + (s.online ? '' : ' line') + '" href="' + href + '">' + (s.online ? '提出預約申請' : 'LINE 詢問') + '<i>↗</i></a></div>';
 }
 function svList() {
   var k = SV_ORDER[SV.i], m = SV_CAT[k];
   var list = B.services.filter(function (s) { return s.cat === k; });
-  var extra = k === 'pick' ? '<div class="sv-card"><div class="top1"><b>季度保養｜熟客選配</b><span class="pr">依商品報價</span></div><div class="meta">時間依現場</div><p class="hook">由島主依當季膚況，整理真正需要的保養組合。</p><div class="row2"><em>包含</em><span>現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</span></div><div class="row2"><em>適合</em><span>肌膚評估／換季保養／產品搭配</span></div><div class="nt">選配商品不享會員 8 折，價格依實際選配。</div><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問 →</a></div>' : '';
-  $('svList').innerHTML = '<div class="sv-head"><b>' + m.zh + '・' + m.en + ' 的療程</b><span>' + (list.length + (extra ? 1 : 0)) + ' 項</span></div>' +
-    list.map(svCard).join('') + extra +
-    '<p class="note" style="margin-top:4px">價格為原價，儲值會員依會員方案折抵。送出預約後，島主核對訂金與時段，預約才正式成立。</p>';
+  var extra = k === 'pick' ? '<div class="xc"><div class="no">' + ((list.length + 1) < 10 ? '0' : '') + (list.length + 1) + ' / EXPERIENCE</div><div class="rec">限熟客</div><h3>季度保養｜熟客選配</h3><div class="mn">時間依現場評估</div><div class="pr">依商品報價</div><div class="lb">適合處理</div><div class="tg"><span>肌膚評估</span><span>換季保養</span><span>產品搭配</span></div><p class="ds">由島主依當季膚況，整理真正需要的保養組合。</p><details><summary>服務流程與預約提醒</summary><div class="fl">現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</div><ul><li>選配商品不享會員 8 折，價格依實際選配。</li></ul></details><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問<i>↗</i></a></div>' : '';
+  $('svList').innerHTML = list.map(svCard).join('') + extra +
+    '<p class="note" style="margin:14px 2px 0">價格為原價，儲值會員依會員方案折抵。已經預約了？<a href="#/report">回報訂金匯款 →</a></p>';
+  var bb = $('svBar'); if (bb) bb.querySelector('span').textContent = m.zh + '・' + m.en + '　送出後由島主確認';
   [].forEach.call(document.querySelectorAll('.sv-tabs button'), function (b, ix) { b.classList.toggle('on', ix === SV.i); });
   [].forEach.call(document.querySelectorAll('.sv-dots i'), function (d, ix) { d.classList.toggle('on', ix === SV.i); });
 }
@@ -358,8 +380,7 @@ function vServices(k0) {
     '<p class="sv-intro">五種照顧，從外到內：<b>身</b>照顧肌膚與身體、<b>心</b>放下情緒、<b>靈</b>看清方向；只想休息選<b>獨處</b>，日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
     '<div class="sv-tabs">' + SV_ORDER.map(function (k, ix) { return '<button type="button" data-svi="' + ix + '">' + SV_CAT[k].zh + '・' + SV_CAT[k].en + '</button>'; }).join('') + '</div>' +
     '<div class="sv-rail" id="svRail">' + cards + '</div><div class="sv-dots">' + SV_ORDER.map(function () { return '<i></i>'; }).join('') + '</div>' +
-    '<div class="pills"><a class="pill" href="#/time">不知道選哪個？先挑時段 ↗</a><a class="pill ghost" href="#/report">已預約・回報匯款</a></div>' +
-    '<div id="svList"></div>');
+    '<div id="svList"></div><div class="sv-bar" id="svBar"><span></span><a href="#/time">先挑時段<i>↗</i></a></div>');
   var rail = $('svRail');
   if (start) { var el = rail.children[start]; rail.scrollLeft = el.offsetLeft - (rail.clientWidth - el.clientWidth) / 2; }
   svList();
