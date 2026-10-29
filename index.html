@@ -214,7 +214,7 @@ var IMG = {
   mens: 'L:kv/mens.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
   face: 'L:kv/courses.jpg', photo: 'L:kv/courses.jpg', body: 'L:kv/courses.jpg', heal: 'L:kv/courses.jpg', moon: 'L:kv/events.jpg',
   hero_services: 'L:kv/page_services.jpg', hero_events: 'L:kv/page_events.jpg', hero_gifts: 'L:kv/page_gifts.jpg', hero_member: 'L:kv/page_member.jpg',
-  coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/mb_cover.jpg', bar_coupe: 'L:bar/mb_coupe.jpg', bar_fizz: 'L:bar/mb_fizz.jpg', bar_highball: 'L:bar/mb_highball.jpg', bar_rocks: 'L:bar/mb_rocks.jpg', 'bar_milk-tea': 'L:bar/mb_milktea.jpg', bar_coffee: 'L:bar/mb_coffee.jpg', bar_tea: 'L:bar/mb_tea.jpg', bar_icecream: 'L:bar/mb_icecream.jpg', bar_wings: 'L:bar/mb_wings.jpg'
+  coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/mb_cover.jpg', bar_coupe: 'L:bar/mb_coupe.jpg', bar_fizz: 'L:bar/mb_fizz.jpg', bar_highball: 'L:bar/mb_highball.jpg', bar_rocks: 'L:bar/mb_rocks.jpg', 'bar_milk-tea': 'L:bar/mb_milktea.jpg', bar_coffee: 'L:bar/mb_coffee.jpg', bar_tea: 'L:bar/mb_tea.jpg', bar_icecream: 'L:bar/mb_icecream.jpg', bar_wings: 'L:bar/mb_wings.jpg', series_beauty: '', series_reset: '', series_soul: '', series_metime: '', series_pick: ''
 };
 function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
 
@@ -231,17 +231,17 @@ var EVENTS = [
       '<p class="note">活動日期依島主公告為準。</p>', cta: ['詢問滿月儀式', '我想詢問滿月儀式']},
   {id: 'photo', img: 'photo', kind: '課程', tag: '固定場・四人成班', title: 'NO UGLY PEOPLE 手機攝影課', sub: '從看見自己開始，練習用手機記錄光線、生活與眼前的人。',
     body: '<ul class="steps"><li>看自己：自拍、姿勢與站進畫面</li><li>看世界：光線、背景與構圖</li><li>五感散步：從感受中找到畫面</li><li>拍陌生人：聽一件心事，拍一張照片</li></ul>' +
-      '<p>固定場：2026/10/24（六）14:00–17:00<br>另約場：湊齊四人可申請其他時間，由島主確認。</p>', cta: ['報名手機攝影課', '我要報名手機攝影課'], cta2: ['登記另約場・四人成班', '我想登記手機攝影課另約場（四人成班）']},
+      '<p>固定場：2026/10/31（六）14:00–17:00｜NT$1,000／人<br>4 人開班、最多 15 人。<br>另約場：湊齊四人可申請其他時間，由島主確認。</p><p class="note">報名後不退費、可轉讓；若取消開課全額退費。</p>', cta: ['報名手機攝影課', '我要報名手機攝影課'], cta2: ['登記另約場・四人成班', '我想登記手機攝影課另約場（四人成班）']},
   {id: 'face', img: 'face', kind: '課程', tag: '兩人成班', title: 'Reset no.1｜Face 顏', sub: '美容師創業陪跑。從臉部照護的學習，走向服務與創業的準備。',
     body: '<p>適合想投入美容服務，或正在準備個人美容事業，希望有人陪伴起步與整理方向的人。</p><p>學習方向：美容專業起步、服務方向、創業準備。<br>可先登記一人等候湊班，或兩人以上一起申請。時長、學費與日期由島主確認。</p>', cta: ['登記 Face 開班意願', '我想登記 Face 顏 開班意願']},
   {id: 'body', img: 'body', kind: '課程', tag: '籌備中', title: 'Reset no.2｜Body 體', sub: '按摩師創業陪跑。從身體照護出發，為自己的專業服務建立方向。', body: '<p>完整內容與開課資訊將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Body 體 課程的開課通知']},
   {id: 'heal', img: 'heal', kind: '課程', tag: '籌備中', title: 'Reset no.3｜Heal 癒', sub: '療癒師創業陪跑。療癒服務、個人定位、創業準備。', body: '<p>陪跑內容、期間與參與方式將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Heal 癒 課程的開課通知']}
 ];
 var GIFTS = [
-  {id: 'mens', img: 'mens', tag: '限定對象｜型男研究所學生', title: '型男研究所 課後福利社', sub: '讓課後的自我照顧，延伸到肌膚與身體。', body: '<p>岩盤浴＋型男護膚｜120 分鐘｜免費體驗</p><p class="note">限型男研究所學生，預約時輸入學生專屬密碼；時段由島主在官方 LINE 確認。</p>', svc: 'mens'},
+  {id: 'mens', img: 'mens', tag: '限定對象｜型男研究所學生', title: '型男研究所 課後福利社', sub: '讓課後的自我照顧，延伸到肌膚與身體。', body: '<p>岩盤浴＋型男護膚｜90 分鐘｜免費體驗</p><p class="note">限型男研究所學生，預約時輸入學生專屬密碼；時段由島主在官方 LINE 確認。</p>', svc: 'mens'},
   {id: 'oil', img: 'oil', tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。', body: '<p>免費體驗一次｜名額由島主確認</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
-  {id: 'indiba', img: 'indiba', tag: '局部放鬆', title: 'INDIBA 肩頸放鬆', sub: '替忙碌的肩頸，留一段短短的休息時間。', body: '<p>10 分鐘｜NT$999</p><p class="note">確認當日狀況 → 肩頸局部操作 → 感受確認與收尾。如有特殊健康狀況，預約時請先告知島主。</p>', svc: 'indiba'},
-  {id: 'sumei', img: 'sumei', tag: '肌膚照顧提案', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
+  {id: 'indiba', img: 'indiba', tag: '局部放鬆', title: 'INTERBO 局部放鬆｜肩頸／腰臀／腿', sub: '用局部儀器照護，給忙碌的身體一段喘息。', body: '<p>10 分鐘／次｜NT$999／次（腿部需選 2 次）</p><p class="note">確認當日狀況 → 肩頸局部操作 → 感受確認與收尾。如有特殊健康狀況，預約時請先告知島主。</p>', svc: 'indiba'},
+  {id: 'sumei', img: 'sumei', tag: '規劃中・可先登記', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
 ];
 var BAR = {
   cats: [{n: '醒', d: '無酒特調', p: 250}, {n: '醺', d: '微醺亂調', p: 300}, {n: '醉', d: '杜康純飲', p: 400}, {n: '吃', d: '私廚秘製', p: 100, unit: '份'}],
@@ -299,28 +299,28 @@ function needBoot() { document.body.classList.remove('mbmode'); var r0 = (locati
 var SV_ORDER = ['beauty', 'reset', 'soul', 'metime', 'pick'];
 var SV_CAT = {
   beauty: {zh: '身', en: 'Beauty', what: '照顧看得到的：肌膚與身體', line: '臉部護膚、煥膚、身體放鬆。覺得累、膚況不好、想變好看，選這裡。'},
-  reset: {zh: '心', en: 'Reset', what: '照顧感受：放下情緒', line: '岩盤浴加上身體療程或潛意識探索，把壓在身上、心裡的事放下。'},
+  reset: {zh: '心', en: 'Reset', what: '照顧感受：放下情緒', line: '從身體訊號出發，依當下狀態走身體或內在路線，把累積的疲憊與情緒整理好。'},
   soul: {zh: '靈', en: 'Soul', what: '照顧方向：看清自己', line: '潛意識探索、薩滿占讀、空間淨化。想弄清楚自己卡在哪，選這裡。'},
   metime: {zh: '獨處', en: 'Me Time', what: '只是休息：什麼都不用做', line: '岩盤浴或泡澡，一個人安靜休息，不用聊天。'},
-  pick: {zh: '代購', en: 'Skin Plan', what: '照顧日常：保養交給島主', line: '肌膚檢測、排保養順序；儲值會員可由島主每季挑好保養品寄給你。'}
+  pick: {zh: '島主選配', en: 'Monsoon', what: '照顧日常：保養交給島主', line: '先做肌膚檢測；熟客可由島主依當季膚況選配保養品，一季一盒。'}
 };
 var NOTE_FACE = '懷孕、近期做過醫美，或臉部有傷口，請先在備註告訴島主。';
 var NOTE_HEAT = '懷孕、有心血管狀況，或當天身體不適，請先在備註告訴島主。';
 var NOTE_MIND = '這是自我探索與陪伴，不取代醫療或心理治療。';
 var SV_COPY = {
-  stoneface: {what: '先在岩盤浴裡代謝暖身，放鬆頭肩頸，再依當天膚況選擇護膚。', incl: '岩盤浴代謝 → 頭肩頸放鬆 → 依膚況選擇護膚', fit: ['想身體和臉一次照顧', '第一次上島', '手腳容易冰冷'], note: NOTE_HEAT},
-  classic: {what: '島主現場看你今天的膚況，從五大需求中挑一個重點，專心做好一次臉部保養。', incl: '膚況檢視 → 依重點選擇的護膚 → 保濕收尾', fit: ['想定期保養', '不知道自己該做什麼', '想要穩定的日常護膚'], note: NOTE_FACE},
-  enzyme: {what: '給摸起來粗粗的、看起來暗暗的肌膚，一次酵素煥膚保養。', incl: '膚況檢視 → 酵素煥膚 → 保濕收尾', fit: ['膚觸粗糙', '氣色暗沉', '上妝不服貼'], note: NOTE_FACE, x: '另有 8 次完整療程 NT$16,800，到店諮詢'},
-  indibaface: {what: '用 INDIBA 英特波儀器保養臉部，著重緊實感、細紋與輪廓。', incl: '膚況檢視 → INDIBA 臉部保養 → 保濕收尾', fit: ['在意輪廓線條', '在意細紋', '重要場合前想上鏡'], note: '懷孕、體內有金屬植入物或心律調節器，請先在備註告訴島主。'},
-  stonebrush: {what: '岩盤浴的溫熱，加上局部體刷，給緊繃、沉重的身體一次舒展。', incl: '岩盤浴溫熱 → 局部體刷 → 補水休息', fit: ['久坐久站', '身體緊繃沉重', '想放鬆但不想全身按摩'], note: NOTE_HEAT},
-  reset90: {what: '先在岩盤浴裡代謝暖身，再做一段身體療程，讓卡在身上的壓力和情緒一起鬆開。', incl: '岩盤浴代謝 → 身體療程', fit: ['壓力都卡在身上', '不想多說話', '想先從身體放鬆'], note: NOTE_HEAT},
-  reset120: {what: '在岩盤浴的溫熱裡做潛意識探索，放下一件事、一個情緒，或一個人。', incl: '岩盤浴代謝 → 潛意識探索 → 整理收尾', fit: ['有放不下的事', '心裡卡著說不出口', '想被好好聽見'], note: NOTE_MIND},
-  subcon: {what: '2～3 小時的深度潛意識探索，找出反覆卡關背後的核心模式。', incl: '聊聊現況 → 潛意識探索 → 整理發現與下一步', fit: ['同樣的問題一直重演', '人生方向迷路', '想真正理解自己'], note: NOTE_MIND},
-  shaman60: {what: '帶著一個當下的議題來，島主以薩滿占讀陪你探索、為你導讀。', incl: '說出議題 → 占讀 → 導讀與討論', fit: ['有個決定拿不定', '想換個角度看事情', '第一次接觸薩滿'], note: NOTE_MIND},
-  space: {what: '到你的家、店或工作室做空間淨化，依坪數與現場狀況報價。', incl: 'LINE 說明空間 → 島主報價 → 約時間到場淨化', fit: ['搬新家', '開新店或工作室', '空間感覺沉悶']},
-  stone60: {what: '一個人躺在岩盤浴上，什麼都不用做，安靜休息 60 分鐘。', incl: '換衣 → 岩盤浴休息 → 補水收尾', fit: ['很累不想說話', '需要一個人的時間', '手腳容易冰冷'], note: NOTE_HEAT, x: '另有 10 次套票 NT$9,000'},
-  bath60: {what: '島主秘製花草精靈浴，用喜馬拉雅沐浴鹽好好泡一個澡。', incl: '島主備浴 → 60 分鐘泡澡時光 → 補水收尾', fit: ['家裡沒有浴缸', '想好好泡個澡', '想要一點儀式感'], note: NOTE_HEAT},
-  skincheck: {what: '帶著你現在用的保養品來，現場檢測膚況，排出你專屬的早晚使用順序。', incl: '肌膚檢測 → 檢視你的保養品 → 整理個人保養手冊', fit: ['保養品一堆不知道怎麼擦', '懶得研究', '想知道錢有沒有花對']}
+  stoneface: {what: '先讓身體安靜下來，再好好照顧這張臉。', incl: '膚況與身體狀態確認 → 岩盤浴 → 清潔與臉部護理 → 面膜與收尾', fit: ['身體沉重', '想好好休息', '在意毛孔', '手腳容易冰冷'], note: NOTE_HEAT},
+  classic: {what: '從基礎清潔與面膜，重新整理肌膚的日常節奏。', incl: '肌膚評估 → 清潔 → 安麗雅姿五色面膜選配 → 收尾保養', fit: ['五色面膜', '日常保養', '想要肌膚舒適'], note: NOTE_FACE},
+  enzyme: {what: '溫和整理老廢角質，讓後續保養更有方向。', incl: '膚況與禁忌確認 → 清潔 → 酵素煥膚 → 舒緩保養與保養提醒', fit: ['膚觸粗糙', '膚色不均', '在意粉刺', '在意毛孔'], note: NOTE_FACE},
+  indibaface: {what: '把臉部保養的焦點，放在輪廓與整體肌膚狀態。', incl: '肌膚與操作適用性評估 → INTERBO 臉部照護 → 收尾保養', fit: ['在意輪廓線條', '在意細紋乾紋', '想要緊實感'], note: '懷孕、體內有金屬植入物或心律調節器，請先在備註告訴島主。'},
+  stonebrush: {what: '用熱感與局部體刷，為久未舒展的身體留一段放鬆時間。', incl: '身體評估與部位確認 → 岩盤浴 → 局部體刷 → 整理與照護提醒', fit: ['在意身體線條', '久坐久站', '長期緊繃'], note: NOTE_HEAT},
+  reset90: {what: '從當下的身體訊號出發，找回自己的節奏。', incl: '五感問卷 → 身體導讀 → 依狀態配置身體或內在路線 → 整合', fit: ['身體緊繃', '疲憊停滯', '想重新整理狀態'], note: NOTE_MIND},
+  reset120: {what: '留更多時間給身體與內在，完成一次更完整的重整。', incl: '五感問卷 → 身體導讀 → 延伸身體與臉部／內在照護 → 整合', fit: ['累積疲憊', '情緒負擔', '想要完整的身心照護'], note: NOTE_MIND},
+  subcon: {what: '走進內在故事，練習理解那些反覆出現的感受。', incl: '牌卡與精油議題 → 岩盤浴＋引導式探索 → 旅程整合', fit: ['重複模式', '內在故事', '自我探索'], note: NOTE_MIND},
+  shaman60: {what: '透過占讀與對談，換個角度閱讀眼前的生命課題。', incl: '議題釐清 → 占讀與象徵解讀 → 對話整合', fit: ['生命議題', '選擇方向', '自我覺察'], note: NOTE_MIND},
+  space: {what: '用一場有意識的儀式，重新感受人與空間的關係。', incl: '了解需求 → 坪數與現場狀態評估 → 擬定並進行淨化儀式', fit: ['居家轉換', '工作空間', '儀式整理'], x: '依坪數與現場狀況報價，請先 LINE 詢問'},
+  stone60: {what: '把一小時還給自己，安靜感受熱與休息。', incl: '身體狀態與高溫禁忌確認 → 岩盤浴 → 緩和休息', fit: ['獨處休息', '熱感放鬆', '想慢下來'], note: NOTE_HEAT},
+  bath60: {what: '在水裡安靜待一會，讓今天不必急著結束。', incl: '確認浴池與使用注意事項 → 泡澡 → 整理休息', fit: ['獨處', '放鬆', '感官休息'], note: NOTE_HEAT},
+  skincheck: {what: '先認識現在的肌膚，再決定接下來怎麼保養。', incl: '確認需求 → 觀察膚況與保養習慣 → 提供保養方向', fit: ['膚況確認', '保養導航', '個人照護']}
 };
 var SV = {i: 0};
 function svCard(s) {
@@ -339,7 +339,7 @@ function svCard(s) {
 function svList() {
   var k = SV_ORDER[SV.i], m = SV_CAT[k];
   var list = B.services.filter(function (s) { return s.cat === k; });
-  var extra = k === 'pick' ? '<div class="sv-card"><div class="top1"><b>島主代購・季風保養包</b><span class="pr">儲值會員</span></div><div class="meta">每季一次</div><p class="hook">做完肌膚檢測後，島主依你的膚況與每季額度，挑好保養品寄給你，換季時再幫你調整。</p><div class="fit"><em>適合</em><span>不想自己研究保養</span><span>想要固定有人幫你看</span></div><div class="flow">流程：店內儲值 → 肌膚檢測 → 個人保養手冊 → 每季調整與寄送</div><a class="go line" href="' + lineMsg('我想詢問「島主代購・季風保養包」') + '">LINE 詢問 →</a></div>' : '';
+  var extra = k === 'pick' ? '<div class="sv-card"><div class="top1"><b>季度保養｜熟客選配</b><span class="pr">依商品報價</span></div><div class="meta">時間依現場</div><p class="hook">由島主依當季膚況，整理真正需要的保養組合。</p><div class="row2"><em>包含</em><span>現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</span></div><div class="row2"><em>適合</em><span>肌膚評估／換季保養／產品搭配</span></div><div class="nt">選配商品不享會員 8 折，價格依實際選配。</div><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問 →</a></div>' : '';
   $('svList').innerHTML = '<div class="sv-head"><b>' + m.zh + '・' + m.en + ' 的療程</b><span>' + (list.length + (extra ? 1 : 0)) + ' 項</span></div>' +
     list.map(svCard).join('') + extra +
     '<p class="note" style="margin-top:4px">價格為原價，儲值會員依會員方案折抵。送出預約後，島主核對訂金與時段，預約才正式成立。</p>';
@@ -351,11 +351,11 @@ function vServices(k0) {
   SV.i = start;
   var cards = SV_ORDER.map(function (k) {
     var m = SV_CAT[k], n = B.services.filter(function (s) { return s.cat === k; }).length + (k === 'pick' ? 1 : 0);
-    return '<div class="sv-cat" data-k="' + k + '"><img src="kv/series_' + k + '.jpg' + KV_V + '" alt="' + m.zh + ' ' + m.en + '"><div class="cap"><b>' + m.zh + '・' + m.en + '</b><span>' + n + ' 項</span><p>' + m.line + '</p></div></div>';
+    return '<div class="sv-cat" data-k="' + k + '"><img src="' + (IMG['series_' + k] || 'kv/series_' + k + '.jpg' + KV_V) + '" alt="' + m.zh + ' ' + m.en + '"><div class="cap"><b>' + m.zh + '・' + m.en + '</b><span>' + n + ' 項</span><p>' + m.line + '</p></div></div>';
   }).join('');
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
-    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>照顧肌膚與身體、<b>心</b>放下情緒、<b>靈</b>看清方向；只想休息選<b>獨處</b>，日常保養交給<b>代購</b>。左右滑動選一種。</p>' +
+    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>照顧肌膚與身體、<b>心</b>放下情緒、<b>靈</b>看清方向；只想休息選<b>獨處</b>，日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
     '<div class="sv-tabs">' + SV_ORDER.map(function (k, ix) { return '<button type="button" data-svi="' + ix + '">' + SV_CAT[k].zh + '・' + SV_CAT[k].en + '</button>'; }).join('') + '</div>' +
     '<div class="sv-rail" id="svRail">' + cards + '</div><div class="sv-dots">' + SV_ORDER.map(function () { return '<i></i>'; }).join('') + '</div>' +
     '<div class="pills"><a class="pill" href="#/time">不知道選哪個？先挑時段 ↗</a><a class="pill ghost" href="#/report">已預約・回報匯款</a></div>' +
