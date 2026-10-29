@@ -139,6 +139,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .mb-cat{display:flex;align-items:baseline;gap:8px;padding:18px 4px 10px;border-top:1px solid #6b4f3d;margin-top:18px;border-bottom:1px solid #d9c5ae}
 .mb-cat b{font-family:var(--serif);font-size:44px;line-height:1;color:#2b1d14}.mb-cat span{font-family:var(--serif);font-size:19px}.mb-cat em{margin-left:auto;font-style:normal;font-weight:700;color:#b5532f;font-size:15px}
 .mb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #d9c5ae;cursor:pointer}
+.mb-row.soldout{opacity:.45;cursor:default}.mb-row.soldout em{font-size:13px;font-weight:400;color:#7a6a5a}
 .mb-row img{width:52px;height:52px;object-fit:cover;border-radius:12px;flex:none}
 .mb-t{flex:1;min-width:0}.mb-t b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:#2b1d14}.mb-t b small{font-family:var(--sans);font-size:13px;color:#e8694a}.mb-t span{font-size:12px;color:#6b5848}
 .mb-row em{font-style:normal;font-weight:700;color:#b5532f;font-size:16px;flex:none}
@@ -503,10 +504,20 @@ function barTotal() {
   var l = cartLines(), n = 0, t = 0; l.forEach(function (x) { n += x.qty; t += x.qty * x.price; });
   return {n: n, t: n ? t : (MB.spa ? 0 : 200), label: n ? '已點 ' + n + ' 份' : (MB.spa ? 'SPA 來客・免入場費' : '純入場')};
 }
+var BAROFF = [], BAROFF_T = 0;
+function barOffSync() {
+  if (Date.now() - BAROFF_T < 30000) return; BAROFF_T = Date.now();
+  api('barOffGet', []).then(function (l) {
+    l = l || []; var ch = JSON.stringify(l) !== JSON.stringify(BAROFF); BAROFF = l;
+    Object.keys(CART).forEach(function (k) { if (BAROFF.indexOf(k.split('|')[0]) >= 0) delete CART[k]; });
+    if (ch && /^#\/bar/.test(location.hash) && !$('mbSheet')) { mbKeep(); vBar(); }
+  }).catch(function () {});
+}
 function vBar() {
-  document.body.classList.add('mbmode'); renderNav('bar'); $('topSub').textContent = 'MOON BAR 沐吧';
+  barOffSync(); document.body.classList.add('mbmode'); renderNav('bar'); $('topSub').textContent = 'MOON BAR 沐吧';
   var c = BAR.cats.filter(function (x) { return x.n === BARCAT; })[0];
   var rows = BAR.items.filter(function (i) { return i.category === BARCAT; }).map(function (i) {
+    if (BAROFF.indexOf(i.id) >= 0) return '<div class="mb-row soldout"><img src="' + barArt(i.illustration) + '" alt="" loading="lazy"><div class="mb-t"><b>' + esc(i.name) + '</b><span>' + esc(i.subtitle) + '</span></div><em>今日售完</em></div>';
     var open = MB.open === i.id, q = bQty(i), k = bKey(i);
     var h = '<div class="mb-row' + (open ? ' open' : '') + '" data-mbopen="' + i.id + '"><img src="' + barArt(i.illustration) + '" alt="" loading="lazy">' +
       '<div class="mb-t"><b>' + esc(i.name) + (q ? ' <small>×' + q + '</small>' : '') + '</b><span>' + esc(i.subtitle) + '</span></div><em>' + money(i.price) + '</em>' +
@@ -562,7 +573,7 @@ function mbSend(b) {
       '<div class="mb-eyebrow" style="margin-top:30px">ORDER RECEIVED</div><h1 class="mb-h1">點單收到了</h1><p class="mb-lead">吧台已經收到你的單，稍等一下就為你送上。<br>' + esc(MB.seat) + '・' + esc(pay) + '・' + money(tot.t) + '</p>' +
       '<button type="button" class="btn coral" data-mbcat="醒" style="max-width:320px;margin:20px auto">再點一杯</button></div>';
     window.scrollTo(0, 0);
-  }).catch(function () { b.disabled = false; b.textContent = '送出訂單'; e.hidden = false; e.textContent = '送出失敗，請再按一次，或直接告訴吧台。'; });
+  }).catch(function (er) { b.disabled = false; b.textContent = '送出訂單'; e.hidden = false; var so = er && er.message && /售完/.test(er.message); if (so) BAROFF_T = 0; e.textContent = so ? er.message : '送出失敗，請再按一次，或直接告訴吧台。'; });
 }
 
 /* ---------- 肌智管家 ---------- */
@@ -653,7 +664,7 @@ function route() {
 }
 document.addEventListener('change', function (ev) { if (ev.target.id === 'mbSpa') { mbKeep(); MB.spa = ev.target.checked; vBar(); } });
 document.addEventListener('click', function (ev) {
-  var row = ev.target.closest('.mb-row'); if (row && !ev.target.closest('button')) { mbKeep(); MB.open = MB.open === row.dataset.mbopen ? '' : row.dataset.mbopen; return vBar(); }
+  var row = ev.target.closest('.mb-row'); if (row && !row.classList.contains('soldout') && !ev.target.closest('button')) { mbKeep(); MB.open = MB.open === row.dataset.mbopen ? '' : row.dataset.mbopen; return vBar(); }
   var t = ev.target.closest('button'); if (!t) return;
   if (t.dataset.d && t.classList.contains('dt')) { ST.date = t.dataset.d; ST.start = null; drawDates(); loadTimes(); if ($('formBox')) $('formBox').hidden = true; if ($('fitBox')) $('fitBox').innerHTML = ''; return; }
   if (t.dataset.t) {
