@@ -270,10 +270,10 @@ var EVENTS = [
   {id: 'heal', img: 'heal', kind: '課程', tag: '籌備中', title: 'Reset no.3｜Heal 癒', sub: '療癒師創業陪跑。療癒服務、個人定位、創業準備。', body: '<p>陪跑內容、期間與參與方式將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Heal 癒 課程的開課通知']}
 ];
 var GIFTS = [
-  {id: 'mens', img: 'mens', tag: '限定對象｜型男研究所學生', title: '型男研究所 課後福利社', sub: '讓課後的自我照顧，延伸到肌膚與身體。', body: '<p>岩盤浴＋型男護膚｜90 分鐘｜免費體驗</p><p class="note">限型男研究所學生，預約時輸入學生專屬密碼；時段由島主在官方 LINE 確認。</p>', svc: 'mens'},
-  {id: 'oil', img: 'oil', tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。', body: '<p>免費體驗一次｜名額由島主確認</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
-  {id: 'indiba', img: 'indiba', tag: '局部放鬆', title: 'INTERBO 局部放鬆｜肩頸／腰臀／腿', sub: '用局部儀器照護，給忙碌的身體一段喘息。', body: '<p>10 分鐘／次｜NT$999／次（腿部需選 2 次）</p><p class="note">確認當日狀況 → 肩頸局部操作 → 感受確認與收尾。如有特殊健康狀況，預約時請先告知島主。</p>', svc: 'indiba'},
-  {id: 'sumei', img: 'sumei', tag: '規劃中・可先登記', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
+  {id: 'mens', img: 'mens', poster: 'kv/ev_mens.jpg', price: '免費（一人一次）', len: '90 分鐘', who: '型男研究所完課學員', fit: ['剛上完型男研究所', '想實際體驗保養'], cta: ['先報名型男研究所', '#/join/mens'], tag: '限定對象｜型男研究所學生', title: '型男研究所 課後福利社', sub: '讓課後的自我照顧，延伸到肌膚與身體。', body: '<p>岩盤浴＋型男護膚｜90 分鐘｜免費體驗</p><p class="note">限型男研究所學生，預約時輸入學生專屬密碼；時段由島主在官方 LINE 確認。</p>', svc: 'mens'},
+  {id: 'oil', img: 'oil', price: '免費體驗一次', who: '名額由島主確認', fit: ['想聊聊此刻的自己', '對精油好奇'], tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。', body: '<p>免費體驗一次｜名額由島主確認</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
+  {id: 'indiba', img: 'indiba', price: 'NT$999／次（腿部需 2 次）', len: '10 分鐘／次', fit: ['肩頸緊繃', '久坐久站'], tag: '局部放鬆', title: 'INTERBO 局部放鬆｜肩頸／腰臀／腿', sub: '用局部儀器照護，給忙碌的身體一段喘息。', body: '<p>10 分鐘／次｜NT$999／次（腿部需選 2 次）</p><p class="note">確認當日狀況 → 肩頸局部操作 → 感受確認與收尾。如有特殊健康狀況，預約時請先告知島主。</p>', svc: 'indiba'},
+  {id: 'sumei', img: 'sumei', price: '由島主確認', fit: ['想認識自己的肌膚', '想要一套保養方法'], tag: '規劃中・可先登記', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
 ];
 var BAR = {
   cats: [{n: '醒', d: '無酒特調', p: 250}, {n: '醺', d: '微醺亂調', p: 300}, {n: '醉', d: '杜康純飲', p: 400}, {n: '吃', d: '私廚秘製', p: 100, unit: '份'}],
@@ -632,12 +632,23 @@ function vEvent(id) {
 }
 
 /* ---------- 遇島有禮 ---------- */
+function giftCard(g, ix) {
+  var no = (ix < 9 ? '0' : '') + (ix + 1), s = svc(g.svc), soon = /規劃中/.test(g.tag);
+  var facts = [['費用', g.price], ['時長', g.len], ['對象', g.who]].filter(function (f) { return f[1]; });
+  var href = g.cta ? g.cta[1] : (s && s.online ? '#/book/' + s.key : lineMsg('我想預約「' + g.title + '」'));
+  var label = g.cta ? g.cta[0] : (s && s.online ? '選時段預約' : (soon ? '先登記' : 'LINE 預約'));
+  return '<div class="xc' + (soon ? ' soon' : '') + '" id="gf_' + g.id + '"><div class="no">' + no + ' / GIFT</div><div class="rec">' + esc(g.tag) + '</div><h3>' + esc(g.title) + '</h3>' +
+    (facts.length ? '<dl class="ef">' + facts.map(function (f) { return '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('') + '</dl>' : '') +
+    ((g.fit || []).length ? '<div class="lb">適合你，如果你</div><div class="tg">' + g.fit.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
+    '<p class="ds">' + esc(g.sub) + '</p><details><summary>內容與預約須知</summary><div class="fl">' + g.body + '</div></details>' +
+    '<a class="go' + (soon ? ' line' : '') + '" href="' + href + '">' + label + '<i>↗</i></a></div>';
+}
 function vGifts() {
-  page('gifts', 'ISLAND GIFTS', '<div class="eyebrow">Discover / Pause Space</div><h1>遇島有禮</h1><p class="lead">島上的限定體驗與專屬提案，找到今天適合你的一份照顧。</p>' +
-    '<img class="heroimg" src="' + img('hero_gifts') + '" alt="遇島有禮" style="max-width:560px">' + 
-    '<div class="grid">' + GIFTS.map(function (g) {
-      return '<a class="card" href="#/gifts/' + g.id + '"><img class="pic" src="' + img(g.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + g.tag + '</span></div><h3>' + g.title + '</h3><p>' + g.sub + '</p><span class="more">看內容 →</span></div></a>';
-    }).join('') + '</div><p class="note" style="margin-top:14px">限定資格、招募名額與時段由島主透過官方 LINE 確認，收到確認後預約才正式成立。</p>');
+  page('gifts', 'ISLAND GIFTS', '<div class="eyebrow">Discover / Pause Space</div><h1>遇島有禮</h1><p class="lead">島上的限定體驗與專屬提案。左右滑看有什麼，點一張就看詳細內容。</p>' +
+    '<div class="ev-rail">' + GIFTS.map(function (g) {
+      return '<a class="ev-c' + (/規劃中/.test(g.tag) ? ' soon' : '') + '" href="javascript:void(document.getElementById(\'gf_' + g.id + '\').scrollIntoView({behavior:\'smooth\'}))"><img src="' + (g.poster ? g.poster + KV_V : img(g.img)) + '" alt="" loading="lazy"><div class="cap"><span>' + esc(g.tag) + '</span><b>' + esc(g.title) + '</b><em>' + esc(g.price || '') + '</em></div></a>';
+    }).join('') + '</div><div>' + GIFTS.map(giftCard).join('') + '</div>' +
+    '<p class="note" style="margin-top:14px">限定資格、招募名額與時段由島主透過官方 LINE 確認，收到確認後預約才正式成立。</p>');
 }
 function vGift(id) {
   var g = GIFTS.filter(function (x) { return x.id === id; })[0]; if (!g) return go('#/gifts');
