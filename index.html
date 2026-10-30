@@ -139,6 +139,14 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .mb-cat{display:flex;align-items:baseline;gap:8px;padding:18px 4px 10px;border-top:1px solid #6b4f3d;margin-top:18px;border-bottom:1px solid #d9c5ae}
 .mb-cat b{font-family:var(--serif);font-size:44px;line-height:1;color:#2b1d14}.mb-cat span{font-family:var(--serif);font-size:19px}.mb-cat em{margin-left:auto;font-style:normal;font-weight:700;color:#b5532f;font-size:15px}
 .mb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #d9c5ae;cursor:pointer}
+.ev-tabs{margin:14px 0 10px}.ev-rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px 8px;padding:2px 16px 12px;-webkit-overflow-scrolling:touch}
+.ev-c{flex:none;width:68%;max-width:290px;scroll-snap-align:start;border-radius:18px;overflow:hidden;background:#fbfaf6;border:1px solid var(--line);text-decoration:none;color:var(--ink)}
+.ev-c img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.ev-c .cap{padding:12px 14px 14px}.ev-c .cap span{display:block;font-size:12px;color:var(--muted);letter-spacing:.06em}
+.ev-c .cap b{display:block;font-family:var(--serif);font-weight:600;font-size:18px;line-height:1.35;margin:3px 0}.ev-c .cap em{font-style:normal;font-size:13px;color:#a2643f}
+.ev-ty{aspect-ratio:4/5;background:#17332f;color:#f3efe6;display:flex;flex-direction:column;justify-content:center;padding:24px;gap:10px}.ev-ty small{font-family:var(--latin);letter-spacing:.25em;font-size:11px;opacity:.7}.ev-ty b{font-family:var(--serif);font-size:34px;font-weight:600;letter-spacing:.08em}.ev-ty span{font-size:14px;opacity:.85}.ev-ty em{font-style:normal;font-family:var(--latin);font-size:26px;color:#ee7a3d;letter-spacing:.06em}
+.ev-c.soon,.xc.soon{opacity:.6}.ef{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0 12px;font-size:14.5px}.ef dt{color:var(--muted);font-size:13px;padding-top:1px}.ef dd{margin:0}
+.jn-s{display:flex;flex-direction:column;gap:8px;margin:0 0 12px}.jn-o{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:#fbfaf6}.jn-o input{width:18px;height:18px;margin:0}
+.tc{max-width:440px;margin:18px auto 40px;background:#fffdf8;border:1px solid #d9cfc2;border-radius:22px;padding:22px 20px;box-shadow:0 8px 30px rgba(30,40,38,.08)}.tc-top{display:flex;justify-content:space-between;font-family:var(--latin,Georgia,serif);letter-spacing:.25em;font-size:12px;color:#5f736d;border-bottom:1px solid #d9cfc2;padding-bottom:10px}.tc-hi{font-family:var(--serif,serif);font-size:24px;line-height:1.45;margin:18px 0 4px}.tc-sv{color:#5f736d;font-size:14px;margin-bottom:6px}.tc-b{border-top:1px dashed #d9cfc2;margin-top:14px;padding-top:12px}.tc-b small{display:block;color:#ee7a3d;font-size:12px;letter-spacing:.1em;margin-bottom:4px}.tc-b p{margin:0}.tc-b ul{margin:0;padding-left:18px}.tc-b .btn{margin-top:10px}.tc-rv{background:#eef3ef;border-radius:16px;padding:16px;margin-top:18px;text-align:center}.tc-rv b{font-size:17px}.tc-rv p{font-size:14px;color:#5f736d;margin:6px 0}.tc-rv ol{text-align:left;font-size:14px;margin:8px 0 12px;padding-left:20px}.tc-line{display:block;text-align:center;margin-top:14px;font-size:14px;color:#5f736d}
 .mb-row.soldout{opacity:.45;cursor:default}.mb-row.soldout em{font-size:13px;font-weight:400;color:#7a6a5a}
 .mb-row img{width:52px;height:52px;object-fit:cover;object-position:50% 30%;border-radius:12px;flex:none}
 .mb-t{flex:1;min-width:0}.mb-t b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:#2b1d14}.mb-t b small{font-family:var(--sans);font-size:13px;color:#e8694a}.mb-t span{font-size:12px;color:#6b5848}
@@ -228,6 +236,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 <script>
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
+var GRACE_URL = 'https://lin.ee/OWfpkuz';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
 var KV_V = '?v=4';
 var IMG = {
@@ -244,17 +253,19 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'Reset・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Monsoon Care'};
 
 var EVENTS = [
-  {id: 'moon', img: 'moon', kind: '嶼祭', tag: '自由隨喜', title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
+  {id: 'moon', img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
     body: '<p>當晚 20:00 開始，穿舒適的衣服到場即可。不收固定費用，隨喜自由給予。</p>' +
       '<table class="moon"><tr><td>10/26</td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
       '<tr><td>11/25</td><td><b>海狸月・超級滿月</b><br><span class="note">靈魂避難所：打造內在的防禦容器</span></td></tr>' +
       '<tr><td>12/24</td><td><b>冷月・平安夜</b><br><span class="note">營火守望：擁抱黑暗中的光芒</span></td></tr></table>' +
       '<p class="note">活動日期依島主公告為準。</p>', cta: ['詢問滿月儀式', '我想詢問滿月儀式']},
-  {id: 'photo', img: 'photo', kind: '課程', tag: '固定場・四人成班', title: 'NO UGLY PEOPLE 手機攝影課', sub: '從看見自己開始，練習用手機記錄光線、生活與眼前的人。',
+  {id: 'photo', img: 'photo', poster: 'kv/ev_photo.jpg', kind: '課程', tag: '四人成班', when: '10/31（六）14:00–17:00｜11 月場即將公布', price: 'NT$1,000／人・兩人同行 NT$1,800', place: 'PAUSE SPACE 島上', cap: '4 人開班・最多 15 人', fit: ['不敢入鏡', '想拍出自己的樣子', '想用手機記錄生活'], title: 'NO UGLY PEOPLE 手機攝影課', sub: '從看見自己開始，練習用手機記錄光線、生活與眼前的人。',
     body: '<ul class="steps"><li>看自己：自拍、姿勢與站進畫面</li><li>看世界：光線、背景與構圖</li><li>五感散步：從感受中找到畫面</li><li>拍陌生人：聽一件心事，拍一張照片</li></ul>' +
       '<p>固定場：2026/10/31（六）14:00–17:00｜NT$1,000／人<br>4 人開班、最多 15 人。<br>另約場：湊齊四人可申請其他時間，由島主確認。</p><p class="note">報名後不退費、可轉讓；若取消開課全額退費。</p>', cta: ['報名手機攝影課', '我要報名手機攝影課'], cta2: ['登記另約場・四人成班', '我想登記手機攝影課另約場（四人成班）']},
-  {id: 'face', img: 'face', kind: '課程', tag: '兩人成班', title: 'Reset no.1｜Face 顏', sub: '美容師創業陪跑。從臉部照護的學習，走向服務與創業的準備。',
+  {id: 'face', img: 'face', kind: '課程', tag: '小班制', title: 'RESET FACE｜三日課', sub: '美容師創業陪跑。從臉部照護的學習，走向服務與創業的準備。', when: '三天・每天 10:00–16:00（日期由島主公告）', price: 'NT$9,800', place: 'PAUSE SPACE 島上', cap: '小班制・兩人成班', fit: ['想投入美容服務', '準備個人工作室', '需要有人陪跑'],
     body: '<p>適合想投入美容服務，或正在準備個人美容事業，希望有人陪伴起步與整理方向的人。</p><p>學習方向：美容專業起步、服務方向、創業準備。<br>可先登記一人等候湊班，或兩人以上一起申請。時長、學費與日期由島主確認。</p>', cta: ['登記 Face 開班意願', '我想登記 Face 顏 開班意願']},
+  {id: 'mens', img: 'mens', poster: 'kv/ev_mens.jpg', kind: '課程', tag: '男士專班・免費', title: '型男研究所｜男士穿搭 × 肌膚保養', sub: 'STYLE LAB 男士專班課。前半小時 Grace 教穿搭，後一小時島主項項教保養，一個晚上把自己的樣子整理好。', when: '11/11（三）・12/9（三）19:30–21:00（19:00 入場）', price: '免費報名',  place: '台北市信義區忠孝東路五段 17 之 1 號 3 樓', who: 'Grace × 島主項項', fit: ['不知道怎麼保養', '不知道怎麼穿', '想看起來更有精神'],
+    body: '<p><b>19:30–20:00｜穿搭｜Grace</b><br>穿搭觀念與場合搭配、質感細節與實用示範</p><p><b>20:00–21:00｜保養｜島主項項</b><br>肌膚保養觀念與日常流程、保養體驗與 QA 交流</p><p>兩場內容相同，選一場參加即可。</p><p class="note">完課學員可享「型男研究所 課後福利社」：岩盤浴＋型男護膚一次免費體驗（見遇島有禮）。</p>', cta: ['報名型男研究所', '我要報名型男研究所'], href: '#/join/mens', cta2: ['預約 Grace 一對一形象諮詢', ''], href2: GRACE_URL},
   {id: 'body', img: 'body', kind: '課程', tag: '籌備中', title: 'Reset no.2｜Body 體', sub: '按摩師創業陪跑。從身體照護出發，為自己的專業服務建立方向。', body: '<p>完整內容與開課資訊將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Body 體 課程的開課通知']},
   {id: 'heal', img: 'heal', kind: '課程', tag: '籌備中', title: 'Reset no.3｜Heal 癒', sub: '療癒師創業陪跑。療癒服務、個人定位、創業準備。', body: '<p>陪跑內容、期間與參與方式將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Heal 癒 課程的開課通知']}
 ];
@@ -434,7 +445,7 @@ function drawForm() {
     '<label for="fPhone">手機</label><input id="fPhone" inputmode="tel" autocomplete="tel">' +
     '<label for="fLine">LINE 名稱（方便我們對上你）</label><input id="fLine">' +
     '<label for="fType">你是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass">岩盤浴套票</option>' : '') + '</select>' +
-    (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric">' : '') +
+    (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric" value="' + esc(ST.preCode || '') + '"><p class="note" style="margin:4px 0 10px">完課後收到的小卡上有你的專屬密碼；請用報名型男研究所時的手機預約。</p>' : '') +
     '<label for="fNote">想讓島主先知道的事（身體狀況、近期醫美、懷孕等）</label><textarea id="fNote"></textarea>' +
     '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>預約訂金</span><b>' + money(B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
     '<p class="note">按下確認後是「送出預約申請」，島主核對' + (dep ? '訂金與' : '') + '時段後，預約才正式成立。</p>' +
@@ -590,12 +601,28 @@ function vTools() {
 }
 
 /* ---------- 島日嶼祭 ---------- */
+var EV = {f: '全部'};
+function evCard(x, ix) {
+  var no = (ix < 9 ? '0' : '') + (ix + 1), soon = x.tag === '籌備中';
+  var facts = [['時間', x.when], ['費用', x.price], ['地點', x.place], ['人數', x.cap], ['講師', x.who]].filter(function (f) { return f[1]; });
+  return '<div class="xc' + (soon ? ' soon' : '') + '" id="ev_' + x.id + '"><div class="no">' + no + ' / ' + (x.kind === '嶼祭' ? 'RITUAL' : 'COURSE') + '</div>' +
+    '<div class="rec">' + esc(x.kind) + '・' + esc(x.tag) + '</div><h3>' + esc(x.title) + '</h3>' +
+    (facts.length ? '<dl class="ef">' + facts.map(function (f) { return '<dt>' + f[0] + '</dt><dd>' + esc(f[1]) + '</dd>'; }).join('') + '</dl>' : '') +
+    ((x.fit || []).length ? '<div class="lb">適合你，如果你</div><div class="tg">' + x.fit.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
+    '<p class="ds">' + esc(x.sub) + '</p>' +
+    '<details><summary>' + (soon ? '目前進度' : '內容與報名須知') + '</summary><div class="fl">' + x.body + '</div></details>' +
+    '<a class="go' + (soon ? ' line' : '') + '" href="' + (x.href || lineMsg(x.cta[1])) + '">' + x.cta[0] + '<i>↗</i></a>' +
+    (x.cta2 ? '<br><a class="go line" style="margin-top:8px"' + (x.href2 ? ' target="_blank"' : '') + ' href="' + (x.href2 || lineMsg(x.cta2[1])) + '">' + x.cta2[0] + '<i>↗</i></a>' : '') + '</div>';
+}
 function vEvents() {
-  page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。把方法帶回生活，也在儀式裡和島上的人相遇。</p>' +
-    '<img class="heroimg" src="' + img('hero_events') + '" alt="島日嶼祭" style="max-width:560px">' + 
-    '<div class="grid">' + EVENTS.map(function (x) {
-      return '<a class="card' + (x.tag === '籌備中' ? ' soon' : '') + '" href="#/events/' + x.id + '"><img class="pic" src="' + img(x.img) + '" alt="" loading="lazy"><div class="body"><div class="chips"><span class="chip">' + x.kind + '</span><span class="chip">' + x.tag + '</span></div><h3>' + x.title + '</h3><p>' + x.sub + '</p><span class="more">看內容 →</span></div></a>';
-    }).join('') + '</div>');
+  var list = EVENTS.filter(function (x) { return EV.f === '全部' || x.kind === EV.f; });
+  page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。左右滑看有什麼，點一張就看詳細內容。</p>' +
+    '<div class="sv-tabs ev-tabs">' + ['全部', '嶼祭', '課程'].map(function (t) { return '<button type="button" data-evf="' + t + '" class="' + (t === EV.f ? 'on' : '') + '">' + t + '</button>'; }).join('') + '</div>' +
+    '<div class="ev-rail">' + list.map(function (x) {
+      return '<a class="ev-c' + (x.tag === '籌備中' ? ' soon' : '') + '" href="javascript:void(document.getElementById(\'ev_' + x.id + '\').scrollIntoView({behavior:\'smooth\'}))">' + (x.typo ? '<div class="ev-ty"><small>PAUSE SPACE × COURSE</small><b>' + esc(x.typo[0]) + '</b><span>' + esc(x.typo[1]) + '</span><em>' + esc(x.typo[2]) + '</em></div>' : '<img src="' + (x.poster ? x.poster + KV_V : img(x.img)) + '" alt="" loading="lazy">') + '<div class="cap"><span>' + esc(x.kind) + '・' + esc(x.tag) + '</span><b>' + esc(x.title) + '</b><em>' + esc((x.when || '').split('｜')[0] || '敬請期待') + '</em></div></a>';
+    }).join('') + '</div>' +
+    '<div>' + list.map(evCard).join('') + '</div>' +
+    '<p class="note" style="margin:14px 2px 0">報名都透過官方 LINE，由島主確認名額後才算完成。</p>');
 }
 function vEvent(id) {
   var x = EVENTS.filter(function (e) { return e.id === id; })[0]; if (!x) return go('#/events');
@@ -649,14 +676,75 @@ function member(fn, data, err, btn) {
 
 /* ---------- 路由 ---------- */
 function go(h) { location.hash = h; }
+
+
+/* ---------- 課程報名頁 ---------- */
+function vJoin(id) {
+  page('events', 'ISLAND DAYS', '<div class="loading">讀取中…</div>');
+  api('courseInfo', [id]).then(function (c) {
+    if (!c || !c.ok) return go('#/events');
+    var W = '日一二三四五六';
+    $('app').innerHTML = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Course / Pause Space</div><h1>' + esc(c.name) + ' 報名</h1>' +
+      '<img class="heroimg" src="kv/ev_' + esc(id) + '.jpg' + KV_V + '" alt="' + esc(c.name) + '" style="max-width:560px">' +
+      '<p class="lead">STYLE LAB 男士專班課。一個晚上，從穿搭到保養，把自己的樣子整理好。免費報名。</p>' +
+      '<div class="xc" style="margin-top:12px"><div class="no">COURSE / 課程內容</div>' +
+      '<dl class="ef"><dt>19:00</dt><dd>入場</dd><dt>19:30</dt><dd><b>穿搭｜Grace</b><br>穿搭觀念與場合搭配、質感細節與實用示範</dd><dt>20:00</dt><dd><b>保養｜島主項項</b><br>肌膚保養觀念與日常流程、保養體驗與 QA 交流</dd><dt>21:00</dt><dd>結束</dd></dl>' +
+      '<div class="lb">適合你，如果你</div><div class="tg"><span>不知道怎麼保養</span><span>不知道怎麼穿</span><span>想看起來更有精神</span></div>' +
+      '<div class="lb">完課福利</div><p class="ds" style="margin:0 0 8px">' + esc(c.perkName) + '免費體驗一次。完課後島主傳給你的小卡上就有專屬預約按鈕。</p>' +
+      '<div class="lb">想更深入？</div><p class="ds" style="margin:0 0 10px">Grace 也有一對一形象諮詢，依你的身形、工作和場合，整理專屬穿搭方向。</p><a class="go line" target="_blank" href="' + GRACE_URL + '">預約 Grace 一對一形象諮詢<i>↗</i></a>' +
+      '<p class="ds" style="margin:14px 0 0">📍 ' + esc(c.where) + '<br>兩場內容相同，選一場參加即可。</p></div>' +
+      (c.sessions.length ? '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
+      '<label>場次</label><div class="jn-s">' + c.sessions.map(function (s, i) { var d = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (d.getMonth() + 1) + '/' + d.getDate() + '（' + W[d.getDay()] + '）</b> ' + s.start + '</span></label>'; }).join('') + '</div>' +
+      '<label for="jnN">姓名</label><input id="jnN" autocomplete="name"><label for="jnP">手機</label><input id="jnP" inputmode="tel" placeholder="09xxxxxxxx">' +
+      '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到你"><label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
+      '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>'
+      : '<div class="panel"><p>目前沒有開放中的場次，<a href="' + lineMsg('我想詢問「' + c.name + '」下一次開課') + '">LINE 島主</a> 登記下一次。</p></div>');
+  }).catch(function () { $('app').innerHTML = '<div class="loading">暫時讀不到，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
+}
+function joinSend(b) {
+  var e = $('jnE'), sel = document.querySelector('input[name=jnS]:checked');
+  var p = {course: b.dataset.jn, date: sel ? sel.value : '', name: $('jnN').value.trim(), phone: $('jnP').value.trim(), lineName: $('jnL').value.trim(), note: $('jnM').value.trim()};
+  if (!p.name) { e.hidden = false; e.textContent = '請填寫姓名'; return; }
+  b.disabled = true; b.textContent = '送出中…';
+  api('courseJoin', [p]).then(function (r) {
+    if (!r.ok) throw new Error(r.error);
+    var d = new Date(r.date + 'T12:00:00');
+    $('app').innerHTML = '<div class="eyebrow" style="margin-top:20px">REGISTERED</div><h1>報名收到了 🌙</h1><p class="lead">' + esc(r.course) + '｜' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + r.start + '<br>' + esc(r.where) + '</p>' +
+      '<div class="panel"><p>島主會在官方 LINE 跟你確認名額。還沒加官方 LINE 的話，先加一下，才收得到確認和課後小卡。</p><p class="note">報名編號：' + esc(r.code) + '</p></div>' +
+      '<a class="btn coral" href="https://line.me/R/ti/p/' + LINE_ID + '">加官方 LINE</a><a class="btn ghost" style="margin-top:10px" href="#/events">回島日嶼祭</a>';
+    window.scrollTo(0, 0);
+  }).catch(function (er) { b.disabled = false; b.textContent = '送出報名'; e.hidden = false; e.textContent = er.message || '送出失敗，請再試一次'; });
+}
+/* ---------- 療程／課程後小卡 ---------- */
+function vCard(t) {
+  page('', 'THANK YOU', '<div class="loading">打開小卡中…</div>');
+  api('cardGet', [t]).then(function (c) {
+    if (!c || !c.ok) { $('app').innerHTML = '<div class="loading">找不到這張小卡，請直接 <a href="https://line.me/R/ti/p/' + LINE_ID + '">LINE 島主</a>。</div>'; return; }
+    var d = new Date(c.date + 'T12:00:00');
+    $('app').innerHTML = '<div class="tc">' +
+      '<div class="tc-top"><span>PAUSE SPACE</span><span>' + (d.getMonth() + 1) + '.' + d.getDate() + '</span></div>' +
+      '<div class="tc-hi">謝謝你今天上島，<br>' + esc(c.name) + '</div><div class="tc-sv">' + esc(c.service) + '</div>' +
+      (c.msg ? '<div class="tc-b"><small>島主想對你說</small><p>' + esc(c.msg).replace(/\n/g, '<br>') + '</p></div>' : '') +
+      (c.tips.length ? '<div class="tc-b"><small>回家後的小提醒</small><ul>' + c.tips.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>' : '') +
+      (c.next ? '<div class="tc-b"><small>下次的建議</small><p>' + esc(c.next) + '</p><a class="btn ghost" href="#/services">看看島上服務</a></div>' : '') +
+      (/型男研究所/.test(c.service) ? '<div class="tc-b"><small>想把穿搭再升級</small><p>Grace 的一對一形象諮詢，幫你整理專屬的穿搭方向。</p><a class="btn ghost" target="_blank" href="' + GRACE_URL + '">預約 Grace 一對一形象諮詢</a></div>' : '') +
+      (c.perk ? '<div class="tc-b"><small>你的課後福利</small><p>完課學員專屬，一人一次，密碼已幫你帶好。</p><a class="btn coral" href="' + esc(c.perk.url) + '">' + esc(c.perk.label) + '</a></div>' : '') +
+      '<div class="tc-rv"><b>' + (c.course ? '喜歡今天的課嗎？' : '喜歡今天的時光嗎？') + '</b><p>花一分鐘，在 Google 留下你的感受，<br>讓更多需要暫停的人找到這座島。</p>' +
+      '<ol><li>按下面的按鈕，打開 PAUSE SPACE 的 Google 頁面</li><li>點「撰寫評論」，選幾顆星</li><li>寫一兩句今天的感受就好，可以附上照片</li></ol>' +
+      '<a class="btn coral" target="_blank" href="' + esc(c.review) + '">⭐ 到 Google 留下評論</a></div>' +
+      '<a class="tc-line" href="https://line.me/R/ti/p/' + LINE_ID + '">有任何想說的，直接 LINE 島主 →</a></div>';
+  }).catch(function () { $('app').innerHTML = '<div class="loading">暫時打不開小卡，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
+}
 function route() {
   var h = (location.hash || '#/').slice(2).split('/');
   var r = h[0] || 'services', a = h[1];
   if (r === 'bar') return vBar();
+  if (r === 'card') return vCard(a);
+  if (r === 'join') return vJoin(a);
   if (r === 'events') return a ? vEvent(a) : vEvents();
   if (!B) { needBoot(); return; }
   if (r === 'services') return a ? vCategory(a) : vServices();
-  if (r === 'book') return vBook(a);
+  if (r === 'book') { var q = String(a || '').split('?'); a = q[0]; ST.preCode = (q[1] || '').replace(/^c=/, ''); return vBook(a); }
   if (r === 'time') return vTime();
   if (r === 'report') return vReport();
   if (r === 'tools') return vTools();
@@ -678,6 +766,8 @@ document.addEventListener('click', function (ev) {
   if (t.id === 'copyBank') { var txt = $('bank').textContent; if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = '已複製'; }); return; }
   if (t.id === 'dSend') return report(ST.last.code, ST.last.phone, $('dLast5').value.trim(), $('dErr'), t, function () { $('dOk').hidden = false; t.hidden = true; });
   if (t.id === 'rSend') return report($('rCode').value.trim().toUpperCase(), $('rPhone').value.trim(), $('rLast5').value.trim(), $('rErr'), t, function () { $('rOk').hidden = false; });
+  if (t.dataset.jn) return joinSend(t);
+  if (t.dataset.evf) { EV.f = t.dataset.evf; return vEvents(); }
   if (t.dataset.mbcat) { mbKeep(); BARCAT = t.dataset.mbcat; MB.open = BAR.items.filter(function (x) { return x.category === BARCAT; })[0].id; MB.y = 0; vBar(); var tb = $('mbTabs'); if (tb) tb.scrollIntoView({block: 'start'}); return; }
   if (t.dataset.mbtoggle) { mbKeep(); MB.open = MB.open === t.dataset.mbtoggle ? '' : t.dataset.mbtoggle; return vBar(); }
   if (t.dataset.mbc) { mbKeep(); MB.choice[t.dataset.mbc] = t.dataset.v; return vBar(); }
