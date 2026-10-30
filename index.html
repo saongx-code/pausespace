@@ -140,7 +140,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .mb-cat b{font-family:var(--serif);font-size:44px;line-height:1;color:#2b1d14}.mb-cat span{font-family:var(--serif);font-size:19px}.mb-cat em{margin-left:auto;font-style:normal;font-weight:700;color:#b5532f;font-size:15px}
 .mb-row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #d9c5ae;cursor:pointer}
 .mb-row.soldout{opacity:.45;cursor:default}.mb-row.soldout em{font-size:13px;font-weight:400;color:#7a6a5a}
-.mb-row img{width:52px;height:52px;object-fit:cover;border-radius:12px;flex:none}
+.mb-row img{width:52px;height:52px;object-fit:cover;object-position:50% 30%;border-radius:12px;flex:none}
 .mb-t{flex:1;min-width:0}.mb-t b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:#2b1d14}.mb-t b small{font-family:var(--sans);font-size:13px;color:#e8694a}.mb-t span{font-size:12px;color:#6b5848}
 .mb-row em{font-style:normal;font-weight:700;color:#b5532f;font-size:16px;flex:none}
 .mb-circle{width:34px;height:34px;border-radius:50%;border:1.5px solid #6b4f3d;background:none;font-size:20px;line-height:1;color:#4a3a2e;cursor:pointer;flex:none}
@@ -229,7 +229,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
-var KV_V = '?v=1';
+var KV_V = '?v=2';
 var IMG = {
   beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
   mens: 'L:kv/mens.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
@@ -490,6 +490,8 @@ function report(code, phone, last5, err, btn, ok) {
 
 /* ---------- Moon Bar ---------- */
 var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
+var BAR_PHOTO = ["sweet-orange-tea", "mei-gao-mei", "mulled-wine", "taurus", "blue-peach-hiss", "harvest-festival", "peachy-fizz", "mint-iced-tea", "tea-champagne", "dingbu-milk-tea", "fitness-icecream", "peppercorn-wings"];
+function itemArt(i) { return BAR_PHOTO.indexOf(i.id) >= 0 ? 'bar/p_' + i.id + '.jpg' + KV_V : barArt(i.illustration); }
 function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
 function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
 function bKey(i) { return i.id + (i.choices ? '|' + (MB.choice[i.id] || i.choices[0]) : ''); }
@@ -517,13 +519,13 @@ function vBar() {
   barOffSync(); document.body.classList.add('mbmode'); renderNav('bar'); $('topSub').textContent = 'MOON BAR 沐吧';
   var c = BAR.cats.filter(function (x) { return x.n === BARCAT; })[0];
   var rows = BAR.items.filter(function (i) { return i.category === BARCAT; }).map(function (i) {
-    if (BAROFF.indexOf(i.id) >= 0) return '<div class="mb-row soldout"><img src="' + barArt(i.illustration) + '" alt="" loading="lazy"><div class="mb-t"><b>' + esc(i.name) + '</b><span>' + esc(i.subtitle) + '</span></div><em>今日售完</em></div>';
+    if (BAROFF.indexOf(i.id) >= 0) return '<div class="mb-row soldout"><img src="' + itemArt(i) + '" alt="" loading="lazy"><div class="mb-t"><b>' + esc(i.name) + '</b><span>' + esc(i.subtitle) + '</span></div><em>今日售完</em></div>';
     var open = MB.open === i.id, q = bQty(i), k = bKey(i);
-    var h = '<div class="mb-row' + (open ? ' open' : '') + '" data-mbopen="' + i.id + '"><img src="' + barArt(i.illustration) + '" alt="" loading="lazy">' +
+    var h = '<div class="mb-row' + (open ? ' open' : '') + '" data-mbopen="' + i.id + '"><img src="' + itemArt(i) + '" alt="" loading="lazy">' +
       '<div class="mb-t"><b>' + esc(i.name) + (q ? ' <small>×' + q + '</small>' : '') + '</b><span>' + esc(i.subtitle) + '</span></div><em>' + money(i.price) + '</em>' +
       '<button type="button" class="mb-circle" data-mbtoggle="' + i.id + '" aria-label="展開">' + (open ? '−' : '+') + '</button></div>';
     if (open) {
-      h += '<div class="mb-card"><div class="mb-art"><img src="' + barArt(i.illustration) + '" alt=""></div><div class="mb-info">' +
+      h += '<div class="mb-card"><div class="mb-art"><img src="' + itemArt(i) + '" alt=""></div><div class="mb-info">' +
         '<div class="mb-h"><b>' + esc(i.name) + '</b><em>' + money(i.price) + '</em></div><div class="mb-sub">' + esc(i.subtitle) + '</div><p>' + esc(i.description) + '</p>' +
         (i.choices ? '<div class="mb-lbl">' + esc(i.choiceLabel) + '</div><div class="mb-chips">' + i.choices.map(function (o) { return '<button type="button" class="mb-chip' + ((MB.choice[i.id] || i.choices[0]) === o ? ' on' : '') + '" data-mbc="' + i.id + '" data-v="' + o + '">' + o + '</button>'; }).join('') + '</div>' : '') +
         '<div class="mb-step"><button type="button" data-mbq="' + i.id + '" data-d="-1"' + ((CART[k] || 0) ? '' : ' disabled') + '>−</button><span>' + (CART[k] || 0) + '</span><button type="button" data-mbq="' + i.id + '" data-d="1">+</button></div>' +
