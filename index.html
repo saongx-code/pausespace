@@ -229,7 +229,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
-var KV_V = '?v=3';
+var KV_V = '?v=4';
 var IMG = {
   beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
   mens: 'L:kv/mens.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
@@ -490,7 +490,7 @@ function report(code, phone, last5, err, btn, ok) {
 
 /* ---------- Moon Bar ---------- */
 var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
-var BAR_PHOTO = ["sweet-orange-tea", "mei-gao-mei", "mulled-wine", "taurus", "blue-peach-hiss", "harvest-festival", "peachy-fizz", "mint-iced-tea", "tea-champagne", "dingbu-milk-tea", "fitness-icecream", "peppercorn-wings"];
+var BAR_PHOTO = ["morning-citrus", "sweet-orange-tea", "mei-gao-mei", "mulled-wine", "taurus", "blue-peach-hiss", "harvest-festival", "peachy-fizz", "mint-iced-tea", "tea-champagne", "dingbu-milk-tea", "fitness-icecream", "peppercorn-wings"];
 function itemArt(i) { return BAR_PHOTO.indexOf(i.id) >= 0 ? 'bar/p_' + i.id + '.jpg' + KV_V : barArt(i.illustration); }
 function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
 function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
