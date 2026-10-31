@@ -599,7 +599,7 @@ function mbSend(b) {
 
 
 /* ---------- 1F 沐吧訂位 ---------- */
-var B1 = {date: '', time: '', n: '2', name: '', phone: '', note: '', info: null};
+var B1 = {date: '', time: '', end: '', n: '2', name: '', phone: '', note: '', info: null};
 var WK = ['日', '一', '二', '三', '四', '五', '六'];
 function b1Days() { var out = [], t = new Date(Date.now() + 8 * 36e5); for (var i = 0; i < 21; i++) { var d = new Date(t.getTime() + i * 864e5); out.push(d.toISOString().slice(0, 10)); } return out; }
 function b1Keep() { if ($('b1Name')) { B1.n = $('b1N').value; B1.name = $('b1Name').value; B1.phone = $('b1Phone').value; B1.note = $('b1Note').value; } }
@@ -609,11 +609,19 @@ function vB1f() {
   if (!B1.date) B1.date = b1Days()[0];
   var info = B1.info && B1.info.date === B1.date ? B1.info : null;
   var times = !info ? '<p class="note">讀取空位中…</p>' : '<div class="b1f-times">' + info.slots.map(function (x) { var dis = !x.left; return '<button type="button" data-b1t="' + x.t + '"' + (dis ? ' disabled' : '') + ' class="' + (B1.time === x.t ? 'on' : '') + '">' + x.t + '<small>' + (x.why || ('剩 ' + x.left + ' 位')) + '</small></button>'; }).join('') + '</div>';
-  var left = info && B1.time ? (info.slots.filter(function (x) { return x.t === B1.time; })[0] || {}).left || 0 : 20;
+  var ends = [], left = 20;
+  if (info && B1.time) {
+    var si = -1; info.slots.forEach(function (x, k) { if (x.t === B1.time) si = k; });
+    var ml = 99, add30 = function (t) { var m = +t.slice(0, 2) * 60 + +t.slice(3) + 30; return ('0' + Math.floor(m / 60)).slice(-2) + ':' + ('0' + m % 60).slice(-2); };
+    for (var j = si; j >= 0 && j < info.slots.length; j++) { if (!info.slots[j].left) break; ml = Math.min(ml, info.slots[j].left); ends.push({t: add30(info.slots[j].t), left: ml}); }
+    if (!ends.some(function (x) { return x.t === B1.end; })) B1.end = '';
+    var ce = ends.filter(function (x) { return x.t === B1.end; })[0]; left = ce ? ce.left : (ends[0] ? ends[0].left : 0);
+  }
+  var endsHtml = !B1.time || !info ? '' : '<div class="b1f-sec"><span class="b1f-lbl">預計離開時間</span><div class="b1f-times">' + ends.map(function (x) { return '<button type="button" data-b1e="' + x.t + '" class="' + (B1.end === x.t ? 'on' : '') + '">' + x.t + '<small>' + (x.t === add30(info.slots[info.slots.length - 1].t) ? '待到打烊' : '剩 ' + x.left + ' 位') + '</small></button>'; }).join('') + '</div></div>';
   var opts = ''; for (var i = 1; i <= Math.max(1, left); i++) opts += '<option' + (String(i) === String(B1.n) ? ' selected' : '') + '>' + i + '</option>';
   $('app').innerHTML = '<div class="mb">' + b1Head('RESERVE YOUR VISIT') + '<h1 class="mb-h1">預約登島</h1><p class="mb-lead">選好日期和時間，幫你把一樓的位子留著。<br>整層包場、空間租借請走 <a href="' + EXEC + '?rent" style="color:#b5532f">空間租借頁</a>。</p>' +
     '<div class="b1f-sec"><span class="b1f-lbl">日期</span><div class="b1f-days">' + b1Days().map(function (d) { var x = new Date(d + 'T12:00:00'); return '<button type="button" data-b1d="' + d + '" class="' + (d === B1.date ? 'on' : '') + '"><small>' + (x.getMonth() + 1) + '月・週' + WK[x.getDay()] + '</small><b>' + x.getDate() + '</b></button>'; }).join('') + '</div></div>' +
-    '<div class="b1f-sec"><span class="b1f-lbl">時間（30 分鐘一格）</span>' + times + '</div>' +
+    '<div class="b1f-sec"><span class="b1f-lbl">到達時間（30 分鐘一格）</span>' + times + '</div>' + endsHtml +
     '<div class="b1f-sec b1f-f"><label for="b1N">人數</label><select id="b1N">' + opts + '</select></div>' +
     '<div class="b1f-sec b1f-f"><label for="b1Name">姓名</label><input id="b1Name" autocomplete="name" placeholder="訂位人姓名" value="' + esc(B1.name) + '"></div>' +
     '<div class="b1f-sec b1f-f"><label for="b1Phone">手機</label><input id="b1Phone" inputmode="tel" autocomplete="tel" placeholder="09xxxxxxxx" value="' + esc(B1.phone) + '"></div>' +
@@ -624,11 +632,11 @@ function vB1f() {
 }
 function b1Send(b) {
   b1Keep(); var e = $('b1Err'), msg = '';
-  if (!B1.time) msg = '請選擇時間。'; else if (!B1.name.trim()) msg = '請填寫姓名。'; else if (!/^09\d{8}$/.test(B1.phone.replace(/[\s-]/g, ''))) msg = '請填寫正確的手機號碼（09 開頭 10 碼）。';
+  if (!B1.time) msg = '請選擇到達時間。'; else if (!B1.end) msg = '請選擇預計離開時間。'; else if (!B1.name.trim()) msg = '請填寫姓名。'; else if (!/^09\d{8}$/.test(B1.phone.replace(/[\s-]/g, ''))) msg = '請填寫正確的手機號碼（09 開頭 10 碼）。';
   if (msg) { e.hidden = false; e.textContent = msg; return; }
   e.hidden = true; b.disabled = true; b.textContent = '送出中…';
-  api('bar1fBook', [{date: B1.date, time: B1.time, n: Number(B1.n), name: B1.name.trim(), phone: B1.phone.replace(/[\s-]/g, ''), note: B1.note.trim()}]).then(function (r) {
-    B1.info = null; var nm = B1.name.trim(), n = B1.n, d = B1.date, t = B1.time; B1.time = ''; B1.note = '';
+  api('bar1fBook', [{date: B1.date, time: B1.time, end: B1.end, n: Number(B1.n), name: B1.name.trim(), phone: B1.phone.replace(/[\s-]/g, ''), note: B1.note.trim()}]).then(function (r) {
+    B1.info = null; var nm = B1.name.trim(), n = B1.n, d = B1.date, t = B1.time; B1.time = ''; B1.end = ''; B1.note = '';
     location.hash = '#/bar1f/c/' + r.id + '/new';
   }).catch(function (er) { b.disabled = false; b.textContent = '送出預約'; e.hidden = false; e.textContent = er.message || '送出失敗，請再試一次。'; B1.info = null; api('bar1fInfo', [B1.date]).then(function (r) { B1.info = r; }); });
 }
@@ -637,7 +645,7 @@ function vB1Card(id, fresh) {
   $('app').innerHTML = '<div class="mb"><div class="loading">讀取訂位中…</div></div>';
   api('bar1fGet', [id]).then(function (c) {
     if (!c || !c.ok) { $('app').innerHTML = '<div class="mb"><div class="loading">找不到這筆訂位，可能已取消。<br><a href="#/bar1f">重新訂位</a></div></div>'; return; }
-    var x = new Date(c.date + 'T12:00:00'), when = (x.getMonth() + 1) + '/' + x.getDate() + '（' + WK[x.getDay()] + '）' + c.time;
+    var x = new Date(c.date + 'T12:00:00'), when = (x.getMonth() + 1) + '/' + x.getDate() + '（' + WK[x.getDay()] + '）' + c.time + (c.end ? '–' + c.end : '');
     var url = location.href.split('#')[0] + '#/bar1f/c/' + id;
     var txt = '【Moon Bar 預約登島】' + when + '・' + c.n + ' 位・' + c.name + '\n地址：' + c.address + (c.phone ? '\n電話：' + c.phone : '') + '\n確認卡：' + url;
     $('app').innerHTML = '<div class="mb">' + b1Head(fresh ? 'RESERVED' : 'YOUR RESERVATION') + '<h1 class="mb-h1">' + (fresh ? '預約送出了' : '你的預約') + '</h1><p class="mb-lead">' + (c.status === '已確認' ? '島主已經幫你安排好座位，到了直接跟吧台說名字就好。' : '島主確認後會幫你安排座位，<br>隨時打開這張確認卡就能看到最新狀態。') + '</p>' +
@@ -845,8 +853,9 @@ document.addEventListener('click', function (ev) {
   if (t.dataset.mbc) { mbKeep(); MB.choice[t.dataset.mbc] = t.dataset.v; return vBar(); }
   if (t.dataset.mbq) { mbKeep(); var bi = bItem(t.dataset.mbq), bk = bKey(bi); CART[bk] = Math.max(0, (CART[bk] || 0) + Number(t.dataset.d)); return vBar(); }
   if (t.id === 'mbGo') return mbConfirm();
-  if (t.dataset.b1d) { b1Keep(); B1.date = t.dataset.b1d; B1.time = ''; return vB1f(); }
-  if (t.dataset.b1t) { b1Keep(); B1.time = t.dataset.b1t; return vB1f(); }
+  if (t.dataset.b1d) { b1Keep(); B1.date = t.dataset.b1d; B1.time = ''; B1.end = ''; return vB1f(); }
+  if (t.dataset.b1t) { b1Keep(); B1.time = t.dataset.b1t; B1.end = ''; return vB1f(); }
+  if (t.dataset.b1e) { b1Keep(); B1.end = t.dataset.b1e; return vB1f(); }
   if (t.id === 'b1Send') return b1Send(t);
   if (t.id === 'b1Now') { var tb2 = $('mbTabs'); if (tb2) tb2.scrollIntoView({block: 'start', behavior: 'smooth'}); return; }
   if (t.id === 'mbBack') { var sh = $('mbSheet'); if (sh) sh.remove(); return; }
