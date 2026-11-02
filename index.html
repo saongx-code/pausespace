@@ -538,7 +538,7 @@ function vBar() {
   barOffSync(); document.body.classList.add('mbmode'); renderNav('bar'); $('topSub').textContent = 'MOON BAR 沐吧';
   var c = BAR.cats.filter(function (x) { return x.n === BARCAT; })[0];
   var rows = BAR.items.filter(function (i) { return i.category === BARCAT; }).map(function (i) {
-    if (BAROFF.indexOf(i.id) >= 0) return '<div class="mb-row soldout"><img src="' + itemArt(i) + '" alt="" loading="lazy"><div class="mb-t"><b>' + esc(i.name) + '</b><span>' + esc(i.subtitle) + '</span></div><em>今日售完</em></div>';
+    if (BAROFF.indexOf(i.id) >= 0) return ''; // 島主下架的品項：客人完全看不到
     var open = MB.open === i.id, q = bQty(i), k = bKey(i);
     var h = '<div class="mb-row' + (open ? ' open' : '') + '" data-mbopen="' + i.id + '"><img src="' + itemArt(i) + '" alt="" loading="lazy">' +
       '<div class="mb-t"><b>' + esc(i.name) + (q ? ' <small>×' + q + '</small>' : '') + '</b><span>' + esc(i.subtitle) + '</span></div><em>' + money(i.price) + '</em>' +
