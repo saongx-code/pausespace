@@ -117,6 +117,11 @@ ul.steps{margin:6px 0;padding-left:20px}
 .cartbar{position:sticky;bottom:0;margin:14px -16px -40px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--deep);color:#f3efe6;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .foot{max-width:980px;margin:0 auto;padding:22px 16px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .foot a.addr{color:inherit}
+.fb-open{flex-basis:100%;border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0 0;text-align:left}
+.fb-sheet{position:fixed;inset:0;z-index:60;background:rgba(23,51,47,.45);display:flex;align-items:flex-end;justify-content:center}
+.fb-pane{width:100%;max-width:520px;background:var(--cream);border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.15)}
+.fb-pane h3{font-family:var(--serif);margin:0 0 4px;font-size:21px;color:var(--ink)}.fb-pane p{margin:0 0 12px;color:var(--muted);font-size:13.5px}
+.fb-pane textarea,.fb-pane input{width:100%;box-sizing:border-box;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:12px;padding:11px 12px;background:#fff;color:var(--ink);margin-bottom:10px}.fb-pane textarea{min-height:110px;resize:vertical}
 .loading{padding:40px 0;text-align:center;color:var(--muted)}
 .soon{opacity:.75}
 #formBox,#fitBox,#barTabs{scroll-margin-top:110px}
@@ -240,6 +245,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 <footer class="foot">
   <span>PAUSE SPACE 空白空拍<br><a class="addr" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E7%91%9E%E5%AE%89%E8%A1%97180%E5%B7%B73%E8%99%9F">台北市大安區瑞安街 180 巷 3 號</a></span>
   <a class="btn sm" href="https://line.me/R/ti/p/@010ievox">回到官方 LINE</a>
+  <button type="button" class="fb-open" id="fbOpen">網站用起來有問題？告訴島主</button>
 </footer>
 <script>
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
@@ -657,6 +663,25 @@ function vB1Card(id, fresh) {
   }).catch(function () { $('app').innerHTML = '<div class="mb"><div class="loading">暫時打不開，<a href="javascript:location.reload()">重新整理</a>。</div></div>'; });
 }
 
+
+/* ---------- 回報問題 ---------- */
+function fbShow() {
+  if ($('fbSheet')) return;
+  var d = document.createElement('div'); d.className = 'fb-sheet'; d.id = 'fbSheet';
+  d.innerHTML = '<div class="fb-pane"><h3>告訴島主哪裡怪怪的</h3><p>例如：登入不了、按了沒反應、看到的堂數不對。島主會盡快處理。</p>' +
+    '<textarea id="fbMsg" placeholder="發生了什麼事？在哪一頁？"></textarea><input id="fbWho" placeholder="你的名字或手機（選填，方便島主回覆你）">' +
+    '<p class="err" id="fbErr" hidden></p><button type="button" class="btn coral" id="fbSend">送出</button><button type="button" class="btn ghost" id="fbClose" style="margin-top:8px">先不用</button></div>';
+  document.body.appendChild(d); setTimeout(function () { var m = $('fbMsg'); if (m) m.focus(); }, 50);
+}
+function fbSend(b) {
+  var m = $('fbMsg').value.trim(), e = $('fbErr');
+  if (m.length < 2) { e.hidden = false; e.textContent = '請寫一下發生了什麼事。'; return; }
+  b.disabled = true; b.textContent = '送出中…';
+  api('issueReport', [{msg: m, who: $('fbWho').value.trim(), page: location.hash || '#/', ua: navigator.userAgent.slice(0, 120)}]).then(function () {
+    $('fbSheet').querySelector('.fb-pane').innerHTML = '<h3>收到了，謝謝你 🌙</h3><p>島主會盡快處理。如果很急，也可以直接 LINE 島主。</p><a class="btn coral" href="https://line.me/R/ti/p/' + LINE_ID + '">LINE 島主</a><button type="button" class="btn ghost" id="fbClose" style="margin-top:8px">關閉</button>';
+  }).catch(function () { b.disabled = false; b.textContent = '送出'; e.hidden = false; e.textContent = '送出失敗，請再按一次，或直接 LINE 島主。'; });
+}
+
 /* ---------- 肌智管家 ---------- */
 function vTools() {
   var s = svc('skincheck');
@@ -852,6 +877,9 @@ document.addEventListener('click', function (ev) {
   if (t.dataset.mbtoggle) { mbKeep(); MB.open = MB.open === t.dataset.mbtoggle ? '' : t.dataset.mbtoggle; return vBar(); }
   if (t.dataset.mbc) { mbKeep(); MB.choice[t.dataset.mbc] = t.dataset.v; return vBar(); }
   if (t.dataset.mbq) { mbKeep(); var bi = bItem(t.dataset.mbq), bk = bKey(bi); CART[bk] = Math.max(0, (CART[bk] || 0) + Number(t.dataset.d)); return vBar(); }
+  if (t.id === 'fbOpen') return fbShow();
+  if (t.id === 'fbSend') return fbSend(t);
+  if (t.id === 'fbClose') { var fs = $('fbSheet'); if (fs) fs.remove(); return; }
   if (t.id === 'mbGo') return mbConfirm();
   if (t.dataset.b1d) { b1Keep(); B1.date = t.dataset.b1d; B1.time = ''; B1.end = ''; return vB1f(); }
   if (t.dataset.b1t) { b1Keep(); B1.time = t.dataset.b1t; B1.end = ''; return vB1f(); }
