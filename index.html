@@ -117,6 +117,8 @@ ul.steps{margin:6px 0;padding-left:20px}
 .cartbar{position:sticky;bottom:0;margin:14px -16px -40px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:var(--deep);color:#f3efe6;display:flex;justify-content:space-between;align-items:center;gap:10px}
 .foot{max-width:980px;margin:0 auto;padding:22px 16px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .foot a.addr{color:inherit}
+.lb{border:1px solid #bfe3c9;background:#f2faf4;border-radius:18px;padding:16px;margin:14px 0}.lb b{display:block;font-size:16px;color:#1d3b36;margin-bottom:4px}.lb p{margin:0 0 12px;font-size:13.5px;color:#5f736d}
+.lb a{display:block;text-align:center;text-decoration:none;background:#06c755;color:#fff;border-radius:14px;padding:13px;font-weight:700;font-size:16px}.lb.ok{padding:12px 16px;color:#2f7d4f;font-weight:700;font-size:14.5px}
 .fb-open{flex-basis:100%;border:0;background:none;color:var(--muted);font:inherit;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px 0 0;text-align:left}
 .fb-sheet{position:fixed;inset:0;z-index:60;background:rgba(23,51,47,.45);display:flex;align-items:flex-end;justify-content:center}
 .fb-pane{width:100%;max-width:520px;background:var(--cream);border-radius:22px 22px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -8px 30px rgba(0,0,0,.15)}
@@ -327,6 +329,11 @@ function api(fn, args) {
     .then(function (r) { return r.json(); })
     .then(function (j) { if (j.error) throw new Error(j.error); return j.result; });
 }
+function lineBind(phone, title, sub, bound) {
+  if (bound) return '<div class="lb ok">✅ 已綁定 LINE，通知會直接送到你的 LINE</div>';
+  var d = String(phone || '').replace(/\D/g, '');
+  return '<div class="lb"><b>📲 ' + title + '</b><p>' + sub + '</p><a href="' + lineMsg('綁定 ' + d) + '">一鍵綁定 LINE</a></div>';
+}
 function svc(k) { return B && B.services.filter(function (s) { return s.key === k; })[0]; }
 function cat(k) { return B && B.categories.filter(function (c) { return c.key === k; })[0]; }
 function priceText(s) { return !s.online ? '請先詢問' : s.priceNote ? esc(s.priceNote) : s.price ? money(s.price) : '免費'; }
@@ -485,6 +492,7 @@ function vDone(r) {
       '<button class="btn ghost" type="button" id="copyBank">複製匯款資料</button>' +
       '<label for="dLast5">匯款後，填寫你的帳號末五碼</label><input id="dLast5" inputmode="numeric" maxlength="5"><p class="err" id="dErr" hidden></p>' +
       '<button class="btn coral" type="button" id="dSend" style="margin-top:10px">我已匯款，送出</button><p class="note" id="dOk" hidden>收到了！島主核對後，會在官方 LINE 通知你預約正式成立。</p></div>' : '') +
+    lineBind(ST.last && ST.last.phone, '把預約確認傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成。之後島主確認、課後小卡都會直接送到你的 LINE。') +
     '<a class="btn ghost" href="https://line.me/R/ti/p/' + LINE_ID + '">回到官方 LINE</a>');
 }
 function vTime() {
@@ -642,7 +650,7 @@ function b1Send(b) {
   if (msg) { e.hidden = false; e.textContent = msg; return; }
   e.hidden = true; b.disabled = true; b.textContent = '送出中…';
   api('bar1fBook', [{date: B1.date, time: B1.time, end: B1.end, n: Number(B1.n), name: B1.name.trim(), phone: B1.phone.replace(/[\s-]/g, ''), note: B1.note.trim()}]).then(function (r) {
-    B1.info = null; var nm = B1.name.trim(), n = B1.n, d = B1.date, t = B1.time; B1.time = ''; B1.end = ''; B1.note = '';
+    B1.lastPhone = B1.phone.replace(/[\s-]/g, ''); B1.info = null; var nm = B1.name.trim(), n = B1.n, d = B1.date, t = B1.time; B1.time = ''; B1.end = ''; B1.note = '';
     location.hash = '#/bar1f/c/' + r.id + '/new';
   }).catch(function (er) { b.disabled = false; b.textContent = '送出預約'; e.hidden = false; e.textContent = er.message || '送出失敗，請再試一次。'; B1.info = null; api('bar1fInfo', [B1.date]).then(function (r) { B1.info = r; }); });
 }
@@ -656,6 +664,7 @@ function vB1Card(id, fresh) {
     var txt = '【Moon Bar 預約登島】' + when + '・' + c.n + ' 位・' + c.name + '\n地址：' + c.address + (c.phone ? '\n電話：' + c.phone : '') + '\n確認卡：' + url;
     $('app').innerHTML = '<div class="mb">' + b1Head(fresh ? 'RESERVED' : 'YOUR RESERVATION') + '<h1 class="mb-h1">' + (fresh ? '預約送出了' : '你的預約') + '</h1><p class="mb-lead">' + (c.status === '已確認' ? '島主已經幫你安排好座位，到了直接跟吧台說名字就好。' : '島主確認後會幫你安排座位，<br>隨時打開這張確認卡就能看到最新狀態。') + '</p>' +
       '<div class="b1f-ok"><dl><dt>狀態</dt><dd><b style="color:' + (c.status === '已確認' ? '#2f7d4f' : '#b5532f') + '">' + (c.status === '已確認' ? '✅ 已確認' : '⏳ 等島主確認') + '</b></dd>' + (c.seats && c.seats.length ? '<dt>座位</dt><dd>' + c.seats.map(esc).join('、') + '</dd>' : '') + '<dt>時間</dt><dd><b>' + when + '</b></dd><dt>人數</dt><dd>' + c.n + ' 位</dd><dt>姓名</dt><dd>' + esc(c.name) + '</dd><dt>地點</dt><dd>' + esc(c.address) + '<br><a target="_blank" style="color:#b5532f" href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(c.address) + '">開地圖導航 ↗</a></dd>' + (c.phone ? '<dt>電話</dt><dd><a style="color:#b5532f" href="tel:' + esc(c.phone) + '">' + esc(c.phone) + '</a></dd>' : '') + '</dl></div>' +
+      (fresh && B1.lastPhone ? lineBind(B1.lastPhone, '島主確認後，直接通知我', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成。島主一確認座位，你的 LINE 就會收到通知。') : '') +
       '<a class="btn coral" style="margin-top:16px" href="https://line.me/R/share?text=' + encodeURIComponent(txt) + '">把確認卡存到 LINE</a>' +
       '<p class="note" style="text-align:center">要改時間或取消，直接 <a href="https://line.me/R/ti/p/' + LINE_ID + '" style="color:#b5532f">LINE 島主</a>。</p>' +
       '<a class="btn ghost" href="#/bar" style="margin-top:8px">看沐吧菜單</a></div>';
@@ -770,11 +779,11 @@ function drawMe() {
     '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + (m.sessionsLeft != null ? '<div class="stat"><span>剩餘堂數</span><b>' + m.sessionsLeft + ' 堂</b></div>' : '') + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
     '<div class="panel"><h3>儲值與消費明細</h3>' + (m.records.length ? m.records.map(function (x) {
       return '<div class="rec"><div><small>' + esc(x.date) + '</small><b>' + esc(x.item) + '</b>' + (x.detail ? '<small>' + esc(x.detail) + '</small>' : '') + '</div><span class="amt' + (x.amount > 0 ? ' plus' : '') + '">' + (x.amount > 0 ? '+' : '') + money(x.amount) + '</span></div>';
-    }).join('') : '<p class="note">還沒有紀錄。</p>') + '</div><button class="btn ghost" id="mOut" type="button">登出</button>');
+    }).join('') : '<p class="note">還沒有紀錄。</p>') + '</div>' + lineBind(m.phone, '課後小卡、預約提醒都傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成，只要做一次。', m.lineBound) + '<button class="btn ghost" id="mOut" type="button">登出</button>');
 }
 function member(fn, data, err, btn) {
   err.hidden = true; btn.disabled = true;
-  api(fn, [data]).then(function (m) { btn.disabled = false; if (!m.ok) { err.hidden = false; err.textContent = m.error; return; } ME = m; drawMe(); })
+  api(fn, [data]).then(function (m) { btn.disabled = false; if (!m.ok) { err.hidden = false; err.textContent = m.error; return; } ME = m; ME.phone = data.phone; drawMe(); })
     .catch(function () { btn.disabled = false; err.hidden = false; err.textContent = '連線失敗，請再試一次。'; });
 }
 
