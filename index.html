@@ -246,6 +246,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 <main id="app"><div class="loading">上島中…</div></main>
 <footer class="foot">
   <span>PAUSE SPACE 空白空拍<br><a class="addr" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E7%91%9E%E5%AE%89%E8%A1%97180%E5%B7%B73%E8%99%9F">台北市大安區瑞安街 180 巷 3 號</a></span>
+  <a class="btn sm ghost" href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">租借空間（共享空間・療程室）</a>
   <a class="btn sm" href="https://line.me/R/ti/p/@010ievox">回到官方 LINE</a>
   <button type="button" class="fb-open" id="fbOpen">網站用起來有問題？告訴島主</button>
 </footer>
@@ -396,7 +397,7 @@ function svList() {
   var list = B.services.filter(function (s) { return s.cat === k; });
   var extra = k === 'pick' ? '<div class="xc"><div class="no">' + ((list.length + 1) < 10 ? '0' : '') + (list.length + 1) + ' / EXPERIENCE</div><div class="rec">限熟客</div><h3>季度保養｜熟客選配</h3><div class="mn">時間依現場評估</div><div class="pr">依商品報價</div><div class="lb">適合處理</div><div class="tg"><span>肌膚評估</span><span>換季保養</span><span>產品搭配</span></div><p class="ds">由島主依當季膚況，整理真正需要的保養組合。</p><details><summary>服務流程與預約提醒</summary><div class="fl">現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</div><ul><li>選配商品不享會員 8 折，價格依實際選配。</li></ul></details><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問<i>↗</i></a></div>' : '';
   $('svList').innerHTML = list.map(svCard).join('') + extra +
-    '<p class="note" style="margin:14px 2px 0">價格為原價，儲值會員依會員方案折抵。已經預約了？<a href="#/report">回報訂金匯款 →</a></p>';
+    '<p class="note" style="margin:14px 2px 0">價格為原價，儲值會員依會員方案折抵。已經預約了？<a href="#/report">回報訂金匯款 →</a><br>想租場地辦活動，或帶自己的客人來做療程？<a href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">空間租借 →</a></p>';
   var bb = $('svBar'); if (bb) bb.querySelector('span').textContent = m.zh + '・' + m.en + '　送出後由島主確認';
   [].forEach.call(document.querySelectorAll('.sv-tabs button'), function (b, ix) { b.classList.toggle('on', ix === SV.i); });
   [].forEach.call(document.querySelectorAll('.sv-dots i'), function (d, ix) { d.classList.toggle('on', ix === SV.i); });
