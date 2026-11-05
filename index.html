@@ -270,6 +270,8 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'Reset・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Monsoon Care'};
 
 var EVENTS = [
+  {id: 'oil', img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜Read The Air', sub: '從關照，到關心。兩天，從對面坐到旁邊。讀懂一棵植物，也許就讀懂了一個人。', when: '11/18（三）＋11/19（四）19:00–21:30（兩天一班）', price: '單人 NT$6,800・雙人同行 NT$6,000／人', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
+    body: '<p><b>DAY 01｜讀懂植物</b><br>十二支能量精油 × 植物特性</p><p><b>DAY 02｜讀懂人</b><br>精油抓周 × 對話引導</p><p>feat. AD VITAM 艾薇丹十二款能量香氛精油。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
   {id: 'moon', img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
     body: '<p>當晚 20:00 開始，穿舒適的衣服到場即可。不收固定費用，隨喜自由給予。</p>' +
       '<table class="moon"><tr><td>10/26</td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
@@ -794,6 +796,7 @@ function go(h) { location.hash = h; }
 
 /* ---------- 課程報名頁 ---------- */
 function vJoin(id) {
+  if (id === 'oil') return vOil();
   page('events', 'ISLAND DAYS', '<div class="loading">讀取中…</div>');
   api('courseInfo', [id]).then(function (c) {
     if (!c || !c.ok) return go('#/events');
@@ -814,6 +817,61 @@ function vJoin(id) {
       '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>'
       : '<div class="panel"><p>目前沒有開放中的場次，<a href="' + lineMsg('我想詢問「' + c.name + '」下一次開課') + '">LINE 島主</a> 登記下一次。</p></div>');
   }).catch(function () { $('app').innerHTML = '<div class="loading">暫時讀不到，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
+}
+/* ---------- 精油抓周｜Read The Air 報名 ---------- */
+function vOil() {
+  page('events', 'ISLAND DAYS', '<div class="loading">讀取中…</div>');
+  api('oilInfo', []).then(function (c) {
+    var rail = [1, 2, 3, 4, 5].map(function (i) { return '<img src="kv/oil_' + i + '.jpg' + KV_V + '" alt="" loading="lazy" style="width:72%;max-width:300px;flex:none;border-radius:14px;scroll-snap-align:start">'; }).join('');
+    var h = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Course / Pause Space</div><h1>精油抓周<br><small style="font-size:.55em;letter-spacing:.08em">Read The Air</small></h1>' +
+      '<img class="heroimg" src="kv/ev_oil.jpg' + KV_V + '" alt="精油抓周" style="max-width:560px">' +
+      '<p class="lead">從關照，到關心。<br>兩天，從對面坐到旁邊。</p>' +
+      '<div style="display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 0 10px;margin:6px 0">' + rail + '</div>' +
+      '<div class="xc" style="margin-top:6px"><div class="no">COURSE / 課程內容</div>' +
+      '<dl class="ef"><dt>時間</dt><dd>11/18（三）＋11/19（四）<br>19:00–21:30（兩天一班）</dd>' +
+      '<dt>DAY 01</dt><dd><b>讀懂植物</b><br>十二支能量精油 × 植物特性</dd><dt>DAY 02</dt><dd><b>讀懂人</b><br>精油抓周 × 對話引導</dd>' +
+      '<dt>精油</dt><dd>AD VITAM 艾薇丹十二款能量香氛精油</dd><dt>帶領</dt><dd>島主項項</dd>' +
+      '<dt>名額</dt><dd>每班 12 人' + (c.open ? '・<b style="color:var(--coral)">剩 ' + c.left + ' 位</b>' : '') + '</dd>' +
+      '<dt>學費</dt><dd>單人 NT$6,800<br>雙人同行 NT$6,000／人</dd><dt>贈送</dt><dd>' + esc(c.gift) + '</dd><dt>地點</dt><dd>' + esc(c.where) + '</dd></dl>' +
+      '<div class="lb">適合你，如果你</div><div class="tg"><span>想更懂身邊的人</span><span>對精油好奇</span><span>想讓關心更走心</span></div>' +
+      '<img src="kv/ev_oil_dm.jpg' + KV_V + '" alt="課程資訊" loading="lazy" style="width:100%;border-radius:14px;margin-top:12px"></div>';
+    if (c.open && c.left > 0) {
+      h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
+        '<label>報名方式</label><div class="jn-s"><label class="jn-o"><input type="radio" name="olT" value="1" checked><span><b>單人</b> NT$6,800</span></label>' +
+        (c.left >= 2 ? '<label class="jn-o"><input type="radio" name="olT" value="2"><span><b>雙人同行</b> NT$6,000／人（共 NT$12,000）</span></label>' : '') + '</div>' +
+        '<label for="olN">姓名</label><input id="olN" autocomplete="name"><label for="olP">手機</label><input id="olP" inputmode="tel" placeholder="09xxxxxxxx">' +
+        '<label for="olL">LINE 名稱</label><input id="olL" placeholder="方便島主找到你">' +
+        '<div id="olPair" hidden><label for="olN2">同行者姓名</label><input id="olN2"><label for="olP2">同行者手機</label><input id="olP2" inputmode="tel" placeholder="09xxxxxxxx"></div>' +
+        '<label for="olM">想問的或備註（可不填）</label><input id="olM">' +
+        '<div class="sum" style="margin-top:12px"><span>學費</span><b id="olTot">NT$6,800</b></div>' +
+        '<p class="note">送出後請在 3 天內匯款，到網站「回報訂金」填末五碼；島主核對後，名額才正式保留。</p>' +
+        '<p class="err" id="olE" hidden></p><button type="button" class="btn coral" id="olGo">送出報名</button></fieldset>';
+    } else {
+      h += '<div class="panel" style="margin-top:14px"><p>' + (c.open ? '這一班已經額滿。' : '這一班已經截止報名。') + '<a href="' + lineMsg('我想登記下一班「精油抓周」') + '">LINE 島主</a> 登記下一班。</p></div>';
+    }
+    $('app').innerHTML = h;
+    [].forEach.call(document.querySelectorAll('input[name=olT]'), function (r) {
+      r.onchange = function () { var two = r.value === '2' && r.checked; $('olPair').hidden = !two; $('olTot').textContent = two ? 'NT$12,000（兩人）' : 'NT$6,800'; };
+    });
+    if ($('olGo')) $('olGo').onclick = function () { oilSend(this); };
+  }).catch(function () { $('app').innerHTML = '<div class="loading">暫時讀不到，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
+}
+function oilSend(b) {
+  var e = $('olE'), two = (document.querySelector('input[name=olT]:checked') || {}).value === '2';
+  var p = {name: $('olN').value.trim(), phone: $('olP').value.trim(), lineName: $('olL').value.trim(), note: $('olM').value.trim(), pair: two,
+    name2: two ? $('olN2').value.trim() : '', phone2: two ? $('olP2').value.trim() : ''};
+  if (!p.name) { e.hidden = false; e.textContent = '請填寫姓名'; return; }
+  e.hidden = true; b.disabled = true; b.textContent = '送出中…';
+  api('oilJoin', [p]).then(function (r) {
+    if (!r.ok) throw new Error(r.error);
+    $('app').innerHTML = '<div class="eyebrow" style="margin-top:20px">REGISTERED</div><h1>報名收到了 🌙</h1>' +
+      '<div class="panel"><small>報名編號</small><p style="font-size:22px;margin:4px 0 8px;color:var(--coral)">' + esc(r.code) + '</p>' +
+      '<p>精油抓周｜11/18（三）＋11/19（四）19:00–21:30<br>' + (r.n === 2 ? '雙人同行' : '單人') + '・學費 <b>NT$' + Number(r.total).toLocaleString() + '</b></p></div>' +
+      '<div class="panel"><h3>最後一步：3 天內匯款</h3><p style="white-space:pre-line">' + esc(r.bankInfo) + '</p><a class="btn coral" href="#/report">匯款後，回報末五碼</a></div>' +
+      lineBind(p.phone, '報名確認、上課提醒都傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成。', false) +
+      '<a class="btn ghost" style="margin-top:10px" href="#/events">回到島日嶼祭</a>';
+    window.scrollTo(0, 0);
+  }).catch(function (x) { b.disabled = false; b.textContent = '送出報名'; e.hidden = false; e.textContent = x.message || '送出失敗，請再按一次；一直失敗請直接 LINE 島主。'; });
 }
 function joinSend(b) {
   var e = $('jnE'), sel = document.querySelector('input[name=jnS]:checked');
