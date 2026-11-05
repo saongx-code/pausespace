@@ -833,7 +833,7 @@ function vOil() {
       '<dt>時間</dt><dd>11/18（三）＋11/19（四）<br>19:00–21:30（兩天一班）</dd><dt>帶領</dt><dd>島主項項</dd>' +
       '<dt>名額</dt><dd>每班 12 人' + (c.open ? '・<b style="color:var(--coral)">剩 ' + c.left + ' 位</b>' : '') + '</dd>' +
       '<dt>學費</dt><dd>單人 NT$6,800<br>雙人同行 NT$6,000／人</dd><dt>贈送</dt><dd>' + esc(c.gift) + '</dd><dt>地點</dt><dd>' + esc(c.where) + '</dd></dl>' +
-      '<div class="lb">⚠️ 輕斷食注意事項</div><p class="ds" style="margin:0">以下狀況請先問過醫師，或報名時告訴島主改用不斷食的方式參加：懷孕或哺乳中、糖尿病或正在服用血糖相關藥物、有慢性疾病或長期服藥、曾有飲食方面的困擾、對代餐成分（例如乳製品、大豆）過敏。</p></div>';
+      '<div class="lb">⚠️ 參加前請先確認</div><p class="ds" style="margin:0 0 8px"><b>本課程不適合懷孕中的朋友參加</b>：課程會使用多款精油，部分精油不適合孕期使用。</p><p class="ds" style="margin:0"><b>輕斷食</b>：以下狀況請先問過醫師，或報名時告訴島主改用不斷食的方式參加：哺乳中、糖尿病或正在服用血糖相關藥物、有慢性疾病或長期服藥、曾有飲食方面的困擾、對代餐成分（例如乳製品、大豆）過敏。</p></div>';
     if (c.open && c.left > 0) {
       h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
         '<label>報名方式</label><div class="jn-s"><label class="jn-o"><input type="radio" name="olT" value="1" checked><span><b>單人</b> NT$6,800</span></label>' +
@@ -843,7 +843,7 @@ function vOil() {
         '<div id="olPair" hidden><label for="olN2">同行者姓名</label><input id="olN2"><label for="olP2">同行者手機</label><input id="olP2" inputmode="tel" placeholder="09xxxxxxxx"></div>' +
         '<label for="olH">過敏或需要島主知道的身體狀況（沒有可不填）</label><input id="olH" placeholder="例如：乳糖不耐、正在服藥">' +
         '<label for="olM">想問的或備註（可不填）</label><input id="olM">' +
-        '<label class="jn-o" style="margin-top:12px"><input type="checkbox" id="olA"><span>我已閱讀輕斷食注意事項</span></label>' +
+        '<label class="jn-o" style="margin-top:12px"><input type="checkbox" id="olA"><span>我已閱讀注意事項，且目前沒有懷孕</span></label>' +
         '<div class="sum" style="margin-top:12px"><span>學費</span><b id="olTot">NT$6,800</b></div>' +
         '<p class="note">送出後請在 3 天內匯款，到網站「回報訂金」填末五碼；島主核對後，名額才正式保留。</p>' +
         '<p class="err" id="olE" hidden></p><button type="button" class="btn coral" id="olGo">送出報名</button></fieldset>';
@@ -862,7 +862,7 @@ function oilSend(b) {
   var p = {name: $('olN').value.trim(), phone: $('olP').value.trim(), lineName: $('olL').value.trim(), note: $('olM').value.trim(), pair: two,
     name2: two ? $('olN2').value.trim() : '', phone2: two ? $('olP2').value.trim() : '', health: $('olH').value.trim(), agree: $('olA').checked};
   if (!p.name) { e.hidden = false; e.textContent = '請填寫姓名'; return; }
-  if (!p.agree) { e.hidden = false; e.textContent = '請先閱讀並勾選輕斷食注意事項'; return; }
+  if (!p.agree) { e.hidden = false; e.textContent = '請先閱讀注意事項，確認目前沒有懷孕後再勾選'; return; }
   e.hidden = true; b.disabled = true; b.textContent = '送出中…';
   api('oilJoin', [p]).then(function (r) {
     if (!r.ok) throw new Error(r.error);
