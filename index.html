@@ -354,7 +354,7 @@ var SV_CAT = {
   beauty: {zh: '身', en: 'Beauty', what: '照顧看得到的：肌膚與身體', line: '臉部護膚、煥膚、身體放鬆。覺得累、膚況不好、想變好看，選這裡。'},
   reset: {zh: '心', en: 'Reset', what: '照顧感受：放下情緒', line: '從身體訊號出發，依當下狀態走身體或內在路線，把累積的疲憊與情緒整理好。'},
   soul: {zh: '靈', en: 'Soul', what: '照顧方向：看清自己', line: '潛意識探索、薩滿占讀、空間淨化。想弄清楚自己卡在哪，選這裡。'},
-  metime: {zh: '獨處', en: 'Me Time', what: '只是休息：什麼都不用做', line: '岩盤浴或泡澡，一個人安靜休息，不用聊天。'},
+  metime: {zh: '岩盤浴／泡澡', en: 'Me Time', what: '只是休息：什麼都不用做', line: '岩盤浴或泡澡，一個人安靜休息，不用聊天。'},
   pick: {zh: '島主選配', en: 'Monsoon', what: '照顧日常：保養交給島主', line: '先做肌膚檢測；熟客可由島主依當季膚況選配保養品，一季一盒。'}
 };
 var NOTE_FACE = '懷孕、近期做過醫美，或臉部有傷口，請先在備註告訴島主。';
@@ -462,10 +462,10 @@ function drawForm() {
   var s = ST.svc, box = $('formBox'); box.hidden = false;
   var dep = s.deposit;
   box.innerHTML = '<h2>你的資料</h2><div class="panel"><b>' + esc(s.name) + '</b><div class="note">' + ST.date + '　' + ST.start + ' 開始</div>' +
-    '<label for="fName">姓名</label><input id="fName" autocomplete="name">' +
-    '<label for="fPhone">手機</label><input id="fPhone" inputmode="tel" autocomplete="tel">' +
+    '<label for="fName">姓名</label><input id="fName" autocomplete="name" value="' + esc(ME ? ME.name : '') + '">' +
+    '<label for="fPhone">手機</label><input id="fPhone" inputmode="tel" autocomplete="tel" value="' + esc(ME ? ME.phone || '' : '') + '">' +
     '<label for="fLine">LINE 名稱（方便我們對上你）</label><input id="fLine">' +
-    '<label for="fType">你是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass">岩盤浴套票</option>' : '') + '</select>' +
+    '<label for="fType">你是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass"' + (window.PREPASS ? ' selected' : '') + '>岩盤浴套票</option>' : '') + '</select>' +
     (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric" value="' + esc(ST.preCode || '') + '"><p class="note" style="margin:4px 0 10px">完課後收到的小卡上有你的專屬密碼；請用報名型男研究所時的手機預約。</p>' : '') +
     '<label for="fNote">想讓島主先知道的事（身體狀況、近期醫美、懷孕等）</label><textarea id="fNote"></textarea>' +
     '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>預約訂金</span><b>' + money(B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
@@ -761,7 +761,7 @@ function vGift(id) {
 }
 
 /* ---------- 駐島會員 ---------- */
-var ME = null;
+var ME = null, PREPASS = 0;
 function vMember() {
   if (ME) return drawMe();
   page('member', 'ISLAND MEMBER', '<div class="eyebrow">Members / Pause Space</div><h1>駐島會員</h1><p class="lead">用手機和生日登入，查看儲值餘額、會員效期與消費紀錄。</p>' +
@@ -776,7 +776,7 @@ function vMember() {
 function drawMe() {
   var m = ME, u = function (x, l) { return '<div class="stat"><span>' + l + '</span><b>' + (x ? (x.active ? '使用中' : '已到期') + '<small>' + esc(x.date) + '</small>' : '<small>未開通</small>') + '</b></div>'; };
   page('member', 'ISLAND MEMBER', '<div class="eyebrow">Welcome back</div><h1>' + esc(m.name) + '</h1>' +
-    '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + (m.sessionsLeft != null ? '<div class="stat"><span>剩餘堂數</span><b>' + m.sessionsLeft + ' 堂</b></div>' : '') + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
+    '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + (m.sessionsLeft != null ? '<div class="stat"><span>剩餘堂數</span><b>' + m.sessionsLeft + ' 堂</b></div>' + (m.sessionsLeft > 0 ? '<a class="btn coral" href="#/book/stone60" onclick="PREPASS=1" style="margin-top:10px">用套票預約岩盤浴</a>' : '') : '') + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
     '<div class="panel"><h3>儲值與消費明細</h3>' + (m.records.length ? m.records.map(function (x) {
       return '<div class="rec"><div><small>' + esc(x.date) + '</small><b>' + esc(x.item) + '</b>' + (x.detail ? '<small>' + esc(x.detail) + '</small>' : '') + '</div><span class="amt' + (x.amount > 0 ? ' plus' : '') + '">' + (x.amount > 0 ? '+' : '') + money(x.amount) + '</span></div>';
     }).join('') : '<p class="note">還沒有紀錄。</p>') + '</div>' + lineBind(m.phone, '課後小卡、預約提醒都傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成，只要做一次。', m.lineBound) + '<button class="btn ghost" id="mOut" type="button">登出</button>');
