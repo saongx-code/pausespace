@@ -270,8 +270,8 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'Reset・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Monsoon Care'};
 
 var EVENTS = [
-  {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜Read The Air', sub: '從關照，到關心。兩天，從對面坐到旁邊。讀懂一棵植物，也許就讀懂了一個人。', when: '11/18（三）＋11/19（四）19:00–21:30（兩天一班）', price: '單人 NT$6,800・雙人同行 NT$6,000／人', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
-    body: '<p><b>DAY 01｜讀懂植物</b><br>十二支能量精油 × 植物特性</p><p><b>DAY 02｜讀懂人</b><br>精油抓周 × 對話引導</p><p><b>兩天之間｜24 小時輕斷食</b><br>第一天課程中段開始，改喝高蛋白代餐到第二天下課</p><p>feat. AD VITAM 艾薇丹十二款能量香氛精油。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
+  {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜READ THE AIR', sub: '從對面，坐到旁邊。一堂結合植物、氣味、輕斷食與走心溝通的兩日課程。', when: '11/18（三）＋11/19（四）19:00–21:30（兩天一班）', price: '單人 NT$6,800・雙人同行 NT$6,000／人', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
+    body: '<p><b>DAY 1｜回到自己</b><br>輕斷食 × 植物 × 氣味</p><p><b>DAY 2｜走近一個人</b><br>精油抓周 × 提問 × 傾聽</p><p>使用艾薇丹 AD VITAM 十二款能量香氛精油。不需要芳療或輕斷食經驗。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
   {id: 'moon', dates: ['2026-11-25', '2026-12-24'], img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
     body: '<p>當晚 20:00 開始，穿舒適的衣服到場即可。不收固定費用，隨喜自由給予。</p>' +
       '<table class="moon"><tr><td>10/26</td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
@@ -829,25 +829,28 @@ function vJoin(id) {
 function vOil() {
   page('events', 'ISLAND DAYS', '<div class="loading">讀取中…</div>');
   api('oilInfo', []).then(function (c) {
-    var blk = function (no, t, d) { return '<div class="xc" style="margin-top:10px"><div class="no">' + no + '</div><h3>' + t + '</h3><p class="ds" style="margin:6px 0 0">' + d + '</p></div>'; };
-    var h = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Course / Pause Space</div><h1>精油抓周<br><small style="font-size:.55em;letter-spacing:.08em">Read The Air</small></h1>' +
+    var ul = function (xs) { return '<ul class="steps" style="margin:6px 0 0">' + xs.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>'; };
+    var day = function (no, t, sub, xs) { return '<div class="xc" style="margin-top:10px"><div class="no">' + no + '</div><h3>' + t + '</h3><p class="ds" style="margin:4px 0 0">' + sub + '</p>' + ul(xs) + '</div>'; };
+    var h = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Course / Pause Space</div><h1>精油抓周<br><small style="font-size:.55em;letter-spacing:.08em">READ THE AIR</small></h1>' +
       '<img class="heroimg" src="kv/ev_oil.jpg' + KV_V + '" alt="精油抓周" style="max-width:560px">' +
-      '<p class="lead">從關照，到關心。兩天，從對面坐到旁邊。<br>讀懂一棵植物，也許就讀懂了一個人。</p>' +
-      blk('① DAY 01', '讀懂植物', '十二支 AD VITAM 艾薇丹能量香氛精油。生長環境、習性、氣味，都是植物留下的線索；人的經歷、選擇、個性，不也有跡可循？') +
-      blk('② 兩天之間', '先停下慣性｜24 小時輕斷食', '我們每天吃的、選的、說的，很多其實只是習慣。從第一天課程中段開始，我們一起輕斷食，改喝高蛋白代餐，一直到第二天晚上下課。讓身體先安靜下來，再抽三支精油、憑直覺選擇，不急著解讀，先問問自己：我是真的需要，還是只是習慣？') +
-      blk('③ DAY 02', '讀懂人', '精油抓周 × 對話引導。別把關照誤以為是關心——當他說「我沒事」，先別急著回答「那就好」。從一種氣味打開一段記憶，讓話題不只聊得開，還能聊得下去。') +
-      '<div class="xc" style="margin-top:10px"><div class="no">FOR YOU / 適合誰</div><ul class="steps" style="margin:6px 0 0">' +
-      '<li>常在照顧別人，卻不確定怎麼走進對方心裡的人（主管、老師、照護者、美業與療癒工作者）</li>' +
-      '<li>想更懂伴侶、家人、朋友，讓關心不只停在「你還好嗎」的人</li>' +
-      '<li>對精油好奇，想從氣味認識自己的人</li>' +
-      '<li>覺得自己活在慣性裡，想停下來重新選擇的人</li></ul></div>' +
-      '<div class="xc" style="margin-top:10px"><div class="no">PARTNER / 合作品牌</div><h3>AD VITAM 艾薇丹</h3>' +
-      '<p class="ds" style="margin:6px 0 0">台灣精油品牌，選用法國有機原料、在台灣製作，產品通過 ECOCERT COSMOS ORGANIC 有機認證。這堂課使用艾薇丹「十二款能量香氛精油」，從十二種植物的氣味與特性，帶你讀懂植物、再讀懂人。</p></div>' +
+      '<p class="lead"><b>從對面，坐到旁邊</b><br>一堂結合植物、氣味、輕斷食與走心溝通的兩日課程</p>' +
+      '<p class="ds">透過輕斷食，暫時放下外在刺激，把感受帶回身體；再以艾薇丹十二款能量香氛精油為媒介，認識植物、理解自己，也練習如何真正靠近另一個人。</p>' +
+      '<p class="ds">精油不替我們決定答案。<br>它提供一條線索，讓那些還說不清楚的感受，慢慢被聽見。</p>' +
+      day('DAY 1', '回到自己', '輕斷食 × 植物 × 氣味', ['輕斷食與身體感受練習', '觀察飲食、情緒與身體的關係', '認識精油與植物的生命特性', '認識艾薇丹十二款能量香氛精油', '練習感受氣味帶來的聯想與訊息']) +
+      day('DAY 2', '走近一個人', '精油抓周 × 提問 × 傾聽', ['學習精油抓周的完整流程', '觀察選擇氣味時的身體與情緒反應', '練習提問、傾聽與延續對話', '從急著給答案，轉向真正理解對方', '完成雙人精油抓周實作']) +
+      '<div class="xc" style="margin-top:10px"><div class="no">YOU TAKE HOME / 你會帶走</div>' + ul(['艾薇丹十二款能量香氛精油的基礎認識', '一套可以實際運用的精油抓周流程', '從氣味、反應與對話理解一個人的方法', '更細緻地感受自己與表達情緒的能力', '陪伴他人，也不把別人的情緒留在自己身上的練習']) + '</div>' +
+      '<div class="xc" style="margin-top:10px"><div class="no">FOR YOU / 適合參加的人</div>' + ul(['對植物與精油充滿好奇的漫享生活家', '想透過氣味探索內在，更深地認識自己', '想學習走心溝通，與人建立深度交流', '從事 SPA、美容、芳療或身心服務的人', '經常承接別人的情緒，想放下負擔、重新 RESET 自己的人']) +
+      '<p class="ds" style="margin:8px 0 0">不需要具備芳療或輕斷食經驗。</p></div>' +
       '<div class="xc" style="margin-top:10px"><div class="no">INFO / 課程資訊</div><dl class="ef">' +
-      '<dt>時間</dt><dd>11/18（三）＋11/19（四）<br>19:00–21:30（兩天一班）</dd><dt>帶領</dt><dd>島主項項</dd>' +
+      '<dt>日期</dt><dd>11/18（三）、11/19（四）</dd><dt>時間</dt><dd>19:00–21:30</dd>' +
+      '<dt>形式</dt><dd>兩日完整課程＋輕斷食體驗</dd><dt>帶領者</dt><dd>島主項項</dd>' +
+      '<dt>使用精油</dt><dd>艾薇丹 AD VITAM 十二款能量香氛精油</dd><dt>地點</dt><dd>' + esc(c.where) + '</dd>' +
       '<dt>名額</dt><dd>每班 12 人' + (c.open ? '・<b style="color:var(--coral)">剩 ' + c.left + ' 位</b>' : '') + '</dd>' +
-      '<dt>學費</dt><dd>單人 NT$6,800<br>雙人同行 NT$6,000／人</dd><dt>贈送</dt><dd>' + esc(c.gift) + '</dd><dt>地點</dt><dd>' + esc(c.where) + '</dd></dl>' +
-      '<div class="lb">⚠️ 參加前請先確認</div><p class="ds" style="margin:0 0 8px"><b>本課程不適合懷孕中的朋友參加</b>：課程會使用多款精油，部分精油不適合孕期使用。</p><p class="ds" style="margin:0"><b>輕斷食</b>：以下狀況請先問過醫師，或報名時告訴島主改用不斷食的方式參加：哺乳中、糖尿病或正在服用血糖相關藥物、有慢性疾病或長期服藥、曾有飲食方面的困擾、對代餐成分（例如乳製品、大豆）過敏。</p></div>';
+      '<dt>費用</dt><dd>單人 NT$6,800<br>雙人同行 NT$6,000／人</dd><dt>贈送</dt><dd>' + esc(c.gift) + '</dd>' +
+      '<dt>精油優惠</dt><dd>十二款能量香氛精油一盒（12 支）<br>原價 NT$15,360（NT$1,280 × 12）<br>課程學員優惠價：<b>NT$［待公布］</b></dd>' +
+      '<dt>報名方式</dt><dd>填寫下方報名表，3 天內匯款完成報名</dd></dl>' +
+      '<div class="lb">⚠️ 參加前請先確認</div><p class="ds" style="margin:0 0 8px"><b>本課程不適合懷孕中的朋友參加</b>：課程會使用多款精油，部分精油不適合孕期使用。</p><p class="ds" style="margin:0"><b>輕斷食</b>：以下狀況請先問過醫師，或報名時告訴島主改用不斷食的方式參加：哺乳中、糖尿病或正在服用血糖相關藥物、有慢性疾病或長期服藥、曾有飲食方面的困擾、對代餐成分（例如乳製品、大豆）過敏。</p></div>' +
+      '<p class="lead" style="text-align:center;margin:22px 0 4px">不是為了看穿一個人<br>而是學會走近他</p>';
     if (c.open && c.left > 0) {
       h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
         '<label>報名方式</label><div class="jn-s"><label class="jn-o"><input type="radio" name="olT" value="1" checked><span><b>單人</b> NT$6,800</span></label>' +
