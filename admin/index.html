@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4efe6">
 <meta name="apple-mobile-web-app-title" content="島主控台">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png?v=2">
 <title>島主控台 Backstage</title>
 <style>
 body{margin:0;background:#f4efe6;color:#2b2a26;font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center}
@@ -84,7 +84,7 @@ var SHIM = '(' + function (EXEC, KEY, HERE) {
 
 function mount(html) {
   var head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">' +
-    '<meta name="theme-color" content="#f4efe6"><meta name="apple-mobile-web-app-title" content="島主控台"><link rel="apple-touch-icon" href="icon.png">' +
+    '<meta name="theme-color" content="#f4efe6"><meta name="apple-mobile-web-app-title" content="島主控台"><link rel="apple-touch-icon" href="icon.png?v=2">' +
     '<title>' + (PAGE === 'cal' ? '行事曆' : '今天') + '｜島主控台</title><script>' + SHIM + '<\/script>';
   html = /<head>/i.test(html) ? html.replace(/<head>/i, '<head>' + head) : head + html;
   document.open();
