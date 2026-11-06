@@ -938,8 +938,8 @@ function vCard(t) {
       (c.next ? '<div class="tc-b"><small>下次的建議</small><p>' + esc(c.next) + '</p><a class="btn ghost" href="#/services">看看島上服務</a></div>' : '') +
       (/型男研究所/.test(c.service) ? '<div class="tc-b"><small>想把穿搭再升級</small><p>Grace 的一對一形象諮詢，幫你整理專屬的穿搭方向。</p><a class="btn ghost" target="_blank" href="' + GRACE_URL + '">預約 Grace 一對一形象諮詢</a></div>' : '') +
       (c.journey ? '<div class="tc-b"><small>你的內在旅程冊</small><p>這次旅程的完整紀錄，隨時可以回來翻。</p><a class="btn coral" target="_blank" rel="noopener" href="' + esc(c.journey) + '">📖 打開我的旅程冊</a></div>' : '') + (c.perk ? '<div class="tc-b"><small>你的課後福利</small><p>完課學員專屬，一人一次，密碼已幫你帶好。</p><a class="btn coral" href="' + esc(c.perk.url) + '">' + esc(c.perk.label) + '</a></div>' : '') +
-      '<div class="tc-rv"><b>' + (c.course ? '喜歡今天的課嗎？' : '喜歡今天的時光嗎？') + '</b><p>花一分鐘，在 Google 留下你的感受，<br>讓更多需要暫停的人找到這座島。</p>' +
-      '<ol><li>按下面的按鈕，打開 PAUSE SPACE 的 Google 頁面</li><li>點「撰寫評論」，選幾顆星</li><li>寫一兩句今天的感受就好，可以附上照片</li></ol>' +
+      '<div class="tc-rv"><b>' + (c.course ? '想聽聽你上完課的感受' : '想聽聽你今天的感受') + '</b><p>花一分鐘，在 Google 留下一句話，<br>讓更多需要暫停的人找到這座島。</p>' +
+      '<ol><li>按下面的按鈕，會直接打開評論畫面</li><li>選幾顆星，寫一兩句今天的感受就好</li></ol>' +
       '<a class="btn coral" target="_blank" href="' + esc(c.review) + '">⭐ 到 Google 留下評論</a></div>' +
       '<a class="tc-line" href="https://line.me/R/ti/p/' + LINE_ID + '">有任何想說的，直接 LINE 島主 →</a></div>';
   }).catch(function () { $('app').innerHTML = '<div class="loading">暫時打不開小卡，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
