@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4efe6">
+<meta name="apple-mobile-web-app-title" content="島主控台">
+<link rel="apple-touch-icon" href="icon.png">
+<title>島主控台 Backstage</title>
+<style>
+body{margin:0;background:#f4efe6;color:#2b2a26;font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center}
+.box{text-align:center;padding:24px;max-width:320px}
+.box b{font-size:20px}
+.box p{color:#7a7468}
+.err{color:#a24b2c}
+</style>
+</head>
+<body>
+<div class="box" id="box"><b>島主控台</b><p>打開中…</p></div>
+<script>
+/* 島主控台外殼：畫面與資料都從 Google（Apps Script）拿，這裡只負責「店面」，讓麥克風能用 */
+var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
+var PAGES = {today: 1, cal: 1};
+
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+
+// 第一次用：網址後面帶 #key=... 進來，記在這支手機上，然後把網址擦乾淨
+(function () {
+  var m = location.hash.match(/key=([^&]+)/);
+  if (m) store('bk', decodeURIComponent(m[1]));  // 鑰匙留在網址裡：書籤、加入主畫面都帶著它，Safari 清資料也不怕
+})();
+var KEY = (location.hash.match(/key=([^&]+)/) || [])[1]; KEY = KEY ? decodeURIComponent(KEY) : store('bk');
+if (KEY && !/key=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search + '#key=' + encodeURIComponent(KEY));
+var PAGE = (location.search.match(/[?&]p=(\w+)/) || [])[1];
+if (!PAGES[PAGE]) PAGE = 'today';
+
+function api(params) {
+  var q = Object.keys(params).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+  return fetch(EXEC + '?' + q, {redirect: 'follow'}).then(function (r) { return r.json(); }).then(function (j) {
+    if (j.error) throw new Error(j.error);
+    return j;
+  });
+}
+
+function fail(msg) {
+  document.getElementById('box').innerHTML = '<b>島主控台</b><p class="err">' + msg + '</p>';
+}
+
+if (!KEY) {
+  fail('這支手機還沒有鑰匙。請用 Claude 給你的「第一次打開」連結開啟。');
+} else {
+  api({api: 'shell', page: PAGE, key: KEY}).then(function (j) { mount(j.html); }).catch(function (e) {
+    fail(/key|鑰匙|權限|Unauthorized|不正確/i.test(String(e)) ? '鑰匙不對，請用 Claude 給你的「第一次打開」連結重新開啟。' : '讀取失敗，往下拉重新整理。');
+  });
+}
+
+// 把 google.script.run 換成「打電話回 Google」，控台原本的程式不用改
+var SHIM = '(' + function (EXEC, KEY, HERE) {
+  function make(ok, bad) {
+    return new Proxy({}, {get: function (_, name) {
+      if (name === 'withSuccessHandler') return function (f) { return make(f, bad); };
+      if (name === 'withFailureHandler') return function (f) { return make(ok, f); };
+      return function () {
+        var args = [].slice.call(arguments);
+        var url = EXEC + '?api=call&key=' + encodeURIComponent(KEY) + '&fn=' + encodeURIComponent(name) + '&args=' + encodeURIComponent(JSON.stringify(args));
+        fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+          if (j.error) throw new Error(j.error);
+          if (ok) ok(j.result);
+        }).catch(function (e) { if (bad) bad(e); });
+      };
+    }});
+  }
+  window.google = {script: {run: make(null, null)}};
+  // 下方選單：今天、行事曆留在這個店面；其他頁打開 Google 那邊的原頁面
+  document.addEventListener('click', function (ev) {
+    var a = ev.target.closest && ev.target.closest('a[href]');
+    if (!a || a.href.indexOf(EXEC) !== 0) return;
+    var u = a.href;
+    var rest = u.replace(/^[^?]*\?/, '').split('&').filter(function (x) { return !/^admin=/.test(x); });
+    if (rest.length === 0) { ev.preventDefault(); location.href = HERE + '?p=today' + '#key=' + encodeURIComponent(KEY); }
+    else if (rest.length === 1 && rest[0] === 'cal=1') { ev.preventDefault(); location.href = HERE + '?p=cal' + '#key=' + encodeURIComponent(KEY); }
+  }, true);
+} + ')(' + JSON.stringify(EXEC) + ',' + JSON.stringify(KEY) + ',' + JSON.stringify(location.pathname) + ');';
+
+function mount(html) {
+  var head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">' +
+    '<meta name="theme-color" content="#f4efe6"><meta name="apple-mobile-web-app-title" content="島主控台"><link rel="apple-touch-icon" href="icon.png">' +
+    '<title>' + (PAGE === 'cal' ? '行事曆' : '今天') + '｜島主控台</title><script>' + SHIM + '<\/script>';
+  html = /<head>/i.test(html) ? html.replace(/<head>/i, '<head>' + head) : head + html;
+  document.open();
+  document.write(html);
+  document.close();
+}
+</script>
+</body>
+</html>
