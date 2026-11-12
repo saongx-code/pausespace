@@ -1,25 +1,24 @@
-部署新櫃台時要一起改的排程規則：
-- soul / oil100：要有 ready.txt 才處理（島主按「交給 AI 整理」）
-- oil100：oils.txt = {like, ok, no}；transcript.txt 可能沒有
-- oil100 抓周卡：主題字規則（只用島主說的話、轉折句→對客人說的短句≤10字、3–5 行延伸、重點字、意象、隱私）
-- Canva：複製母版 → 換插畫（generate-image）＋換文字層 → 存檔（島主 2026-11-12 長期同意：只限抓周卡、存進「精油抓周作品集」）→ 匯出 PNG → 草稿 card / canva 欄位
-- deskSend oil100：抓網址存進案件資料夾（cardFile）→ 開分享 → LINE 附圖
+# 抓周卡 v3（島主 2026-11-13 定稿）
+同一種風格、版面、顏色；內容（插畫意象、詩句、主題字）每位客人都依精油抓周的逐字稿重新設計。
 
-抓周卡 v2（島主 2026-11-12 定稿，對標：藍色印刷書封）
-- 母版 DAHauEFjtFs【母版 v2】精油抓周卡（請勿刪除）；作品集資料夾 FAHauH645BQ
-- 頁 PBMl7rpb6QnmLZvg；背景＝插畫（update_fill locator=頁 id）
-- 文字層 PBMl7rpb6QnmLZvg-LBCYn2sKMx7JD2hJ（整頁透明 PNG，update_fill 後 crop_media 0,0,1080,1920）
-- 署名小字 PBMl7rpb6QnmLZvg-LBKywcyznjJDF7Vh「名字　日期　·　精油抓周」20px，放在不擋插畫主體的地方
-- （2026-11-13 起改用 Julialangosh403 的團隊；舊團隊的母版與作品集不再使用）
+## Canva（Julialangosh403 的團隊）
+- 母版 DAHauC7UhDg【母版 v3】精油抓周卡（請勿刪除）；作品集資料夾 FAHauH645BQ
+- 頁 PBMl7rpb6QnmLZvg：背景＝插畫（update_fill locator＝頁 id）
+- 文字層 PBMl7rpb6QnmLZvg-LBCYn2sKMx7JD2hJ（整頁透明 PNG；update_fill 後 crop_media 0,0,1080,1920）
+- 卡片上沒有客人名字；落款固定「島主項項｜精油抓周」（在文字層裡）
+- 插畫風格參考 media：MAHauCcplIM（v3 範例插畫）
 
-插畫規則
-- 每位客人畫一張新的（作品集），圖案「從那位客人的逐字稿抓意象」，不是每次都畫鳥
-- 固定風格：深藍單色印刷感、米白紙；一個清楚的主體＋幾個動態模糊的元素（速度感）；元素大小方向不規則，不要排得像軍隊
-- 留一塊乾淨空白給主題字（預設畫面中段）
-- generate-image 可用 MAHauNKao_w 當風格參考圖
+## 版面
+- 上方約六成：插畫。深藍單色印刷感、米白紙；一個清楚的主體（通常是一個人或一個物件，站在畫面中上方，腳要高於畫面 58% 的位置）＋各式各樣、大小方向不規則、有的清楚有的動態模糊的元素（速度感，不要排得像軍隊）。往下慢慢淡進米白紙。不要任何文字。
+- 下方約四成：文字層（poem.py 自動排）
+  - 詩句 3–5 行：從島主在逐字稿裡真的說過的話延伸；每行 1 個粗斑駁關鍵字（"b"）＋細字（"r"），也可以整行細字。關鍵字通常是主題字裡的詞（重複出現有節奏感）
+  - 第一行後、最後一行後各一條淡虛線（自動）
+  - 主題字：對客人說的短句，10 字以內，大號粗斑駁（自動置中）
+  - 落款：島主項項｜精油抓周（自動）
+- 插畫若讓人物腳太低，壓到第一行字：crop_media 頁背景往上移，再看縮圖確認
 
-文字層規則（desk/cardkit/ink.py，用法看 README）
-- 主題字：復古印刷、墨色不均、斑駁，每個字大小不一、錯落排；1–2 條細斜線
-- 「島主項項」＝手寫落款（直寫），放在主題字旁
-- 字放在插畫的空白處，不能壓到鳥／主體／人物
-- 產出 PNG → push 到 repo desk/ → raw.githubusercontent 網址 → upload-asset-from-url → update_fill 文字層
+## 文字層產生
+python3 poem.py spec.json → 1080×1920 透明 PNG
+spec 範例：example_v3.json
+{"out":"x.png","title":"你值得自由","seed":7,"lines":[[["自由","b"],["不用一直飛","r"]],[["自由","b"],["不用飛很遠","r"]],[["自由是你真的","r"]],[["聽見自己","b"],["心裡","r"]],[["想去的地方","r"]]]}
+產出 → push 到 repo desk/cards/案件資料夾ID.png → raw.githubusercontent 網址 → Canva upload-asset-from-url → 上傳成功立刻從 repo 刪掉再 push

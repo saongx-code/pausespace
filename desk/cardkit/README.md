@@ -1,3 +1,7 @@
+# 抓周卡文字層（v3：poem.py；舊版 ink.py 保留不用）
+先讀 RULES.md。
+python3 poem.py spec.json → 1080x1920 透明 PNG（深藍 #22345e）。需要 Noto Serif CJK（/usr/share/fonts/opentype/noto/，Black/Regular，第 3 個＝TC）。
+
 # 抓周卡文字層產生器
 python3 ink.py spec.json [seed] → 1080x1920 透明 PNG（深藍 #22345e）
 - glyphs：每個字一筆 {ch,size,x,y,rot,ink}；font:"hand" = 手寫落款（Klee One），其餘 = Noto Serif CJK TC 復古印刷斑駁
