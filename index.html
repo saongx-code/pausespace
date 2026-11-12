@@ -498,7 +498,8 @@ function vDone(r) {
       '<label for="dLast5">匯款後，填寫你的帳號末五碼</label><input id="dLast5" inputmode="numeric" maxlength="5"><p class="err" id="dErr" hidden></p>' +
       '<button class="btn coral" type="button" id="dSend" style="margin-top:10px">我已匯款，送出</button><p class="note" id="dOk" hidden>收到了！島主核對後，會在官方 LINE 通知你預約正式成立。</p></div>' : '') +
     lineBind(ST.last && ST.last.phone, '把預約確認傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成。之後島主確認、課後小卡都會直接送到你的 LINE。') +
-    '<a class="btn ghost" href="https://line.me/R/ti/p/' + LINE_ID + '">回到官方 LINE</a>');
+    '<a class="btn ghost" href="https://line.me/R/ti/p/' + LINE_ID + '">回到官方 LINE</a>' +
+    '<p class="note" style="text-align:center;margin-top:14px">之後需要改時間？<a href="#/change/' + esc(r.code) + '" style="color:#b5532f">在這裡申請</a>（療程 24 小時前）</p>');
 }
 function vTime() {
   ST = {svc: null, date: B.dates[0].date, start: null};
@@ -524,6 +525,49 @@ function report(code, phone, last5, err, btn, ok) {
   api('reportDeposit', [{code: code, phone: phone, last5: last5}]).then(function (r) {
     btn.disabled = false; if (!r.ok) { err.hidden = false; err.textContent = r.error; return; } ok();
   }).catch(function () { btn.disabled = false; err.hidden = false; err.textContent = '送出失敗，請再試一次。'; });
+}
+
+/* ---------- 客人自己改時間 ---------- */
+var CH = {};
+function vChange(code) {
+  CH = {code: String(code || '').toUpperCase(), phone: (ME && ME.phone) || '', info: null, done: null};
+  chDraw();
+}
+function chDraw() {
+  var h = '<a class="back" href="#/services">← 島上服務</a><h1>改預約時間</h1>', i = CH.info;
+  if (!i) {
+    h += '<p class="lead">療程開始 24 小時前，都可以申請改時間；島主同意後才會正式改過去。</p><div class="panel"><label for="cCode">預約編號</label><input id="cCode" autocapitalize="characters" value="' + esc(CH.code) + '" placeholder="例如 PS261025-1400-AB3">' +
+      '<label for="cPhone">預約時留的手機</label><input id="cPhone" inputmode="tel" value="' + esc(CH.phone) + '">' +
+      '<p class="err" id="cErr" hidden></p><button class="btn coral" id="cFind" type="button" style="margin-top:12px">找我的預約</button>' +
+      '<p class="note" style="margin-top:10px">預約編號在「預約申請收到了」那則 LINE 訊息裡。找不到的話，直接 <a href="https://line.me/R/ti/p/' + LINE_ID + '" style="color:#b5532f">LINE 島主</a>。</p></div>';
+  } else {
+    h += '<div class="panel"><div class="note">' + (CH.done ? '目前的預約（保留中）' : '目前的預約') + '</div><b>' + esc(i.service) + '</b><div>' + esc(i.date) + '　' + esc(i.start) + '–' + esc(i.end) + '</div></div>';
+    if (CH.done) h += '<div class="panel"><h3>改期申請送出了 🌿</h3><div>想改到：<b>' + esc(CH.done.date) + '　' + esc(CH.done.start) + '–' + esc(CH.done.end) + '</b></div><p class="note">' + (CH.done.line ? '申請紀錄已經傳到您的 LINE。' : '') + '島主同意後會用 LINE 通知您；在那之前，原本的時間都幫您保留著。</p></div>';
+    else if (!i.canChange) h += '<div class="panel"><p>' + esc(i.reason) + '</p><a class="btn coral" href="https://line.me/R/ti/p/' + LINE_ID + '">LINE 島主</a></div>';
+    else h += '<h2>選新的日期</h2><div class="dates" id="dates"></div><h2>選新的開始時間</h2><div id="times"></div><div id="chBox"></div>';
+  }
+  page('services', 'BOOKING', h);
+  if (i && i.canChange && !CH.done) { ST = {svc: svc(i.svcKey) || {key: i.svcKey, min: i.min}, date: B.dates[0].date, start: null, change: true}; drawDates(); loadTimes(); }
+}
+function chPick() {
+  $('chBox').innerHTML = '<div class="panel" style="margin-top:14px"><div>改到 <b>' + esc(ST.date) + '　' + esc(ST.start) + '</b> 開始</div><p class="err" id="cErr" hidden></p><button class="btn coral" id="cMove" type="button" style="margin-top:10px">送出改期申請</button><p class="note" style="margin-top:8px">島主同意後才會正式改過去。</p></div>';
+  $('chBox').scrollIntoView({behavior: 'smooth', block: 'start'});
+}
+function chFind(b) {
+  var e = $('cErr'); CH.code = $('cCode').value.trim().toUpperCase(); CH.phone = $('cPhone').value.trim();
+  e.hidden = true; b.disabled = true; b.textContent = '查詢中…';
+  api('bookingGet', [{code: CH.code, phone: CH.phone}]).then(function (r) {
+    b.disabled = false; b.textContent = '找我的預約';
+    if (!r.ok) { e.hidden = false; e.textContent = r.error; return; }
+    CH.info = r; chDraw();
+  }).catch(function () { b.disabled = false; b.textContent = '找我的預約'; e.hidden = false; e.textContent = '查詢失敗，請再試一次。'; });
+}
+function chMove(b) {
+  var e = $('cErr'); e.hidden = true; b.disabled = true; b.textContent = '送出中…';
+  api('bookingMove', [{code: CH.code, phone: CH.phone, date: ST.date, start: ST.start}]).then(function (r) {
+    if (!r.ok) { b.disabled = false; b.textContent = '送出改期申請'; e.hidden = false; e.textContent = r.error; return; }
+    CH.done = r; ST = {}; chDraw(); window.scrollTo(0, 0);
+  }).catch(function () { b.disabled = false; b.textContent = '送出改期申請'; e.hidden = false; e.textContent = '送出失敗，請再試一次；一直失敗請直接 LINE 島主。'; });
 }
 
 /* ---------- Moon Bar ---------- */
@@ -802,7 +846,7 @@ function drawMe() {
     (m.sessionsLeft != null ? '<div class="panel"><h3>我的套票</h3><div class="stat" style="border-top:0"><span>♨️ 岩盤浴套票</span><b>剩 ' + m.sessionsLeft + ' 堂</b></div>' + (m.resetUp != null ? '<div class="stat"><span>✨ 其中可升級成 Reset</span><b>還有 ' + Math.min(m.resetUp, m.sessionsLeft) + ' 次</b></div>' : '') + (m.sessionsLeft > 0 ? '<a class="btn coral" href="#/book/stone60" onclick="PREPASS=1" style="margin-top:10px">用套票預約岩盤浴</a>' : '<p class="note">套票已用完，想續購請 <a href="' + lineMsg('我想續購岩盤浴套票') + '">LINE 島主</a>。</p>') + '</div>' : '') + ((m.journeys || []).length ? '<div class="panel"><h3>📖 我的旅程冊</h3>' + m.journeys.map(function (j) { return '<a class="rec" style="text-decoration:none;color:inherit" target="_blank" rel="noopener" href="' + esc(j.url) + '"><div><small>' + esc(j.date) + '</small><b>' + esc(j.title || '內在旅程冊') + '</b></div><span>打開 ↗</span></a>'; }).join('') + '</div>' : '') + '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
     '<div class="panel"><h3>儲值與消費明細</h3>' + (m.records.length ? m.records.map(function (x) {
       return '<div class="rec"><div><small>' + esc(x.date) + '</small><b>' + esc(x.item) + '</b>' + (x.detail ? '<small>' + esc(x.detail) + '</small>' : '') + '</div><span class="amt' + (x.amount > 0 ? ' plus' : '') + '">' + (x.amount > 0 ? '+' : '') + money(x.amount) + '</span></div>';
-    }).join('') : '<p class="note">還沒有紀錄。</p>') + '</div>' + lineBind(m.phone, '課後小卡、預約提醒都傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成，只要做一次。', m.lineBound) + '<button class="btn ghost" id="mOut" type="button">登出</button>');
+    }).join('') : '<p class="note">還沒有紀錄。</p>') + '</div>' + '<a class="btn ghost" href="#/change" style="margin:12px 0">改預約時間</a>' + lineBind(m.phone, '課後小卡、預約提醒都傳到我的 LINE', '按下去會打開官方 LINE，訊息已經幫你填好，按「傳送」就完成，只要做一次。', m.lineBound) + '<button class="btn ghost" id="mOut" type="button">登出</button>');
 }
 function member(fn, data, err, btn) {
   err.hidden = true; btn.disabled = true;
@@ -957,6 +1001,7 @@ function route() {
   if (r === 'book') { var q = String(a || '').split('?'); a = q[0]; ST.preCode = (q[1] || '').replace(/^c=/, ''); return vBook(a); }
   if (r === 'time') return vTime();
   if (r === 'report') return vReport();
+  if (r === 'change') return vChange(a);
   if (r === 'tools') return vTools();
   if (r === 'gifts' || r === 'benefits') return a ? vGift(a) : vGifts();
   if (r === 'member') return vMember();
@@ -966,15 +1011,17 @@ document.addEventListener('change', function (ev) { if (ev.target.id === 'mbSpa'
 document.addEventListener('click', function (ev) {
   var row = ev.target.closest('.mb-row'); if (row && !row.classList.contains('soldout') && !ev.target.closest('button')) { mbKeep(); MB.open = MB.open === row.dataset.mbopen ? '' : row.dataset.mbopen; return vBar(); }
   var t = ev.target.closest('button'); if (!t) return;
-  if (t.dataset.d && t.classList.contains('dt')) { ST.date = t.dataset.d; ST.start = null; drawDates(); loadTimes(); if ($('formBox')) $('formBox').hidden = true; if ($('fitBox')) $('fitBox').innerHTML = ''; return; }
+  if (t.dataset.d && t.classList.contains('dt')) { ST.date = t.dataset.d; ST.start = null; drawDates(); loadTimes(); if ($('formBox')) $('formBox').hidden = true; if ($('chBox')) $('chBox').innerHTML = ''; if ($('fitBox')) $('fitBox').innerHTML = ''; return; }
   if (t.dataset.t) {
     ST.start = t.dataset.t; [].forEach.call(document.querySelectorAll('.tm'), function (x) { x.classList.toggle('on', x === t); });
-    if (ST.svc) drawForm(); else drawFit(+t.dataset.fit); return;
+    if (ST.change) chPick(); else if (ST.svc) drawForm(); else drawFit(+t.dataset.fit); return;
   }
   if (t.dataset.pick) { ST.svc = svc(t.dataset.pick); drawForm(); return; }
   if (t.id === 'fSend') return sendBooking();
   if (t.id === 'copyBank') { var txt = $('bank').textContent; if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { t.textContent = '已複製'; }); return; }
   if (t.id === 'dSend') return report(ST.last.code, ST.last.phone, $('dLast5').value.trim(), $('dErr'), t, function () { $('dOk').hidden = false; t.hidden = true; });
+  if (t.id === 'cFind') return chFind(t);
+  if (t.id === 'cMove') return chMove(t);
   if (t.id === 'rSend') return report($('rCode').value.trim().toUpperCase(), $('rPhone').value.trim(), $('rLast5').value.trim(), $('rErr'), t, function () { $('rOk').hidden = false; });
   if (t.dataset.jn) return joinSend(t);
   if (t.dataset.evf) { EV.f = t.dataset.evf; return vEvents(); }
@@ -1004,7 +1051,7 @@ window.addEventListener('hashchange', route);
   route();
   try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}
   function boot(n) {
-    api('getBootstrap', []).then(function (d) { try { localStorage.setItem('ps_boot', JSON.stringify({t: Date.now(), d: d})); } catch (e) {} var first = !B; B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = d.images[k]; }); if (first || !/^#\/(book|time|member|report)/.test(location.hash)) route(); })
+    api('getBootstrap', []).then(function (d) { try { localStorage.setItem('ps_boot', JSON.stringify({t: Date.now(), d: d})); } catch (e) {} var first = !B; B = d; BOOTFAIL = false; if (d.images) Object.keys(d.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = d.images[k]; }); if (first || !/^#\/(book|time|member|report|change)/.test(location.hash)) route(); })
       .catch(function () { if (n < 3) return setTimeout(function () { boot(n + 1); }, 1500 * n); BOOTFAIL = true; route(); });
   }
   boot(1);
