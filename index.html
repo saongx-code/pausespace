@@ -277,11 +277,11 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'Reset・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Monsoon Care'};
 
 var EVENTS = [
-  {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜READ THE AIR', sub: '從對面，坐到旁邊。一堂結合植物、氣味、輕斷食與走心溝通的兩日課程。', when: '11/18（三）＋11/19（四）19:00–21:30（兩天一班）', price: '單人 NT$6,800・雙人同行 NT$6,000／人', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
+  {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜READ THE AIR', sub: '從對面，坐到旁邊。一堂結合植物、氣味、輕斷食與走心溝通的課程，連續兩晚、共 5 小時。', when: '11/18（三）＋11/19（四）19:00–21:30（連續兩晚，共 5 小時）', price: '單人 NT$6,800・雙人同行 NT$6,000／人', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
     body: '<p><b>DAY 1｜回到自己</b><br>輕斷食 × 植物 × 氣味</p><p><b>DAY 2｜走近一個人</b><br>精油抓周 × 提問 × 傾聽</p><p>使用艾薇丹 AD VITAM 十二款能量香氛精油。不需要芳療或輕斷食經驗。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
   {id: 'moon', dates: ['2026-11-25', '2026-12-24'], img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
     body: '<p>當晚 20:00 開始，穿舒適的衣服到場即可。不收固定費用，隨喜自由給予。</p>' +
-      '<table class="moon"><tr><td>10/26</td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
+      '<table class="moon"><tr><td>10/26<br><span class="note">已結束</span></td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
       '<tr><td>11/25</td><td><b>海狸月・超級滿月</b><br><span class="note">靈魂避難所：打造內在的防禦容器</span></td></tr>' +
       '<tr><td>12/24</td><td><b>冷月・平安夜</b><br><span class="note">營火守望：擁抱黑暗中的光芒</span></td></tr></table>' +
       '<p class="note">活動日期依島主公告為準。</p>', cta: ['詢問滿月儀式', '我想詢問滿月儀式']},
@@ -290,19 +290,19 @@ var EVENTS = [
       '<p>11 月場：Coming soon（日期即將公布）｜NT$1,000／人<br>4 人開班、最多 15 人。<br>另約場：湊齊四人可申請其他時間，由島主確認。</p><p class="note">報名後不退費、可轉讓；若取消開課全額退費。</p>', cta: ['先登記 11 月場', '我想登記手機攝影課 11 月場，日期公布時通知我'], cta2: ['登記另約場・四人成班', '我想登記手機攝影課另約場（四人成班）']},
   {id: 'face', off: true, img: 'face', kind: '課程', tag: '小班制', title: 'RESET FACE｜三日課', sub: '美容師創業陪跑。從臉部照護的學習，走向服務與創業的準備。', when: '三天・每天 10:00–16:00（日期由島主公告）', price: 'NT$9,800', place: 'PAUSE SPACE 島上', cap: '小班制・兩人成班', fit: ['想投入美容服務', '準備個人工作室', '需要有人陪跑'],
     body: '<p>適合想投入美容服務，或正在準備個人美容事業，希望有人陪伴起步與整理方向的人。</p><p>學習方向：美容專業起步、服務方向、創業準備。<br>可先登記一人等候湊班，或兩人以上一起申請。時長、學費與日期由島主確認。</p>', cta: ['登記 Face 開班意願', '我想登記 Face 顏 開班意願']},
-  {id: 'mens', dates: ['2026-11-11', '2026-12-09'], img: 'mens', poster: 'kv/ev_mens.jpg', kind: '課程', tag: '男士專班・免費', title: '型男研究所｜男士穿搭 × 肌膚保養', sub: 'STYLE LAB 男士專班課。前半小時 Grace 教穿搭，後一小時島主項項教保養，一個晚上把自己的樣子整理好。', when: '11/11（三）・12/9（三）19:30–21:00（19:00 入場）', price: '免費報名',  place: '台北市信義區忠孝東路五段 17 之 1 號 3 樓', who: 'Grace × 島主項項', fit: ['不知道怎麼保養', '不知道怎麼穿', '想看起來更有精神'],
-    body: '<p><b>19:30–20:00｜穿搭｜Grace</b><br>穿搭觀念與場合搭配、質感細節與實用示範</p><p><b>20:00–21:00｜保養｜島主項項</b><br>肌膚保養觀念與日常流程、保養體驗與 QA 交流</p><p>兩場內容相同，選一場參加即可。</p><p class="note">上完課可享「型男課後福利社」：岩盤浴＋型男護膚 90 分鐘，學員價 NT$660。上課當天官方 LINE 會傳專屬預約連結給你。</p>', cta: ['報名型男研究所', '我要報名型男研究所'], href: '#/join/mens', cta2: ['預約 Grace 一對一形象諮詢', ''], href2: GRACE_URL},
+  {id: 'mens', dates: ['2026-11-11', '2026-12-09'], img: 'mens', poster: 'kv/ev_mens.jpg', kind: '課程', tag: '男士專班・免費', title: '型男研究所｜男士穿搭 × 肌膚保養', sub: 'STYLE LAB 男士專班課。前半小時 Grace 教穿搭，後一小時島主項項教保養，一個晚上把自己的樣子整理好。', when: '12/9（三）19:30–21:00（19:00 入場）｜11/11 場已結束', price: '免費報名',  place: '台北市信義區忠孝東路五段 17 之 1 號 3 樓', who: 'Grace × 島主項項', fit: ['不知道怎麼保養', '不知道怎麼穿', '想看起來更有精神'],
+    body: '<p><b>19:30–20:00｜穿搭｜Grace</b><br>穿搭觀念與場合搭配、質感細節與實用示範</p><p><b>20:00–21:00｜保養｜島主項項</b><br>肌膚保養觀念與日常流程、保養體驗與 QA 交流</p><p>每場內容相同；11/11 場已結束，下一場是 12/9。</p><p class="note">上完課可享「型男課後福利社」：岩盤浴＋型男護膚 90 分鐘，學員價 NT$660。上課當天官方 LINE 會傳專屬預約連結給你。</p>', cta: ['報名型男研究所', '我要報名型男研究所'], href: '#/join/mens', cta2: ['預約 Grace 一對一形象諮詢', ''], href2: GRACE_URL},
   {id: 'body', off: true, img: 'body', kind: '課程', tag: '籌備中', title: 'Reset no.2｜Body 體', sub: '按摩師創業陪跑。從身體照護出發，為自己的專業服務建立方向。', body: '<p>完整內容與開課資訊將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Body 體 課程的開課通知']},
   {id: 'heal', off: true, img: 'heal', kind: '課程', tag: '籌備中', title: 'Reset no.3｜Heal 癒', sub: '療癒師創業陪跑。療癒服務、個人定位、創業準備。', body: '<p>陪跑內容、期間與參與方式將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Heal 癒 課程的開課通知']}
 ];
 var GIFTS = [
   {id: 'mens', img: 'perk', price: '學員價 NT$660', len: '90 分鐘', who: '型男研究所學員', fit: ['剛上完型男研究所', '想把課堂學的保養實際做一次'], cta: ['先報名型男研究所', '#/join/mens'], tag: '型男研究所學員限定', title: '型男課後福利社｜岩盤浴＋型男護膚', sub: '上完型男研究所的專屬福利：泡一場岩盤浴，再做一次型男護膚，把課堂上學的保養真的做在自己臉上。', body: '<p><b>岩盤浴＋型男護膚｜90 分鐘｜學員價 NT$660</b></p><ul class="steps"><li>上課當天，官方 LINE 會傳給你專屬預約連結</li><li>點連結選時間，學員密碼已經自動帶好</li><li>來島上：先泡岩盤浴，再做型男護膚</li></ul><p class="note">限型男研究所學員，一人一次。還沒加官方 LINE 的話，記得先加，才收得到連結。</p>', svc: 'mens'},
-  {id: 'oil', img: 'oil', price: '免費（現場點一杯飲料）', who: '名額由島主確認', fit: ['想聊聊此刻的自己', '對精油好奇'], tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。這不是 SPA 療程，是一場小小的氣味占卜。', body: '<p>體驗免費，現場只需點一杯飲料｜名額由島主確認</p><p>最好的狀態，就是把自己放下，什麼都不用想。</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
+  {id: 'oil', img: 'oil', price: '免費（現場點一杯飲料）', who: '名額由島主確認', fit: ['想聊聊此刻的自己', '對精油好奇'], tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。這不是 SPA 療程，是一場小小的氣味占卜。', body: '<p>體驗免費，現場只需點一杯飲料｜名額由島主確認</p><p>不用先想好答案，帶著此刻的自己來。</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
   {id: 'indiba', img: 'indiba', price: 'NT$999／次（腿部需 2 次）', len: '10 分鐘／次', fit: ['肩頸緊繃', '久坐久站'], tag: '局部放鬆', title: 'INDIBA 局部放鬆｜肩頸／腰臀／腿', sub: '用局部儀器照護，給忙碌的身體一段喘息。', body: '<p>10 分鐘／次｜NT$999／次（腿部需選 2 次）</p><p class="note">確認當日狀況 → 肩頸局部操作 → 感受確認與收尾。如有特殊健康狀況，預約時請先告知島主。</p>', svc: 'indiba'},
-  {id: 'sumei', img: 'sumei', price: '由島主確認', fit: ['想認識自己的肌膚', '想要一套保養方法'], tag: '規劃中・可先登記', title: 'Su 美・島計劃', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
+  {id: 'sumei', img: 'sumei', price: '由島主確認', fit: ['想認識自己的肌膚', '想要一套保養方法'], tag: '規劃中・可先登記', title: 'Su 美・島計畫', sub: '從一次 SPA 護膚開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p>SPA 護膚＋個人護膚手冊｜費用由島主確認</p><p class="note">了解目前膚況與保養習慣 → SPA 護膚 → 整理個人護膚手冊</p>', svc: 'sumei'}
 ];
 var BAR = {
-  cats: [{n: '醒', d: '無酒特調', p: 250}, {n: '醺', d: '微醺亂調', p: 300}, {n: '醉', d: '杜康純飲', p: 400}, {n: '吃', d: '私廚秘製', p: 100, unit: '份'}],
+  cats: [{n: '醒', d: '無酒特調', p: 250}, {n: '醺', d: '微醺亂調', p: 300, from: true}, {n: '醉', d: '杜康純飲', p: 400}, {n: '吃', d: '私廚秘製', p: 100, unit: '份'}],
   art: {wine: 'rocks', sake: 'tea'},
   items: [
     {id: 'morning-citrus', name: '清橙泡', subtitle: '紅橙・柳橙・南非國寶茶・康普茶', category: '醒', price: 250, illustration: 'fizz', description: '明亮柑橘在細緻氣泡裡展開，酸甜清爽，尾韻帶著淡淡茶香。'},
@@ -361,29 +361,29 @@ function needBoot() { document.body.classList.remove('mbmode'); var r0 = (locati
 /* ---------- 島上服務（左右滑分類卡＋療程卡） ---------- */
 var SV_ORDER = ['beauty', 'reset', 'soul', 'metime', 'pick'];
 var SV_CAT = {
-  beauty: {zh: '身', en: 'Beauty', what: '照顧看得到的：肌膚與身體', line: '臉部護膚、煥膚、身體放鬆。覺得累、膚況不好、想變好看，選這裡。'},
-  reset: {zh: '心', en: 'Reset', what: '照顧感受：放下情緒', line: '從身體訊號出發，依當下狀態走身體或內在路線，把累積的疲憊與情緒整理好。'},
-  soul: {zh: '靈', en: 'Soul', what: '照顧方向：看清自己', line: '潛意識探索、薩滿占讀、空間淨化。想弄清楚自己卡在哪，選這裡。'},
-  metime: {zh: '岩盤浴／泡澡', en: 'Me Time', what: '只是休息：什麼都不用做', line: '岩盤浴或泡澡，一個人安靜休息，不用聊天。'},
-  pick: {zh: '島主選配', en: 'Monsoon', what: '照顧日常：保養交給島主', line: '先做肌膚檢測；熟客可由島主依當季膚況選配保養品，一季一盒。'}
+  beauty: {zh: '身', en: 'Beauty', what: '肌膚與身體照護', line: '肌膚與身體照護：臉部護膚、煥膚、局部體刷。'},
+  reset: {zh: '心', en: 'RESET', what: '岩盤浴 × 身心放鬆與探索', line: '岩盤浴 × 身心放鬆與探索：從牌卡與精油開始，依你當天的狀態安排按摩或引導。'},
+  soul: {zh: '靈', en: 'Soul', what: '潛意識探索 × 占讀 × 儀式', line: '潛意識探索 × 占讀 × 儀式：陪你換個角度，看看眼前的議題。'},
+  metime: {zh: '獨處', en: 'Me Time', what: '獨處時光｜岩盤浴・泡澡', line: '獨處時光｜岩盤浴・泡澡：一個人安靜休息，不用聊天。'},
+  pick: {zh: '島主選配', en: 'Skin Care', what: '肌膚諮詢 × 季度保養', line: '肌膚諮詢 × 季度保養：先做肌膚檢測，熟客可由島主依當季膚況選配保養品。'}
 };
 var NOTE_FACE = '懷孕、近期做過醫美，或臉部有傷口，請先在備註告訴島主。';
 var NOTE_HEAT = '懷孕、有心血管狀況，或當天身體不適，請先在備註告訴島主。';
 var NOTE_MIND = '這是自我探索與陪伴，不取代醫療或心理治療。';
 var SV_COPY = {
-  stoneface: {what: '先讓身體安靜下來，再好好照顧這張臉。', incl: '膚況與身體狀態確認 → 岩盤浴 → 清潔與臉部護理 → 面膜與收尾', fit: ['身體沉重', '想好好休息', '在意毛孔', '手腳容易冰冷'], note: NOTE_HEAT},
-  classic: {what: '從基礎清潔與面膜，重新整理肌膚的日常節奏。', incl: '肌膚評估 → 清潔 → 安麗雅姿五色面膜選配 → 收尾保養', fit: ['五色面膜', '日常保養', '想要肌膚舒適'], note: NOTE_FACE},
-  enzyme: {what: '溫和整理老廢角質，讓後續保養更有方向。', incl: '膚況與禁忌確認 → 清潔 → 酵素煥膚 → 舒緩保養與保養提醒', fit: ['膚觸粗糙', '膚色不均', '在意粉刺', '在意毛孔'], note: NOTE_FACE},
-  indibaface: {what: '把臉部保養的焦點，放在輪廓與整體肌膚狀態。', incl: '肌膚與操作適用性評估 → INDIBA 臉部照護 → 收尾保養', fit: ['在意輪廓線條', '在意細紋乾紋', '想要緊實感'], note: '懷孕、體內有金屬植入物或心律調節器，請先在備註告訴島主。'},
-  stonebrush: {what: '用熱感與局部體刷，為久未舒展的身體留一段放鬆時間。', incl: '身體評估與部位確認 → 岩盤浴 → 局部體刷 → 整理與照護提醒', fit: ['在意身體線條', '久坐久站', '長期緊繃'], note: NOTE_HEAT},
-  reset90: {what: '抽牌與精油冥想開場，躺進岩盤浴。島主感受你身體哪裡卡住，用臉部按摩、頭肩頸按摩或體刷等手技，讓身體真實感受到代謝。', incl: '抽牌 → 精油冥想 → 岩盤浴 → 臉部／頭肩頸按摩或體刷（依身體狀態）', fit: ['身體緊繃', '疲憊停滯', '想讓身體先鬆開'], note: NOTE_MIND},
-  reset120: {what: '抽牌與精油冥想開場，躺進岩盤浴後進行催眠與身心探索。一邊排汗、一邊走進潛意識，偏體驗型，適合想先感受看看的你。', incl: '抽牌 → 精油冥想 → 岩盤浴＋催眠與身心探索 → 整合', fit: ['想體驗潛意識探索', '累積疲憊', '情緒負擔'], note: NOTE_MIND},
-  subcon: {what: '完整版的潛意識探索，不使用岩盤浴。全身心投入這一場，一起走進潛意識裡感受、調整、放下。結束後收到只屬於你的內在旅程冊。', incl: '牌卡與精油議題 → 完整的潛意識探索（感受・調整・放下）→ 旅程整合 → 專屬內在旅程冊', fit: ['想專心處理一個人生議題', '反覆出現的模式', '想挖得更深'], note: NOTE_MIND},
-  shaman60: {what: '透過占讀與對談，換個角度閱讀眼前的生命課題。', incl: '議題釐清 → 占讀與象徵解讀 → 對話整合', fit: ['生命議題', '選擇方向', '自我覺察'], note: NOTE_MIND},
-  space: {what: '用一場有意識的儀式，重新感受人與空間的關係。', incl: '了解需求 → 坪數與現場狀態評估 → 擬定並進行淨化儀式', fit: ['居家轉換', '工作空間', '儀式整理'], x: '依坪數與現場狀況報價，請先 LINE 詢問'},
-  stone60: {what: '把一小時還給自己，安靜感受熱與休息。', incl: '身體狀態與高溫禁忌確認 → 岩盤浴 → 緩和休息', fit: ['獨處休息', '熱感放鬆', '想慢下來'], note: NOTE_HEAT},
-  bath60: {what: '在水裡安靜待一會，讓今天不必急著結束。', incl: '確認浴池與使用注意事項 → 泡澡 → 整理休息', fit: ['獨處', '放鬆', '感官休息'], note: NOTE_HEAT},
-  skincheck: {what: '先認識現在的肌膚，再決定接下來怎麼保養。', incl: '確認需求 → 觀察膚況與保養習慣 → 提供保養方向', fit: ['膚況確認', '保養導航', '個人照護']}
+  stoneface: {what: '先讓身體安靜下來，再好好照顧這張臉。', incl: '膚況與身體狀態確認 → 岩盤浴 → 清潔與臉部護理 → 面膜與收尾', fit: ['身體疲憊', '想整理膚況', '想一次照顧身體與臉'], note: NOTE_HEAT},
+  classic: {what: '從基礎清潔與面膜，重新整理肌膚的日常節奏。', incl: '肌膚評估 → 清潔 → 安麗雅姿五色面膜選配 → 收尾保養', fit: ['想定期護膚', '不確定怎麼保養', '想了解目前膚況'], note: NOTE_FACE},
+  enzyme: {what: '溫和整理老廢角質，讓後續保養更有方向。', incl: '膚況與禁忌確認 → 清潔 → 酵素煥膚 → 舒緩保養與保養提醒', fit: ['膚觸粗糙', '在意暗沉', '想整理老廢角質'], note: NOTE_FACE},
+  indibaface: {what: '把臉部保養的焦點，放在輪廓與整體肌膚狀態。', incl: '肌膚與操作適用性評估 → INDIBA 臉部照護 → 收尾保養', fit: ['在意輪廓', '在意細紋', '想加強臉部保養'], note: '懷孕、體內有金屬植入物或心律調節器，請先在備註告訴島主。'},
+  stonebrush: {what: '用熱感與局部體刷，為久未舒展的身體留一段放鬆時間。', incl: '身體評估與部位確認 → 岩盤浴 → 局部體刷 → 整理與照護提醒', fit: ['久坐久站', '局部緊繃', '想舒展身體'], note: NOTE_HEAT},
+  reset90: {what: '從牌卡與精油開始，聊聊你今天的狀態。在岩盤浴的溫熱中慢下來，再依當下需求安排臉部、頭肩頸按摩或局部體刷，讓一直繃著的身體有機會鬆開。', incl: '抽牌 → 精油冥想 → 岩盤浴 → 臉部／頭肩頸按摩或體刷（依身體狀態）', fit: ['身體一直繃著', '累了卻停不下來', '想有人帶著放鬆'], note: NOTE_MIND},
+  reset120: {what: '從牌卡與精油開始，先在岩盤浴的溫熱中讓身體慢下來，再由島主引導進入身心探索，最後一起整合這次的感受。', incl: '牌卡與精油 → 岩盤浴放鬆 → 引導式身心探索 → 整合', fit: ['想體驗內在探索', '有些感受說不清楚', '想透過身體慢下來'], note: NOTE_MIND},
+  subcon: {what: '不使用岩盤浴，整段時間專注在一個你想探索的議題。由島主引導進入潛意識，感受、整理，結束後收到只屬於你的內在旅程冊。', incl: '牌卡與精油釐清議題 → 潛意識引導探索 → 旅程整合 → 專屬內在旅程冊', fit: ['有一個想探索的議題', '反覆遇到相似模式', '想理解自己的感受'], note: NOTE_MIND},
+  shaman60: {what: '透過占讀與對談，換個角度閱讀眼前的生命課題。', incl: '議題釐清 → 占讀與象徵解讀 → 對話整合', fit: ['正面臨選擇', '想整理眼前課題', '想換個角度看事情'], note: NOTE_MIND},
+  space: {what: '用一場有意識的儀式，重新感受人與空間的關係。', incl: '了解需求 → 坪數與現場狀態評估 → 擬定並進行淨化儀式', fit: ['搬家或轉換空間', '想重新整理空間感受', '需要一場安定儀式'], x: '依坪數與現場狀況報價，請先 LINE 詢問'},
+  stone60: {what: '把一小時還給自己，安靜感受熱與休息。', incl: '身體狀態與高溫禁忌確認 → 岩盤浴 → 緩和休息', fit: ['想安靜躺著', '喜歡溫熱感', '需要獨處'], note: NOTE_HEAT},
+  bath60: {what: '在水裡安靜待一會，讓今天不必急著結束。', incl: '確認浴池與使用注意事項 → 泡澡 → 整理休息', fit: ['想泡水放鬆', '需要自己的時間', '想暫時放下工作'], note: NOTE_HEAT},
+  skincheck: {what: '先認識現在的肌膚，再決定接下來怎麼保養。', incl: '確認需求 → 觀察膚況與保養習慣 → 提供保養方向', fit: ['不清楚自己的膚況', '保養品越買越多', '不知道使用順序']}
 };
 var SV = {i: 0};
 var SV_REC = {stoneface: '初次上島推薦・膚體一起照顧', reset90: 'RESET 入門', subcon: '想往內走得更深', stone60: '一個人的安靜時間'};
@@ -396,7 +396,7 @@ function svCard(s, ix) {
     (SV_REC[s.key] ? '<div class="rec">' + SV_REC[s.key] + '</div>' : '') +
     '<h3>' + esc(s.name) + '</h3><div class="mn">' + (s.min ? s.min + ' 分鐘' : '時間依現場評估') + '</div>' +
     '<div class="pr">' + priceText(s) + '</div>' +
-    (c.fit.length ? '<div class="lb">適合處理</div><div class="tg">' + c.fit.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
+    (c.fit.length ? '<div class="lb">適合你，如果你……</div><div class="tg">' + c.fit.map(function (x) { return '<span>' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
     '<p class="ds">' + esc(c.what) + '</p>' +
     '<details><summary>服務流程與預約提醒</summary>' + (c.incl ? '<div class="fl">' + esc(c.incl) + '</div>' : '') + '<ul>' + remind + '</ul></details>' +
     '<a class="go' + (s.online ? '' : ' line') + '" href="' + href + '">' + (s.online ? '提出預約申請' : 'LINE 詢問') + '<i>↗</i></a></div>';
@@ -405,10 +405,10 @@ function svList() {
   var k = SV_ORDER[SV.i], m = SV_CAT[k];
   var list = B.services.filter(function (s) { return s.cat === k; });
   SV.n = list.length + (k === 'pick' ? 1 : 0);
-  var extra = k === 'pick' ? '<div class="xc svx"><div class="svh"><span class="ic">✦</span><b>療程 ' + ((list.length + 1) < 10 ? '0' : '') + (list.length + 1) + '</b>／共 ' + SV.n + ' 項</div><div class="rec">限熟客</div><h3>季度保養｜熟客選配</h3><div class="mn">時間依現場評估</div><div class="pr">依商品報價</div><div class="lb">適合處理</div><div class="tg"><span>肌膚評估</span><span>換季保養</span><span>產品搭配</span></div><p class="ds">由島主依當季膚況，整理真正需要的保養組合。</p><details><summary>服務流程與預約提醒</summary><div class="fl">現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</div><ul><li>選配商品不享會員 8 折，價格依實際選配。</li></ul></details><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問<i>↗</i></a></div>' : '';
+  var extra = k === 'pick' ? '<div class="xc svx"><div class="svh"><span class="ic">✦</span><b>療程 ' + ((list.length + 1) < 10 ? '0' : '') + (list.length + 1) + '</b>／共 ' + SV.n + ' 項</div><div class="rec">限熟客</div><h3>季度保養｜熟客選配</h3><div class="mn">時間依現場評估</div><div class="pr">依商品報價</div><div class="lb">適合你，如果你……</div><div class="tg"><span>換季不知道怎麼換</span><span>想精簡保養品</span><span>需要有人協助搭配</span></div><p class="ds">由島主依當季膚況，整理真正需要的保養組合。</p><details><summary>服務流程與預約提醒</summary><div class="fl">現場膚況諮詢 → 檢視既有保養品 → 選配建議與代購</div><ul><li>選配商品不享會員 8 折，價格依實際選配。</li></ul></details><a class="go line" href="' + lineMsg('我想詢問「季度保養｜熟客選配」') + '">LINE 詢問<i>↗</i></a></div>' : '';
   var dn = $('svDown'); if (dn) dn.innerHTML = '往下看「' + m.zh + '・' + m.en + '」的 ' + SV.n + ' 項療程<i>↓</i>';
   $('svList').innerHTML = list.map(svCard).join('') + extra + '<div class="sv-end">— 以上是「' + m.zh + '・' + m.en + '」全部 ' + SV.n + ' 項 —</div>' +
-    '<p class="note" style="margin:14px 2px 0">價格為原價，儲值會員依會員方案折抵。已經預約了？<a href="#/report">回報訂金匯款 →</a><br>想租場地辦活動，或帶自己的客人來做療程？<a href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">空間租借 →</a></p>';
+    '<p class="note" style="margin:14px 2px 0">價格為原價，儲值會員依會員方案折抵。已經預約了？<a href="#/report">回報匯款 →</a><br>想租場地辦活動，或帶自己的客人來做療程？<a href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">空間租借 →</a></p>';
   var bb = $('svBar'); if (bb) bb.querySelector('span').textContent = m.zh + '・' + m.en + '　送出後由島主確認';
   [].forEach.call(document.querySelectorAll('.sv-tabs button'), function (b, ix) { b.classList.toggle('on', ix === SV.i); });
   [].forEach.call(document.querySelectorAll('.sv-dots i'), function (d, ix) { d.classList.toggle('on', ix === SV.i); });
@@ -423,7 +423,7 @@ function vServices(k0) {
   }).join('');
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
-    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>照顧肌膚與身體、<b>心</b>放下情緒、<b>靈</b>看清方向；只想休息選<b>獨處</b>，日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
+    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>是肌膚與身體照護、<b>心</b>是岩盤浴與身心放鬆、<b>靈</b>是潛意識探索與占讀；只想休息選<b>獨處</b>，日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
     '<div class="sv-tabs">' + SV_ORDER.map(function (k, ix) { return '<button type="button" data-svi="' + ix + '">' + SV_CAT[k].zh + '・' + SV_CAT[k].en + '</button>'; }).join('') + '</div>' +
     '<div class="sv-wrap"><button type="button" class="sv-arw l" data-svstep="-1" aria-label="上一類">‹</button><button type="button" class="sv-arw r" data-svstep="1" aria-label="下一類">›</button><div class="sv-swipe" id="svSwipe"><span class="trk"><i class="dot"></i></span>左右滑動，換一種照顧</div><div class="sv-rail" id="svRail">' + cards + '</div></div><div class="sv-dots">' + SV_ORDER.map(function () { return '<i></i>'; }).join('') + '</div><div class="sv-down" id="svDown"></div>' +
     '<div id="svList"></div><div class="sv-bar" id="svBar"><span></span><a href="#/time">先挑時段<i>↗</i></a></div>');
@@ -532,7 +532,7 @@ function drawFit(fit) {
   $('fitBox').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 function vReport() {
-  page('services', 'BOOKING', '<a class="back" href="#/services">← 島上服務</a><h1>回報訂金匯款</h1><div class="panel">' +
+  page('services', 'BOOKING', '<a class="back" href="#/services">← 島上服務</a><h1>回報匯款</h1><div class="panel">' +
     '<label for="rCode">預約編號</label><input id="rCode" autocapitalize="characters" placeholder="例如 PS261025-1400-AB3">' +
     '<label for="rPhone">預約時留的手機</label><input id="rPhone" inputmode="tel"><label for="rLast5">匯款帳號末五碼</label><input id="rLast5" inputmode="numeric" maxlength="5">' +
     '<p class="err" id="rErr" hidden></p><p class="note" id="rOk" hidden>收到了！島主核對後，會在官方 LINE 通知你預約正式成立。</p><button class="btn coral" id="rSend" type="button" style="margin-top:12px">我已匯款，送出</button></div>');
@@ -642,7 +642,7 @@ function vBar() {
     '<div class="mb-rules"><div><b>純入場 NT$200</b><span>今天只付場地費也可以</span></div><div><b>點一杯即含入場</b><span>續點依菜單價格計費</span></div></div>' +
     '<div class="mb-notes"><p>註記：遇見島主，可以點一杯換一題。</p><p>傳聞：點滿兩杯，可解鎖闆娘可喬的奧修占卜。</p></div>' +
     '<div class="mb-tabs" id="mbTabs">' + BAR.cats.map(function (x) { return '<button type="button" class="' + (x.n === BARCAT ? 'on' : '') + '" data-mbcat="' + x.n + '"><b>' + x.n + '</b><span>' + x.d + '</span></button>'; }).join('') + '</div>' +
-    '<div class="mb-cat"><b>' + c.n + '</b><span>' + c.d + '</span><em>' + money(c.p) + ' / ' + (c.unit || '杯') + '</em></div>' + rows +
+    '<div class="mb-cat"><b>' + c.n + '</b><span>' + c.d + '</span><em>' + money(c.p) + (c.from ? ' 起' : '') + ' / ' + (c.unit || '杯') + '</em></div>' + rows +
     '<fieldset class="mb-form"><legend>點單資料</legend><div class="mb-2"><div><label for="mbName">點單姓名</label><input id="mbName" placeholder="例如：小喬" value="' + esc(MB.name) + '"></div>' +
     '<div><label for="mbSeat">座位</label><select id="mbSeat"><option value="">請選擇座位</option>' + BAR.seats.map(function (x) { return '<option' + (x === MB.seat ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select></div></div><p class="err" id="mbErr" hidden></p></fieldset>' +
     '</div><div class="mb-bar"><div><small>' + tot.label + '</small><b>' + money(tot.t) + '</b></div><button type="button" id="mbGo">確認訂單 →</button></div>';
@@ -762,10 +762,10 @@ function vTools() {
   var s = svc('skincheck');
   page('tools', 'SKIN BUTLER',
     '<div class="eyebrow">Skin Butler / Pause Space</div><h1>肌智管家</h1><p class="lead">不懂保養、懶得研究也沒關係。先讓島主看看你的皮膚，再幫你排出專屬的保養順序。</p>' +
-    '<img class="heroimg" src="' + img('tools') + '" alt="肌智管家 Skin Butler" style="max-width:560px">' + '<div class="herot"><b>皮膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div>' +
+    '<img class="heroimg" src="' + img('tools') + '" alt="肌智管家 Skin Butler" style="max-width:560px">' + '<div class="herot"><b>肌膚檢測・保養順序諮詢</b><span>帶著你現在在用的保養品來</span></div>' +
     '<div class="panel"><h3>怎麼進行</h3><ul class="steps"><li>現場肌膚檢測，了解目前膚況</li><li>看看你手上的保養品，排出早晚使用順序</li><li>整理成你的個人保養手冊，帶回家照著做</li></ul>' +
     '<p class="note">之後會開放：拍下保養品照片，由島主的保養知識庫幫你排順序，島主確認後送到你手上。</p></div>' +
-    (s && s.online ? '<a class="btn coral" href="#/book/skincheck">預約皮膚檢測</a>' : '<a class="btn coral" href="' + lineMsg('我想預約皮膚檢測／保養順序諮詢') + '">LINE 預約皮膚檢測</a>'));
+    (s && s.online ? '<a class="btn coral" href="#/book/skincheck">預約肌膚檢測</a>' : '<a class="btn coral" href="' + lineMsg('我想預約肌膚檢測／保養順序諮詢') + '">LINE 預約皮膚檢測</a>'));
 }
 
 /* ---------- 島日嶼祭 ---------- */
@@ -839,7 +839,6 @@ function vGifts() {
 }
 function vGift(id) {
   var g = GIFTS.filter(function (x) { return x.id === id; })[0]; if (!g) return go('#/gifts');
-  if (g.id === 'oil') return go('#/join/oil');
   var s = svc(g.svc), soon = /規劃中/.test(g.tag);
   var facts = [['費用', g.price], ['時長', g.len], ['對象', g.who]].filter(function (f) { return f[1]; });
   var href = s && s.online ? '#/book/' + s.key : lineMsg('我想預約「' + g.title + '」');
@@ -951,7 +950,7 @@ function vOil() {
         '<label for="olM">想問的或備註（可不填）</label><input id="olM">' +
         '<label class="jn-o" style="margin-top:12px"><input type="checkbox" id="olA"><span>我已閱讀注意事項，且目前沒有懷孕</span></label>' +
         '<div class="sum" style="margin-top:12px"><span>學費</span><b id="olTot">NT$6,800</b></div>' +
-        '<p class="note">送出後請在 3 天內匯款，到網站「回報訂金」填末五碼；島主核對後，名額才正式保留。</p>' +
+        '<p class="note">送出後請在 3 天內匯款，到網站「回報匯款」填末五碼；島主核對後，名額才正式保留。</p>' +
         '<p class="err" id="olE" hidden></p><button type="button" class="btn coral" id="olGo">送出報名</button></fieldset>';
     } else {
       h += '<div class="panel" style="margin-top:14px"><p>' + (c.open ? '這一班已經額滿。' : '這一班已經截止報名。') + '<a href="' + lineMsg('我想登記下一班「精油抓周」') + '">LINE 島主</a> 登記下一班。</p></div>';
