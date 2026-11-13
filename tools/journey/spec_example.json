@@ -1,0 +1,8 @@
+{"pages": [
+ {"layout": "cover", "name": "王小明", "sub": "INNER JOURNEY  ·  2026.01.01  ·  潛意識探索", "line": "「客人當天最關鍵的一句話。」", "intro": "那天，你帶著「議題」走進來，\n帶回……", "foot": "ONE LINE IN ENGLISH."},
+ {"layout": "collage", "hole": [110, 190, 860, 645], "label": "PROLOGUE　序章", "title": "出發前", "body": "療程前聊的近況……", "foot": "BEFORE THE JOURNEY."},
+ {"layout": "map", "stations": [["序章", "出發前", "關鍵字・關鍵字"], ["第一章", "三張牌", "牌名・牌名・牌名"], ["終章", "回到現實", "關鍵字"]]},
+ {"layout": "full_top", "label": "CHAPTER 2　第二章", "title": "章名", "body": "個案經歷，一個場景都不能漏。", "quote": "「島主說的話。」", "view": "神話、歷史或心理學的另一個角度。", "foot": "ENGLISH LINE."},
+ {"layout": "full_bottom", "text_y": 900, "label": "CHAPTER 3　第三章", "title": "章名", "body": "……", "view": "……", "foot": "ENGLISH LINE."},
+ {"layout": "integration", "summary": "這一次走過的整合……", "hw_title": "一件具體的事。", "hw_steps": ["步驟一。", "每週日晚上……", "四週後帶回來。"], "hw_why": "為什麼跟這次旅程有關。", "hw_dates": "回報日　1/4（日）・1/11（日）・1/18（日）・1/25（日）", "next_week": "2026/01/26（一）～ 02/01（日）", "next_note": "帶著功課回來，我們從這裡繼續。"}
+]}
