@@ -469,12 +469,13 @@ function drawDates() {
   $('dates').innerHTML = B.dates.map(function (d) { return '<button type="button" class="dt' + (d.date === ST.date ? ' on' : '') + '" data-d="' + d.date + '">週' + d.dow + '<b>' + d.label.split('/')[1] + '</b>' + d.label.split('/')[0] + '月</button>'; }).join('');
   var on = $('dates').querySelector('.on'); if (on) on.scrollIntoView({inline: 'center', block: 'nearest'});
 }
+var SVC_FROM = '12:00'; // 島主療程最早 12:00 開始（空間租借、Moon Bar 不受影響）
 function loadTimes() {
   $('times').innerHTML = '<p class="note">讀取可預約時間…</p>';
   var want = ST.date;
   api('getSlots', [want]).then(function (sl) {
     if (ST.date !== want) return;
-    var fit = sl.filter(function (x) { return !ST.svc || x.fit >= ST.svc.min; });
+    var fit = sl.filter(function (x) { return x.start >= SVC_FROM && (!ST.svc || x.fit >= ST.svc.min); });
     $('times').innerHTML = fit.length ? '<div class="times">' + fit.map(function (x) { return '<button type="button" class="tm' + (x.start === ST.start ? ' on' : '') + '" data-t="' + x.start + '" data-fit="' + x.fit + '">' + x.start + '</button>'; }).join('') + '</div><p class="note" style="margin-top:8px">已扣除療程前後的整理時間。</p>'
       : '<p class="note">這天已經沒有適合的時段，換一天看看。</p>';
   }).catch(function () { $('times').innerHTML = '<p class="err">讀不到時段，請稍後再試，或直接 LINE 島主。</p>'; });
