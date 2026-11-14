@@ -391,7 +391,7 @@ function svCard(s, ix) {
   var c = SV_COPY[s.key] || {what: s.desc, incl: '', fit: []};
   var href = s.online ? '#/book/' + s.key : lineMsg('我想詢問「' + s.name + '」');
   var no = (ix < 9 ? '0' : '') + (ix + 1);
-  var remind = (s.deposit ? '<li>預約需付訂金 NT$' + (B.deposit || 400) + '，送出後由島主核對時段與訂金，預約才正式成立。</li>' : '<li>送出後由島主確認，預約才正式成立。</li>') + (c.note ? '<li>' + esc(c.note) + '</li>' : '') + (c.x ? '<li>' + esc(c.x) + '</li>' : '');
+  var remind = (s.deposit ? '<li>預約需付訂金 NT$' + (B.deposit || 400) + '，當天全額折抵療程費；送出後由島主核對時段與訂金，預約才正式成立。</li>' : '<li>送出後由島主確認，預約才正式成立。</li>') + (c.note ? '<li>' + esc(c.note) + '</li>' : '') + (c.x ? '<li>' + esc(c.x) + '</li>' : '');
   return '<div class="xc svx"><div class="svh"><span class="ic">✦</span><b>療程 ' + no + '</b>／共 ' + SV.n + ' 項</div>' +
     (SV_REC[s.key] ? '<div class="rec">' + SV_REC[s.key] + '</div>' : '') +
     '<h3>' + esc(s.name) + '</h3><div class="mn">' + (s.min ? s.min + ' 分鐘' : '時間依現場評估') + '</div>' +
@@ -493,7 +493,7 @@ function drawForm() {
     '<label for="fType">你是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass"' + (window.PREPASS ? ' selected' : '') + '>岩盤浴套票</option>' : '') + '</select>' +
     (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric" value="' + esc(ST.preCode || '') + '"><p class="note" style="margin:4px 0 10px">完課後收到的小卡上有你的專屬密碼；請用報名型男研究所時的手機預約。</p>' : '') +
     '<label for="fNote">想讓島主先知道的事（身體狀況、近期醫美、懷孕等）</label><textarea id="fNote"></textarea>' +
-    '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>預約訂金</span><b>' + money(B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
+    '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>預約訂金（當天折抵療程費）</span><b>' + money(B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
     '<p class="note">按下確認後是「送出預約申請」，島主核對' + (dep ? '訂金與' : '') + '時段後，預約才正式成立。</p>' +
     '<p class="err" id="fErr" hidden></p><button class="btn coral" id="fSend" type="button">確認送出預約申請</button></div>';
   box.scrollIntoView({behavior: 'smooth', block: 'start'});
