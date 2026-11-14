@@ -364,7 +364,7 @@ var SV_CAT = {
   beauty: {zh: '身', en: 'Beauty', what: '肌膚與身體照護', line: '肌膚與身體照護：臉部護膚、煥膚、局部體刷。'},
   reset: {zh: '心', en: 'RESET', what: '岩盤浴 × 身心放鬆與探索', line: '岩盤浴 × 身心放鬆與探索：從牌卡與精油開始，依您當天的狀態安排按摩或引導。'},
   soul: {zh: '靈', en: 'Soul', what: '潛意識探索 × 占讀 × 儀式', line: '潛意識探索 × 占讀 × 儀式：陪您換個角度，看看眼前的議題。'},
-  metime: {zh: '獨處', en: 'Me Time', what: '獨處時光｜岩盤浴・泡澡', line: '獨處時光｜岩盤浴・泡澡：一個人安靜休息，不用聊天。'},
+  metime: {zh: '獨處', en: 'Me Time', what: '獨處時光｜岩盤浴・花草精靈浴', line: '獨處時光｜岩盤浴・花草精靈浴：一個人安靜休息，不用聊天。'},
   pick: {zh: '島主選配', en: 'Skin Care', what: '肌膚諮詢 × 季度保養', line: '肌膚諮詢 × 季度保養：先做肌膚檢測，熟客可由島主依當季膚況選配保養品。'}
 };
 var NOTE_FACE = '懷孕、近期做過醫美，或臉部有傷口，請先在備註告訴島主。';
@@ -382,7 +382,7 @@ var SV_COPY = {
   shaman60: {what: '透過占讀與對談，換個角度閱讀眼前的生命課題。', incl: '議題釐清 → 占讀與象徵解讀 → 對話整合', fit: ['正面臨選擇', '想整理眼前課題', '想換個角度看事情'], note: NOTE_MIND},
   space: {what: '用一場有意識的儀式，重新感受人與空間的關係。', incl: '了解需求 → 坪數與現場狀態評估 → 擬定並進行淨化儀式', fit: ['搬家或轉換空間', '想重新整理空間感受', '需要一場安定儀式'], x: '依坪數與現場狀況報價，請先 LINE 詢問'},
   stone60: {what: '把一小時還給自己，安靜感受熱與休息。', incl: '身體狀態與高溫禁忌確認 → InBody 量測 → 岩盤浴 → 再量一次，看見當天的變化 → 緩和休息', fit: ['想安靜躺著', '喜歡溫熱感', '需要獨處'], note: NOTE_HEAT},
-  bath60: {what: '花草精靈浴：在水裡安靜待一會，讓今天不必急著結束。可選島主手作的喜馬拉雅沐浴三鹽、艾薇丹精油泡澡粉，或請島主為您調一份專屬配比。建議點一杯飲品，帶進去一起享用。', incl: '選浴鹽／泡澡粉（或請島主調配）→ 泡澡 → 整理休息｜全程 1 小時，毛巾、浴巾、浴袍都已備好', fit: ['想泡水放鬆', '需要自己的時間', '想暫時放下工作'], note: NOTE_HEAT},
+  bath60: {what: '在水裡安靜待一會，讓今天不必急著結束。可選島主手作的喜馬拉雅沐浴三鹽、艾薇丹精油泡澡粉，或請島主為您調一份專屬配比。建議點一杯飲品，帶進去一起享用。', incl: '選浴鹽／泡澡粉（或請島主調配）→ 花草精靈浴 → 整理休息｜全程 1 小時，毛巾、浴巾、浴袍都已備好', fit: ['想泡水放鬆', '需要自己的時間', '想暫時放下工作'], note: NOTE_HEAT},
   skincheck: {what: '先認識現在的肌膚，再決定接下來怎麼保養。', incl: '確認需求 → 觀察膚況與保養習慣 → 提供保養方向', fit: ['不清楚自己的膚況', '保養品越買越多', '不知道使用順序']}
 };
 var SV = {i: 0};
@@ -423,7 +423,7 @@ function vServices(k0) {
   }).join('');
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
-    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>是肌膚與身體照護、<b>心</b>是岩盤浴與身心放鬆、<b>靈</b>是潛意識探索與占讀；只想休息選<b>獨處</b>，日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
+    '<p class="sv-intro">五種照顧，從外到內：<b>身</b>是肌膚與身體照護、<b>心</b>是岩盤浴與身心放鬆、<b>靈</b>是潛意識探索與占讀；只想休息選<b>獨處</b>（岩盤浴、花草精靈浴），日常保養交給<b>島主選配</b>。左右滑動選一種。</p>' +
     '<div class="sv-tabs">' + SV_ORDER.map(function (k, ix) { return '<button type="button" data-svi="' + ix + '">' + SV_CAT[k].zh + '・' + SV_CAT[k].en + '</button>'; }).join('') + '</div>' +
     '<div class="sv-wrap"><button type="button" class="sv-arw l" data-svstep="-1" aria-label="上一類">‹</button><button type="button" class="sv-arw r" data-svstep="1" aria-label="下一類">›</button><div class="sv-swipe" id="svSwipe"><span class="trk"><i class="dot"></i></span>左右滑動，換一種照顧</div><div class="sv-rail" id="svRail">' + cards + '</div></div><div class="sv-dots">' + SV_ORDER.map(function () { return '<i></i>'; }).join('') + '</div><div class="sv-down" id="svDown"></div>' +
     '<div id="svList"></div><div class="sv-bar" id="svBar"><span></span><a href="#/time">先挑時段<i>↗</i></a></div>');
