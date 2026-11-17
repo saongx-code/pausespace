@@ -189,7 +189,7 @@ function addSheet(date) {
   var h = '<h3>新增預約</h3><div class="sub">預約人：' + esc(S.me.name) + '</div>' +
     '<label>項目 *</label><input id="bkI" maxlength="40" placeholder="例如：岩盤浴、臉部護理、讀書會">' +
     '<label>地點 *</label><div class="opts" id="bkR">' + S.roster.rooms.map(function (r) { return '<button data-v="' + r.id + '"><i style="background:' + r.hex + '"></i>' + esc(r.name) + '</button>'; }).join('') + '</div>' +
-    '<label>分類</label><div class="opts" id="bkC">' + CATS.map(function (c) { return '<button data-v="' + c + '">' + c + '</button>'; }).join('') + '</div>' +
+    (S.me.kind === '簽約' ? '<label>分類</label><div class="opts" id="bkC">' + CATS.map(function (c) { return '<button data-v="' + c + '">' + c + '</button>'; }).join('') + '</div>' : '') +
     '<div class="row2"><div><label>日期 *</label><input id="bkD" type="date" value="' + date + '"></div><div><label>開始 *</label><select id="bkS">' + times + '</select></div></div>' +
     '<label>多久 *</label><div class="opts" id="bkL">' + [30, 60, 90, 120, 150, 180, 240].map(function (d) { return '<button data-v="' + d + '">' + (d % 60 ? d + ' 分' : d / 60 + ' 小時') + '</button>'; }).join('') + '</div>' +
     '<div class="sub" id="bkEnd" style="margin:6px 0 0"></div>' +
@@ -201,8 +201,9 @@ function addSheet(date) {
     '<label>備註</label><textarea id="bkN" maxlength="500" placeholder="需要提醒的事（選填）"></textarea>' +
     '<div class="err" id="bkE"></div><button class="btn" id="bkGo" disabled>送出</button><button class="btn ghost" onclick="closeSheet()">取消</button>';
   openSheet(h);
-  var v = {R: '', C: '', L: 0};
+  var v = {R: '', C: S.me.kind === '簽約' ? '' : '租借', L: 0};
   ['R', 'C', 'L'].forEach(function (k) {
+    if (k === 'C' && !$('bkC')) return;
     [].forEach.call(document.querySelectorAll('#bk' + k + ' button'), function (b) {
       b.onclick = function () { [].forEach.call(document.querySelectorAll('#bk' + k + ' button'), function (x) { x.classList.remove('on'); }); b.classList.add('on'); v[k] = k === 'L' ? +b.dataset.v : b.dataset.v; check(); };
     });
