@@ -185,7 +185,7 @@ function openSheet(html) { $('panel').innerHTML = html; $('sheet').classList.add
 function closeSheet() { $('sheet').classList.remove('on'); }
 $('sheet').onclick = function (e) { if (e.target === this) closeSheet(); };
 function addSheet(date) {
-  var times = ''; for (var t = 600; t < 1320; t += 30) times += '<option value="' + t + '"' + (t === 600 ? ' selected' : '') + '>' + hm(t) + '</option>';
+  var times = ''; for (var t = 480; t < 1380; t += 30) times += '<option value="' + t + '"' + (t === 480 ? ' selected' : '') + '>' + hm(t) + '</option>';
   var h = '<h3>新增預約</h3><div class="sub">預約人：' + esc(S.me.name) + '</div>' +
     '<label>項目 *</label><input id="bkI" maxlength="40" placeholder="例如：岩盤浴、臉部護理、讀書會">' +
     '<label>地點 *</label><div class="opts" id="bkR">' + S.roster.rooms.map(function (r) { return '<button data-v="' + r.id + '"><i style="background:' + r.hex + '"></i>' + esc(r.name) + '</button>'; }).join('') + '</div>' +
@@ -210,7 +210,7 @@ function addSheet(date) {
   function check() {
     var ext = $('bkT') && $('bkT').value === '__ext', s = +$('bkS').value;
     if ($('bkTx')) $('bkTx').style.display = ext ? 'block' : 'none';
-    $('bkEnd').textContent = v.L ? hm(s) + '–' + hm(s + v.L) + (s + v.L > 1320 ? '（超過 22:00，請縮短）' : '') : '';
+    $('bkEnd').textContent = v.L ? hm(s) + '–' + hm(s + v.L) + (s + v.L > 1380 ? '（超過 23:00，請縮短）' : '') : '';
     $('bkGo').disabled = !(v.L && v.R && s + v.L <= 1320 && $('bkD').value && $('bkI').value.trim() && $('bkO').value.trim() && (!ext || $('bkTx').value.trim()));
   }
   ['bkI', 'bkO', 'bkT', 'bkTx', 'bkS', 'bkD'].forEach(function (id) { if ($(id)) $(id).oninput = $(id).onchange = check; });
