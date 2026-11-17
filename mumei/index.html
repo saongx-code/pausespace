@@ -211,7 +211,7 @@ function addSheet(date) {
     var ext = $('bkT') && $('bkT').value === '__ext', s = +$('bkS').value;
     if ($('bkTx')) $('bkTx').style.display = ext ? 'block' : 'none';
     $('bkEnd').textContent = v.L ? hm(s) + '–' + hm(s + v.L) + (s + v.L > 1380 ? '（超過 23:00，請縮短）' : '') : '';
-    $('bkGo').disabled = !(v.L && v.R && s + v.L <= 1320 && $('bkD').value && $('bkI').value.trim() && $('bkO').value.trim() && (!ext || $('bkTx').value.trim()));
+    $('bkGo').disabled = !(v.L && v.R && s + v.L <= 1380 && $('bkD').value && $('bkI').value.trim() && $('bkO').value.trim() && (!ext || $('bkTx').value.trim()));
   }
   ['bkI', 'bkO', 'bkT', 'bkTx', 'bkS', 'bkD'].forEach(function (id) { if ($(id)) $(id).oninput = $(id).onchange = check; });
   $('bkGo').onclick = function () {
