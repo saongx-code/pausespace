@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4efe6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="靈感箱">
+<link rel="apple-touch-icon" href="icon.png?v=2">
+<title>靈感箱｜島主控台</title>
+<style>
+:root{--bg:#f4efe6;--card:#fffdf8;--ink:#2b2a26;--sub:#7a7468;--line:#e4dccd;--accent:#a8693f;--ok:#4f7a4a;--err:#a24b2c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif;padding:max(16px,env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+.wrap{max-width:520px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+header h1{font-size:20px;margin:0}
+header a{color:var(--sub);font-size:14px;text-decoration:none}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:#e9e1d3;border-radius:14px;padding:4px;margin-bottom:14px}
+.tabs button{border:0;background:none;padding:10px;border-radius:10px;font:inherit;color:var(--sub)}
+.tabs button.on{background:var(--card);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0 0 8px;color:var(--sub);font-weight:600}
+textarea,input[type=text],input[type=url]{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:84px;resize:vertical}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;font:inherit;color:var(--ink)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;color:var(--sub)}
+.chip.on{border-color:var(--accent);color:var(--accent);background:#fbf3ec}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumbs div{position:relative}
+.thumbs img{width:76px;height:76px;object-fit:cover;border-radius:10px;border:1px solid var(--line)}
+.thumbs b{position:absolute;top:-6px;right:-6px;background:var(--ink);color:#fff;border-radius:50%;width:22px;height:22px;font-size:13px;line-height:22px;text-align:center}
+.mic{display:flex;align-items:center;gap:12px}
+.rec{width:64px;height:64px;border-radius:50%;border:0;background:var(--accent);color:#fff;font-size:26px;flex:none}
+.rec.live{background:var(--err);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px rgba(162,75,44,.15)}}
+.hint{color:var(--sub);font-size:13px;margin:6px 0 0}
+audio{width:100%;margin-top:8px}
+.save{width:100%;border:0;border-radius:14px;padding:15px;font:inherit;font-size:17px;font-weight:600;background:var(--ink);color:#fff}
+.save:disabled{opacity:.5}
+.msg{text-align:center;margin-top:10px;min-height:1.6em}
+.msg.ok{color:var(--ok)}.msg.err{color:var(--err)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><h1>💡 靈感箱</h1><a id="back" href="./">← 回控台</a></header>
+
+  <div class="tabs">
+    <button id="t-idea" class="on">💡 靈感</button>
+    <button id="t-diary">📔 日記</button>
+  </div>
+
+  <!-- 靈感：連結＋圖片＋一句話 -->
+  <div id="idea">
+    <div class="card">
+      <h2>連結</h2>
+      <div class="row">
+        <input id="url" type="url" placeholder="貼上 IG、Threads、YouTube 連結" style="flex:1;min-width:0">
+        <button class="btn" id="paste">📋 貼上</button>
+      </div>
+      <div class="chips" id="kinds">
+        <button class="chip" data-v="貼文">貼文</button>
+        <button class="chip" data-v="影片">影片</button>
+        <button class="chip" data-v="畫風">畫風</button>
+        <button class="chip" data-v="帳號">帳號</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>圖片／截圖</h2>
+      <label class="btn" style="display:inline-block">🖼️ 選照片<input id="pick" type="file" accept="image/*" multiple hidden></label>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+    <div class="card">
+      <h2>喜歡的地方（可以不寫）</h2>
+      <textarea id="note" placeholder="例如：配色很舒服、開頭第一句很抓人"></textarea>
+    </div>
+  </div>
+
+  <!-- 日記：只有標題（可省略） -->
+  <div id="diary" class="hide">
+    <div class="card">
+      <h2>標題（可以不寫，會自動用第一句）</h2>
+      <input id="title" type="text" placeholder="例如：今天客人說的一句話">
+    </div>
+  </div>
+
+  <!-- 語音：兩種都可以用 -->
+  <div class="card">
+    <h2 id="micTitle">語音（可以不錄）</h2>
+    <div class="mic">
+      <button class="rec" id="rec">🎙️</button>
+      <div><b id="recState">按一下開始錄</b><p class="hint" id="recHint">再按一下停止。說話會同步轉成文字。</p></div>
+    </div>
+    <audio id="player" controls class="hide"></audio>
+    <textarea id="text" placeholder="轉好的文字會出現在這裡，可以自己修改" style="margin-top:10px"></textarea>
+  </div>
+
+  <button class="save" id="save">存進素材總表</button>
+  <div class="msg" id="msg"></div>
+</div>
+
+<script>
+/* 靈感箱：存進「PAUSE SPACE｜自媒體工廠」素材總表
+   靈感 → 「靈感對標」分頁；日記 → 「日記」分頁；圖片與錄音 → 自媒體工廠資料夾裡的「靈感箱素材」
+   後端在 Apps Script 的 inboxPost_（用 POST 傳，因為圖片和錄音太大放不進網址） */
+var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
+function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+var KEY = (location.hash.match(/key=([^&]+)/) || [])[1];
+KEY = KEY ? decodeURIComponent(KEY) : store('bk');
+if (KEY) { store('bk', KEY); if (!/key=/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search + '#key=' + encodeURIComponent(KEY)); }
+var $ = function (id) { return document.getElementById(id); };
+if (KEY) $('back').href = './#key=' + encodeURIComponent(KEY);
+
+var mode = (location.search.match(/[?&]m=diary/) ? 'diary' : 'idea');
+var kind = '', images = [], audio = null;
+
+function setMode(m) {
+  mode = m;
+  $('t-idea').className = m === 'idea' ? 'on' : '';
+  $('t-diary').className = m === 'diary' ? 'on' : '';
+  $('idea').className = m === 'idea' ? '' : 'hide';
+  $('diary').className = m === 'diary' ? '' : 'hide';
+  $('micTitle').textContent = m === 'diary' ? '說說今天的故事' : '語音（可以不錄）';
+  document.title = (m === 'diary' ? '語音日記' : '靈感箱') + '｜島主控台';
+}
+$('t-idea').onclick = function () { setMode('idea'); };
+$('t-diary').onclick = function () { setMode('diary'); };
+setMode(mode);
+
+/* 類型小按鈕：貼連結時自動猜，也可以自己點 */
+function setKind(v) {
+  kind = v;
+  [].forEach.call($('kinds').children, function (c) { c.className = 'chip' + (c.dataset.v === v ? ' on' : ''); });
+}
+$('kinds').onclick = function (e) { var v = e.target.dataset && e.target.dataset.v; if (v) setKind(kind === v ? '' : v); };
+function guessKind(u) {
+  if (/\/(reel|reels|shorts)\/|youtu\.?be|tiktok\.com|\/tv\//i.test(u)) return '影片';
+  if (/instagram\.com\/p\/|threads\.(net|com)\/.*\/post\//i.test(u)) return '貼文';
+  if (/pinterest|behance|dribbble/i.test(u)) return '畫風';
+  if (/instagram\.com\/[^\/?#]+\/?$|threads\.(net|com)\/@[^\/?#]+\/?$/i.test(u)) return '帳號';
+  return '';
+}
+function sourceOf(u) {
+  var m = u.match(/(?:instagram\.com|threads\.(?:net|com))\/@?([A-Za-z0-9._]+)/i);
+  var host = ''; try { host = new URL(u).hostname.replace(/^www\./, ''); } catch (e) {}
+  var name = {'instagram.com': 'IG', 'threads.net': 'Threads', 'threads.com': 'Threads', 'youtube.com': 'YouTube', 'youtu.be': 'YouTube', 'tiktok.com': 'TikTok', 'facebook.com': 'FB', 'pinterest.com': 'Pinterest'}[host] || host;
+  if (m && !/^(p|reel|reels|tv|stories|explore)$/i.test(m[1])) return name + ' @' + m[1];
+  return name;
+}
+$('url').addEventListener('input', function () { var g = guessKind(this.value.trim()); if (g) setKind(g); });
+$('paste').onclick = function () {
+  if (!navigator.clipboard || !navigator.clipboard.readText) { $('url').focus(); return; }
+  navigator.clipboard.readText().then(function (t) {
+    t = (t || '').trim();
+    var m = t.match(/https?:\/\/\S+/);
+    if (m) { $('url').value = m[0]; var g = guessKind(m[0]); if (g) setKind(g); }
+    else if (t) { $('note').value = ($('note').value ? $('note').value + '\n' : '') + t; }
+  }).catch(function () { $('url').focus(); });
+};
+
+/* 圖片：先在手機上縮到長邊 1600，存得快又不佔空間 */
+function shrink(file) {
+  return new Promise(function (ok, bad) {
+    var img = new Image(), url = URL.createObjectURL(file);
+    img.onload = function () {
+      var s = Math.min(1, 1600 / Math.max(img.width, img.height));
+      var c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      ok(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = function () { bad(new Error('這張圖片讀不到')); };
+    img.src = url;
+  });
+}
+$('pick').onchange = function () {
+  var files = [].slice.call(this.files || []);
+  this.value = '';
+  Promise.all(files.map(shrink)).then(function (list) { images = images.concat(list); drawThumbs(); })
+    .catch(function (e) { say(e.message, 'err'); });
+};
+function drawThumbs() {
+  $('thumbs').innerHTML = images.map(function (d, i) { return '<div><img src="' + d + '"><b data-i="' + i + '">×</b></div>'; }).join('');
+}
+$('thumbs').onclick = function (e) { var i = e.target.dataset && e.target.dataset.i; if (i != null) { images.splice(+i, 1); drawThumbs(); } };
+
+/* 錄音＋同步轉文字（手機瀏覽器內建的聽寫，免費；不支援時只存錄音，之後再補文字） */
+var rec = null, chunks = [], speech = null, live = false, baseText = '';
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+function startSpeech() {
+  if (!SR) return;
+  try {
+    speech = new SR();
+    speech.lang = 'zh-TW'; speech.continuous = true; speech.interimResults = true;
+    baseText = $('text').value ? $('text').value.replace(/\s*$/, '') + '\n' : '';
+    var done = '';
+    speech.onresult = function (e) {
+      var interim = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) done += e.results[i][0].transcript; else interim += e.results[i][0].transcript;
+      }
+      $('text').value = baseText + done + interim;
+    };
+    speech.onend = function () { if (live) { baseText = $('text').value; done = ''; try { speech.start(); } catch (x) {} } };
+    speech.onerror = function (e) { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { speech = null; $('recHint').textContent = '這支手機不能同步轉文字，先存錄音，之後自動補文字。'; } };
+    speech.start();
+  } catch (e) { speech = null; }
+}
+$('rec').onclick = function () {
+  if (live) { stopAll(); return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) { startSpeech(); if (speech) { live = true; ui(); } else say('這個瀏覽器不能錄音，請用 Safari 打開。', 'err'); return; }
+  navigator.mediaDevices.getUserMedia({audio: true}).then(function (stream) {
+    chunks = [];
+    rec = new MediaRecorder(stream);
+    rec.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+    rec.onstop = function () {
+      stream.getTracks().forEach(function (t) { t.stop(); });
+      var blob = new Blob(chunks, {type: rec.mimeType || 'audio/mp4'});
+      var fr = new FileReader();
+      fr.onload = function () { audio = {data: fr.result, type: blob.type}; };
+      fr.readAsDataURL(blob);
+      $('player').src = URL.createObjectURL(blob);
+      $('player').className = '';
+    };
+    rec.start();
+    live = true; ui();
+    startSpeech();
+  }).catch(function () { say('沒有拿到麥克風權限，請在跳出視窗按「允許」。', 'err'); });
+};
+function stopAll() {
+  live = false;
+  if (speech) { try { speech.stop(); } catch (e) {} }
+  if (rec && rec.state !== 'inactive') rec.stop();
+  ui();
+}
+function ui() {
+  $('rec').className = 'rec' + (live ? ' live' : '');
+  $('rec').textContent = live ? '■' : '🎙️';
+  $('recState').textContent = live ? '錄音中…' : (audio || rec ? '錄好了，可以再錄一段' : '按一下開始錄');
+}
+
+/* 存檔 */
+function say(t, cls) { $('msg').textContent = t; $('msg').className = 'msg ' + (cls || ''); }
+function pack(dataUrl, name) {
+  if (!dataUrl) return null;
+  var m = dataUrl.match(/^data:([^;]+);base64,(.*)$/);
+  return m ? {type: m[1], data: m[2], name: name} : null;
+}
+$('save').onclick = function () {
+  if (live) stopAll();
+  // 錄音停止後要一點點時間才拿得到檔案
+  setTimeout(send, rec && !audio ? 600 : 0);
+};
+function send() {
+  if (!KEY) { say('這支手機還沒有鑰匙，請先從控台點進來。', 'err'); return; }
+  var text = $('text').value.trim(), url = $('url').value.trim(), note = $('note').value.trim();
+  var ext = audio && /mp4|m4a|aac/.test(audio.type) ? 'm4a' : (audio && /webm/.test(audio.type) ? 'webm' : 'audio');
+  var body = {api: 'inbox', key: KEY, mode: mode, text: text,
+    audio: audio ? pack(audio.data, 'voice.' + ext) : null};
+  if (mode === 'idea') {
+    if (!url && !images.length && !note && !text && !audio) { say('還沒有放任何東西喔', 'err'); return; }
+    body.url = url; body.kind = kind; body.note = note; body.source = url ? sourceOf(url) : '';
+    body.images = images.map(function (d, i) { return pack(d, 'img' + (i + 1) + '.jpg'); });
+  } else {
+    if (!text && !audio) { say('先錄一段或寫幾句吧', 'err'); return; }
+    body.title = $('title').value.trim() || text.split(/[。！？\n!?]/)[0].slice(0, 24);
+  }
+  $('save').disabled = true; say('存檔中…');
+  fetch(EXEC, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify(body), redirect: 'follow'})
+    .then(function (r) { return r.json(); })
+    .then(function (j) {
+      if (j.error) throw new Error(j.error);
+      say('✅ 已存進「' + ((j.result && j.result.sheet) || (mode === 'diary' ? '日記' : '靈感對標')) + '」', 'ok');
+      reset();
+    })
+    .catch(function (e) { say('沒存成功：' + (e.message || e) + '。內容還在，稍後再按一次。', 'err'); })
+    .then(function () { $('save').disabled = false; });
+}
+function reset() {
+  $('url').value = ''; $('note').value = ''; $('title').value = ''; $('text').value = '';
+  images = []; drawThumbs(); audio = null; rec = null; setKind('');
+  $('player').className = 'hide'; $('player').removeAttribute('src'); ui();
+}
+</script>
+</body>
+</html>
