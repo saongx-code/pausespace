@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<!-- 島主輪播產生器：照「島主風格手冊」Carousel 版型（4:5、1080×1350）排版。內容放在 specs/*.json，用 render.js 輸出 PNG。 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;500&family=Noto+Sans+TC:wght@400;500;700&family=Cormorant+Garamond:wght@500&family=Klee+One:wght@600&display=swap">
+<style>
+@font-face{font-family:"Noto Serif TC Local";src:url("../journey/NotoSerifTC[wght].ttf")}
+:root{
+  --deep:#17332f; --ink:#1d3b36; --muted:#5f736d; --coral:#ee7a3d;
+  --cream:#fbf8f2; --mist:#dfe9e4; --mist-2:#eef3ef; --line:#cfdad4;
+  --serif:"Noto Serif TC","Noto Serif TC Local",serif;
+  --sans:"Noto Sans TC","Noto Serif TC Local",sans-serif;
+  --display:"Cormorant Garamond","Noto Serif TC Local",serif;
+  --hand:"Klee One","Noto Serif TC Local",serif;
+  --u:3.75px; /* 風格手冊預覽是 288 寬，放大 3.75 倍＝1080 */
+}
+body{margin:0;background:#ddd;display:flex;flex-wrap:wrap;gap:40px;padding:40px}
+.s{width:1080px;height:1350px;position:relative;background:var(--cream);overflow:hidden;flex:none}
+.eb{position:absolute;left:calc(24*var(--u));top:calc(28*var(--u));font:500 calc(11*var(--u)) var(--display);letter-spacing:.3em;color:var(--muted)}
+.no{position:absolute;right:calc(20*var(--u));top:calc(24*var(--u));font:500 calc(12*var(--u)) var(--display);letter-spacing:.1em;color:var(--muted)}
+.ti{font-family:var(--serif);font-weight:300;color:var(--ink)}
+.line{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));height:2px;background:var(--line)}
+.sg{position:absolute;left:calc(24*var(--u));bottom:calc(18*var(--u));font:600 calc(13*var(--u)) var(--hand);color:var(--ink)}
+.bd{font:400 calc(12.5*var(--u))/1.85 var(--sans);color:var(--ink)}
+.bd p{margin:0 0 calc(8*var(--u))}
+.small{font:400 calc(10*var(--u))/1.7 var(--sans);color:var(--muted)}
+/* 封面 */
+.cover .img{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));top:calc(56*var(--u));height:calc(176*var(--u));background-size:cover;background-position:center}
+.cover .v{position:absolute;right:calc(34*var(--u));top:calc(70*var(--u));writing-mode:vertical-rl;text-orientation:upright;line-height:1.3;font-size:calc(26*var(--u));letter-spacing:.18em;color:#fff;text-shadow:0 2px 18px rgba(0,0,0,.3)}
+.cover .tag{position:absolute;left:calc(24*var(--u));top:calc(242*var(--u));font:500 calc(10*var(--u)) var(--sans);color:var(--muted);letter-spacing:.08em}
+.cover .t2{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));top:calc(256*var(--u));font-size:calc(20*var(--u));line-height:1.45}
+.cover .line{top:calc(316*var(--u))}
+/* 內頁 */
+.page .t2{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));top:calc(52*var(--u));font-size:calc(22*var(--u));line-height:1.35}
+.page .line{top:calc(120*var(--u))}
+.page .bd{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));top:calc(136*var(--u))}
+.page .q{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));bottom:calc(30*var(--u));font:300 calc(14*var(--u))/1.7 var(--serif);color:var(--ink)}
+.page .q b{display:block;font:500 calc(10*var(--u)) var(--display);letter-spacing:.3em;color:var(--coral);margin-bottom:calc(4*var(--u))}
+.page .pic{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));bottom:calc(30*var(--u));height:calc(96*var(--u));background-size:cover;background-position:center}
+/* 結尾 */
+.end{background:var(--deep)}
+.end .eb,.end .no{color:var(--mist)}
+.end .t2{position:absolute;left:calc(24*var(--u));top:calc(60*var(--u));right:calc(24*var(--u));font-size:calc(21*var(--u));line-height:1.4;color:var(--cream)}
+.end .bd{position:absolute;left:calc(24*var(--u));right:calc(24*var(--u));top:calc(150*var(--u));color:var(--mist)}
+.end .cta{position:absolute;left:calc(24*var(--u));bottom:calc(92*var(--u));background:var(--coral);color:#fff;border-radius:999px;padding:calc(8*var(--u)) calc(18*var(--u));font:500 calc(13*var(--u)) var(--sans)}
+.end .qr{position:absolute;right:calc(20*var(--u));bottom:calc(20*var(--u));width:calc(84*var(--u));height:calc(84*var(--u));background:#fff;padding:calc(5*var(--u));box-sizing:border-box;border-radius:calc(6*var(--u))}
+.end .qr img{width:100%;height:100%;display:block}
+.end .sg{color:var(--cream);bottom:calc(28*var(--u))}
+</style>
+</head>
+<body>
+<script>
+var spec = window.SPEC;
+function esc(s) { return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+function lines(s) { return esc(s).replace(/\n/g, '<br>'); }
+var total = spec.slides.length;
+spec.slides.forEach(function (sl, i) {
+  var n = '<span class="no">' + String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0') + '</span>';
+  var h = '';
+  if (sl.type === 'cover') {
+    h = '<span class="eb">' + esc(sl.eyebrow) + '</span>' + n +
+      '<div class="img" style="background-image:url(\'' + sl.image + '\');background-position:' + (sl.pos || 'center') + ';background-size:' + (sl.zoom || 'cover') + '"></div>' +
+      '<div class="v ti">' + esc(sl.vertical) + '</div>' +
+      (sl.tag ? '<div class="tag">' + esc(sl.tag) + '</div>' : '') +
+      '<div class="t2 ti">' + lines(sl.title) + '</div><div class="line"></div><div class="sg">島主項項</div>';
+  } else if (sl.type === 'page') {
+    h = '<span class="eb">' + esc(sl.eyebrow) + '</span>' + n +
+      '<div class="t2 ti">' + lines(sl.title) + '</div><div class="line"></div>' +
+      '<div class="bd">' + sl.body.map(function (p) { return '<p>' + lines(p) + '</p>'; }).join('') +
+      (sl.small ? '<p class="small">' + lines(sl.small) + '</p>' : '') + '</div>' +
+      (sl.quote ? '<div class="q"><b>ISLAND WORDS</b>' + lines(sl.quote) + '</div>' : '') +
+      (sl.image ? '<div class="pic" style="background-image:url(\'' + sl.image + '\');background-position:' + (sl.pos || 'center') + ';background-size:' + (sl.zoom || 'cover') + '"></div>' : '');
+  } else {
+    h = '<span class="eb">' + esc(sl.eyebrow || 'PAUSE SPACE') + '</span>' + n +
+      '<div class="t2 ti">' + lines(sl.title) + '</div>' +
+      '<div class="bd">' + lines(sl.body) + '</div>' +
+      '<span class="cta">' + esc(sl.cta) + '</span>' +
+      '<div class="qr"><img src="../../pay/line-friend.png" alt=""></div><div class="sg">島主項項</div>';
+  }
+  var d = document.createElement('div');
+  d.className = 's ' + (sl.type === 'cover' ? 'cover' : sl.type === 'page' ? 'page' : 'end');
+  d.innerHTML = h;
+  document.body.appendChild(d);
+});
+</script>
+</body>
+</html>
