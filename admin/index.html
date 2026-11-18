@@ -80,10 +80,11 @@ var SHIM = '(' + function (EXEC, KEY, HERE) {
     if (rest.length === 0) { ev.preventDefault(); location.href = HERE + '?p=today' + '#key=' + encodeURIComponent(KEY); }
     else if (rest.length === 1 && rest[0] === 'cal=1') { ev.preventDefault(); location.href = HERE + '?p=cal' + '#key=' + encodeURIComponent(KEY); }
   }, true);
-  // 右下角小按鈕 💡：點進靈感箱（獨立頁面，不拖慢控台）
+  // 右下角小按鈕 💡：點進靈感箱（Claude 上的獨立頁面，用島主自己的 Google 權限存檔；原始檔在 tools/inbox/inbox.html）
   document.addEventListener('DOMContentLoaded', function () {
     var a = document.createElement('a');
-    a.href = HERE.replace(/[^\/]*$/, '') + 'inbox.html#key=' + encodeURIComponent(KEY);
+    a.href = 'https://claude.ai/artifact/4wJ7yKo8zsnGXjsZKJn1oQ';
+    a.target = '_blank'; a.rel = 'noopener';
     a.textContent = '💡'; a.setAttribute('aria-label', '靈感箱');
     a.style.cssText = 'position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:9999;width:46px;height:46px;border-radius:50%;background:#2b2a26;color:#fff;font-size:22px;line-height:46px;text-align:center;text-decoration:none;box-shadow:0 3px 10px rgba(0,0,0,.18)';
     document.body.appendChild(a);
