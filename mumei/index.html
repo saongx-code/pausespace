@@ -184,14 +184,16 @@ function mv(n) { var y = +S.month.slice(0, 4), m = +S.month.slice(5, 7) - 1 + n;
 function openSheet(html) { $('panel').innerHTML = html; $('sheet').classList.add('on'); }
 function closeSheet() { $('sheet').classList.remove('on'); }
 $('sheet').onclick = function (e) { if (e.target === this) closeSheet(); };
-function addSheet(date) {
+function addSheet(date, ev) {
+  var durs = [30, 60, 90, 120, 150, 180, 240];
+  if (ev && !ev.allDay) { var d0 = mins(ev.end) - mins(ev.start); if (d0 > 0 && durs.indexOf(d0) < 0) { durs.push(d0); durs.sort(function (a, b) { return a - b; }); } }
   var times = ''; for (var t = 480; t < 1380; t += 30) times += '<option value="' + t + '"' + (t === 480 ? ' selected' : '') + '>' + hm(t) + '</option>';
-  var h = '<h3>新增預約</h3><div class="sub">預約人：' + esc(S.me.name) + '</div>' +
+  var h = '<h3>' + (ev ? '修改預約' : '新增預約') + '</h3><div class="sub">預約人：' + esc(ev ? (ev.booker || S.me.name) : S.me.name) + '</div>' +
     '<label>項目 *</label><input id="bkI" maxlength="40" placeholder="例如：岩盤浴、臉部護理、讀書會">' +
     '<label>地點 *</label><div class="opts" id="bkR">' + S.roster.rooms.map(function (r) { return '<button data-v="' + r.id + '"><i style="background:' + r.hex + '"></i>' + esc(r.name) + '</button>'; }).join('') + '</div>' +
     (S.me.kind === '簽約' ? '<label>分類</label><div class="opts" id="bkC">' + CATS.map(function (c) { return '<button data-v="' + c + '">' + c + '</button>'; }).join('') + '</div>' : '') +
     '<div class="row2"><div><label>日期 *</label><input id="bkD" type="date" value="' + date + '"></div><div><label>開始 *</label><select id="bkS">' + times + '</select></div></div>' +
-    '<label>多久 *</label><div class="opts" id="bkL">' + [30, 60, 90, 120, 150, 180, 240].map(function (d) { return '<button data-v="' + d + '">' + (d % 60 ? d + ' 分' : d / 60 + ' 小時') + '</button>'; }).join('') + '</div>' +
+    '<label>多久 *</label><div class="opts" id="bkL">' + durs.map(function (d) { return '<button data-v="' + d + '">' + (d % 60 ? d + ' 分' : d / 60 + ' 小時') + '</button>'; }).join('') + '</div>' +
     '<div class="sub" id="bkEnd" style="margin:6px 0 0"></div>' +
     '<label>對象 *</label><input id="bkO" maxlength="40" placeholder="客人或對象名字">';
   if (S.me.admin) h += '<label>負責老師</label><select id="bkT"><option value="">' + esc(S.me.name) + '（自己）</option>' +
@@ -199,7 +201,7 @@ function addSheet(date) {
     '<option value="__ext">外部老師（手寫）</option></select><input id="bkTx" placeholder="外部老師名字" style="display:none;margin-top:6px">';
   h += '<label>指定幫忙的人</label><select id="bkH"><option value="">不用</option>' + S.roster.people.map(function (p) { return '<option>' + esc(p.name) + '</option>'; }).join('') + '</select>' +
     '<label>備註</label><textarea id="bkN" maxlength="500" placeholder="需要提醒的事（選填）"></textarea>' +
-    '<div class="err" id="bkE"></div><button class="btn" id="bkGo" disabled>送出</button><button class="btn ghost" onclick="closeSheet()">取消</button>';
+    '<div class="err" id="bkE"></div><button class="btn" id="bkGo" disabled>' + (ev ? '儲存修改' : '送出') + '</button><button class="btn ghost" onclick="closeSheet()">取消</button>';
   openSheet(h);
   var v = {R: '', C: S.me.kind === '簽約' ? '' : '租借', L: 0};
   ['R', 'C', 'L'].forEach(function (k) {
@@ -215,12 +217,26 @@ function addSheet(date) {
     $('bkGo').disabled = !(v.L && v.R && s + v.L <= 1380 && $('bkD').value && $('bkI').value.trim() && $('bkO').value.trim() && (!ext || $('bkTx').value.trim()));
   }
   ['bkI', 'bkO', 'bkT', 'bkTx', 'bkS', 'bkD'].forEach(function (id) { if ($(id)) $(id).oninput = $(id).onchange = check; });
+  if (ev) {
+    $('bkI').value = ev.item || ''; $('bkO').value = ev.target || ''; $('bkN').value = ev.note || '';
+    if (ev.date) $('bkD').value = ev.date;
+    if (!ev.allDay && ev.start) $('bkS').value = String(mins(ev.start));
+    if (ev.helper) $('bkH').value = ev.helper;
+    var pick = function (k, val) { [].forEach.call(document.querySelectorAll('#bk' + k + ' button'), function (b) { if (b.dataset.v === String(val)) b.click(); }); };
+    pick('R', ev.room); if (ev.cat) pick('C', ev.cat); if (!ev.allDay) pick('L', mins(ev.end) - mins(ev.start));
+    if ($('bkT') && ev.teacher && ev.teacher !== S.me.name) {
+      var tn = String(ev.teacher), inList = [].some.call($('bkT').options, function (o) { return o.value === tn; });
+      if (inList) $('bkT').value = tn; else { $('bkT').value = '__ext'; $('bkTx').value = tn.replace(/^外部：/, ''); }
+    }
+    check();
+  }
   $('bkGo').onclick = function () {
     var b = this; b.disabled = true; $('bkE').textContent = '';
     var tv = $('bkT') ? ($('bkT').value === '__ext' ? '外部：' + $('bkTx').value.trim() : ($('bkT').value || S.me.name)) : '';
     var d = $('bkD').value;
-    api('mmBookIt', [S.token, {date: d, room: v.R, cat: v.C, start: hm(+$('bkS').value), dur: v.L, item: $('bkI').value, target: $('bkO').value, teacher: tv, helper: $('bkH').value, note: $('bkN').value}])
-      .then(function () { closeSheet(); toast('已加進行事曆'); S.sel = d; S.month = d.slice(0, 7); load(); })
+    var pl = {date: d, room: v.R, cat: v.C, start: hm(+$('bkS').value), dur: v.L, item: $('bkI').value, target: $('bkO').value, teacher: tv, helper: $('bkH').value, note: $('bkN').value};
+    (ev ? api('mmUpdate', [S.token, ev.id, pl]) : api('mmBookIt', [S.token, pl]))
+      .then(function () { closeSheet(); toast(ev ? '已修改' : '已加進行事曆'); S.sel = d; S.month = d.slice(0, 7); load(); })
       .catch(function (e) { $('bkE').textContent = e.message; b.disabled = false; });
   };
 }
@@ -233,8 +249,9 @@ function detail(e) {
     '<span>對象</span><div>' + esc(e.target || '—') + '</div><span>負責老師</span><div>' + esc(e.teacher || '—') + '</div>' +
     '<span>預約人</span><div>' + esc(e.booker || '—') + '</div><span>幫忙</span><div>' + esc(e.helper || '—') + '</div></div>' +
     (e.note ? '<div class="note">' + esc(e.note) + '</div>' : '') +
-    (can && e.mm ? '<button class="btn danger" id="dlGo">取消這筆預約</button>' : '') + '<button class="btn ghost" onclick="closeSheet()">關閉</button>';
+    (can && e.mm ? '<button class="btn" id="edGo">修改</button><button class="btn danger" id="dlGo">取消這筆預約</button>' : '') + '<button class="btn ghost" onclick="closeSheet()">關閉</button>';
   openSheet(h);
+  if ($('edGo')) $('edGo').onclick = function () { addSheet(e.date, e); };
   if ($('dlGo')) $('dlGo').onclick = function () {
     var b = this;
     if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = '再按一次確認取消'; return; }
