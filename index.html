@@ -277,6 +277,8 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'RESET・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Skin Care'};
 
 var EVENTS = [
+  {id: 'talk', dates: ['2026-12-06'], kind: '課程', tag: '每月一場・20 人', typo: ['島上分享會', '冬季戀歌', '12.06 SAT'], title: '島上分享會｜冬季戀歌', sub: '精油抓周 × 10 張塔羅，談占卜與情感；再聽羊大分享怎麼用 Threads 行銷收單。', when: '12/6（六）14:00–18:00', price: 'NT$500（現場付款）', place: 'PAUSE SPACE 島上・1F 交誼廳', cap: '20 人', who: '島主項項 × Chris × 羊大', fit: ['對占卜、精油、情感話題好奇', '想找一個可以變現的副業', '想認識島上的人'],
+    body: '<p><b>精油抓周｜島主項項</b><br>三支精油，聊聊此刻的自己，現場體驗</p><p><b>10 張牌的塔羅｜Chris</b><br>冬天的心事，用 10 張牌說說占卜與情感</p><p><b>Threads 行銷與收單｜羊大</b><br>怎麼把一個體驗，變成在 Threads 上收得到單的副業</p><p class="note">每月一場，主題每次不同。報名當天截止，名額 20 人，額滿就關閉。</p>', cta: ['立即報名', ''], href: '#/join/talk'},
   {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜READ THE AIR', sub: '從對面，坐到旁邊。一堂結合植物、氣味、輕斷食與走心溝通的課程，連續兩晚、共 5 小時。', when: '11/18（三）＋11/19（四）19:00–21:30（連續兩晚，共 5 小時）', price: '單人 NT$6,800・雙人同行 NT$6,000／人（不需另購精油；學員可用 5.5 折加購）', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
     body: '<p><b>DAY 1｜回到自己</b><br>輕斷食 × 植物 × 氣味</p><p><b>DAY 2｜走近一個人</b><br>精油抓周 × 提問 × 傾聽</p><p>使用艾薇丹 AD VITAM 十二款能量香氛精油。不需要芳療或輕斷食經驗。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
   {id: 'moon', dates: ['2026-11-25', '2026-12-24'], img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
@@ -891,6 +893,7 @@ function vJoin(id) {
   page('events', 'ISLAND DAYS', '<div class="loading">讀取中…</div>');
   api('courseInfo', [id]).then(function (c) {
     if (!c || !c.ok) return go('#/events');
+    if (c.generic) return joinGeneric(id, c);
     var W = '日一二三四五六';
     $('app').innerHTML = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Course / Pause Space</div><h1>' + esc(c.name) + ' 報名</h1>' +
       '<img class="heroimg" src="kv/ev_' + esc(id) + '.jpg' + KV_V + '" alt="' + esc(c.name) + '" style="max-width:560px">' +
@@ -908,6 +911,31 @@ function vJoin(id) {
       '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>'
       : '<div class="panel"><p>目前沒有開放中的場次，<a href="' + lineMsg('我想詢問「' + c.name + '」下一次開課') + '">LINE 島主</a> 登記下一次。</p></div>');
   }).catch(function () { $('app').innerHTML = '<div class="loading">暫時讀不到，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
+}
+function joinGeneric(id, c) {
+  var W = '日一二三四五六', s0 = c.sessions[0];
+  var h = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Island Talk / Pause Space</div><h1>' + esc(c.name) + (s0 && s0.theme ? '<br><small style="font-size:.55em;letter-spacing:.04em">' + esc(s0.theme.split('｜')[0]) + '</small>' : '') + '</h1>' +
+    '<div class="ev-ty" style="border-radius:18px;max-width:560px;margin-bottom:14px"><small>PAUSE SPACE × ISLAND TALK</small><b>' + esc(c.name) + '</b><span>' + esc(s0 ? s0.theme.split('｜')[0] : '敬請期待') + '</span><em>' + (s0 ? s0.date.slice(5).replace('-', '.') : '') + '</em></div>' +
+    '<p class="lead">' + esc(c.intro) + '</p>';
+  if (!s0) return ($('app').innerHTML = h + '<div class="panel"><p>下一場還在準備中，<a href="' + lineMsg('我想登記下一場「' + c.name + '」') + '">LINE 島主</a> 先登記，開放報名時通知您。</p></div>');
+  var d = new Date(s0.date + 'T12:00:00');
+  h += '<div class="xc" style="margin-top:12px"><div class="no">THIS TIME / 這一場</div><h3>' + esc(s0.theme) + '</h3>' +
+    '<dl class="ef">' + (s0.items || []).map(function (x) { return '<dt>' + esc(x[0] || '・') + '</dt><dd><b>' + esc(x[1]) + '</b><br>' + esc(x[2]) + '</dd>'; }).join('') + '</dl>' +
+    ((s0.fit || []).length ? '<div class="lb">適合您，如果您</div><div class="tg">' + s0.fit.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
+    '<div class="xc" style="margin-top:10px"><div class="no">INFO / 資訊</div><dl class="ef">' +
+    '<dt>日期</dt><dd>' + (d.getMonth() + 1) + '/' + d.getDate() + '（' + W.charAt(d.getDay()) + '）' + esc(s0.start) + (s0.end ? '–' + esc(s0.end) : '') + '</dd>' +
+    '<dt>地點</dt><dd>' + esc(c.where) + '</dd>' + (s0.who ? '<dt>帶領</dt><dd>' + esc(s0.who) + '</dd>' : '') +
+    '<dt>費用</dt><dd>' + esc(c.pay || ('NT$' + c.price)) + '</dd>' +
+    (c.cap ? '<dt>名額</dt><dd>' + c.cap + ' 人' + (s0.left != null ? '・<b style="color:var(--coral)">剩 ' + s0.left + ' 位</b>' : '') + '</dd>' : '') +
+    '<dt>報名截止</dt><dd>活動當天開始前，額滿就關閉</dd></dl></div>';
+  if (s0.left === 0) h += '<div class="panel" style="margin-top:14px"><p>這一場已經額滿。<a href="' + lineMsg('我想登記下一場「' + c.name + '」') + '">LINE 島主</a> 登記下一場。</p></div>';
+  else h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
+    '<label>場次</label><div class="jn-s">' + c.sessions.filter(function (s) { return s.left !== 0; }).map(function (s, i) { var dd = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (dd.getMonth() + 1) + '/' + dd.getDate() + '（' + W.charAt(dd.getDay()) + '）' + esc(s.start) + '</b> ' + esc((s.theme || '').split('｜')[0]) + '</span></label>'; }).join('') + '</div>' +
+    '<label for="jnN">姓名</label><input id="jnN" autocomplete="name"><label for="jnP">手機</label><input id="jnP" inputmode="tel" placeholder="09xxxxxxxx">' +
+    '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您"><label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
+    '<p class="note">費用 ' + esc(c.pay || ('NT$' + c.price)) + '，當天到場再付就好。</p>' +
+    '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>';
+  $('app').innerHTML = h;
 }
 /* ---------- 精油抓周｜Read The Air 報名 ---------- */
 function vOil() {
@@ -990,7 +1018,7 @@ function joinSend(b) {
     if (!r.ok) throw new Error(r.error);
     var d = new Date(r.date + 'T12:00:00');
     $('app').innerHTML = '<div class="eyebrow" style="margin-top:20px">REGISTERED</div><h1>報名收到了 🌙</h1><p class="lead">' + esc(r.course) + '｜' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + r.start + '<br>' + esc(r.where) + '</p>' +
-      '<div class="panel"><p>島主會在官方 LINE 跟您確認名額。還沒加官方 LINE 的話，先加一下，才收得到確認和課後小卡。</p><p class="note">報名編號：' + esc(r.code) + '</p></div>' +
+      '<div class="panel"><p>島主會在官方 LINE 跟您確認名額。還沒加官方 LINE 的話，先加一下，才收得到確認和課後小卡。</p>' + (r.pay ? '<p>費用：' + esc(r.pay) + '</p>' : '') + '<p class="note">報名編號：' + esc(r.code) + '</p></div>' +
       '<a class="btn coral" href="https://line.me/R/ti/p/' + LINE_ID + '">加官方 LINE</a><a class="btn ghost" style="margin-top:10px" href="#/events">回島日嶼祭</a>';
     window.scrollTo(0, 0);
   }).catch(function (er) { b.disabled = false; b.textContent = '送出報名'; e.hidden = false; e.textContent = er.message || '送出失敗，請再試一次'; });
