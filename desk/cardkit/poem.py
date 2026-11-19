@@ -85,8 +85,8 @@ def auto(spec):
     cv,_=run_text(cv,x,1790-tsize*1.08,spec['title'],'bold',tsize,1.3,2)
     tail=[('｜','reg',28),('精油抓周','reg',26)]
     if os.path.exists(SIG):  # 用島主的親筆簽名
-        sig=I.open(SIG).convert('L'); sh=int(52*S); sw=int(sig.width*sh/sig.height); sig=sig.resize((sw,sh),I.LANCZOS)
-        x=540-(sw/S+10+width(tail))/2; X,Y=int(x*S),int(1840*S)
+        sig=I.open(SIG).convert('L'); sh=int(84*S); sw=int(sig.width*sh/sig.height); sig=sig.resize((sw,sh),I.LANCZOS)
+        x=540-(sw/S+10+width(tail))/2; X,Y=int(x*S),int(1826*S)
         cv[Y:Y+sh,X:X+sw]=np.maximum(cv[Y:Y+sh,X:X+sw],np.asarray(sig,dtype=float)/255); x+=sw/S+10
     else:
         sg=[('島主項項','hand',56)]+tail; x=540-width(sg)/2; tail=sg
