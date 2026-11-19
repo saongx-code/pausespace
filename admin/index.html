@@ -63,6 +63,7 @@ if (!KEY) {
 var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
   var READS = {todaySummary: 1, calRange: 1, todoList: 1, deskList: 1, deskBookings: 1, bar1fPending: 1, ledgerList: 1, mediaList: 1};
   function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  function clearReads() { try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('rc:') === 0) localStorage.removeItem(k); }); } catch (e) {} }
   function make(ok, bad) {
     return new Proxy({}, {get: function (_, name) {
       if (name === 'withSuccessHandler') return function (f) { return make(f, bad); };
@@ -78,6 +79,7 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
           if (j.error) throw new Error(j.error);
           var fresh = JSON.stringify(j.result);
           if (READS[name]) { if (fresh === old) return; st(ck, fresh); }
+          else clearReads();  // 送出、修改之後，記住的舊畫面全部作廢，不會再跳回「送出前」
           if (ok) ok(j.result);
         }).catch(function (e) { if (bad && !old) bad(e); });
       };
