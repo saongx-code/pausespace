@@ -72,7 +72,9 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
         var aj = JSON.stringify(args), ck = 'rc:' + name + ':' + aj, old = READS[name] ? st(ck) : null;
         if (old && ok) setTimeout(function () { try { ok(JSON.parse(old)); } catch (e) {} }, 0);  // 先給上次的資料，畫面秒出現
         var url = EXEC + '?api=call&key=' + encodeURIComponent(KEY) + '&fn=' + encodeURIComponent(name) + '&args=' + encodeURIComponent(aj);
-        fetch(url).then(function (r) { return r.json(); }).then(function (j) {
+        // 照片這類大資料塞不進網址，改用 POST 傳
+        var req = url.length > 6000 ? fetch(EXEC, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body: JSON.stringify({api: 'call', key: KEY, fn: name, args: aj})}) : fetch(url);
+        req.then(function (r) { return r.json(); }).then(function (j) {
           if (j.error) throw new Error(j.error);
           var fresh = JSON.stringify(j.result);
           if (READS[name]) { if (fresh === old) return; st(ck, fresh); }
