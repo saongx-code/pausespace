@@ -5,6 +5,10 @@ import os
 D=os.path.dirname(os.path.abspath(__file__))+'/'
 NOTO='/usr/share/fonts/opentype/noto/'
 FONTS={'bold':(NOTO+'NotoSerifCJK-Black.ttc',3),'semi':(NOTO+'NotoSerifCJK-Bold.ttc',3),'reg':(NOTO+'NotoSerifCJK-Regular.ttc',3),'hand':(D+'YujiMai-Regular.ttf',0)}
+if not os.path.exists(NOTO+'NotoSerifCJK-Regular.ttc'):  # 沒裝 Noto CJK 的機器：改用 repo 裡的思源宋體（粗細用同一套）
+    _alt=D+'../../tools/journey/NotoSerifTC[wght].ttf'
+    FONTS.update({'bold':(_alt,0),'semi':(_alt,0),'reg':(_alt,0)})
+SIG=D+'signature.png'  # 島主親手寫的「島主項項」簽名（白字＝墨水的灰階圖，sig.py 產生）；有這個檔就用它當落款
 INK=(0x22,0x34,0x5e); W,H=1080,1920; S=2
 rng=np.random.default_rng(int(sys.argv[2]) if len(sys.argv)>2 else 11)
 def F(k,size):
@@ -79,8 +83,14 @@ def auto(spec):
     tsize=spec.get('title_size',120 if len(spec['title'])<=5 else max(80,int(600/len(spec['title']))))
     tr=[(spec['title'],'bold',tsize)]; x=540-width(tr)/2
     cv,_=run_text(cv,x,1790-tsize*1.08,spec['title'],'bold',tsize,1.3,2)
-    sg=[('島主項項','hand',56),('｜','reg',28),('精油抓周','reg',26)]; x=540-width(sg)/2
-    for txt,k,size in sg:
+    tail=[('｜','reg',28),('精油抓周','reg',26)]
+    if os.path.exists(SIG):  # 用島主的親筆簽名
+        sig=I.open(SIG).convert('L'); sh=int(52*S); sw=int(sig.width*sh/sig.height); sig=sig.resize((sw,sh),I.LANCZOS)
+        x=540-(sw/S+10+width(tail))/2; X,Y=int(x*S),int(1840*S)
+        cv[Y:Y+sh,X:X+sw]=np.maximum(cv[Y:Y+sh,X:X+sw],np.asarray(sig,dtype=float)/255); x+=sw/S+10
+    else:
+        sg=[('島主項項','hand',56)]+tail; x=540-width(sg)/2; tail=sg
+    for txt,k,size in tail:
         cv,x=run_text(cv,x,1876-size*1.08,txt,k,size,0,2); x+=6
     A=I.fromarray((np.clip(cv,0,1)*255).astype('uint8')).resize((W,H),I.LANCZOS)
     o=I.new('RGBA',(W,H),INK+(0,)); o.putalpha(A); o.save(spec['out'])
