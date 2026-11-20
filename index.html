@@ -920,7 +920,7 @@ function joinGeneric(id, c) {
   if (!s0) return ($('app').innerHTML = h + '<div class="panel"><p>下一場還在準備中，<a href="' + lineMsg('我想登記下一場「' + c.name + '」') + '">LINE 島主</a> 先登記，開放報名時通知您。</p></div>');
   var d = new Date(s0.date + 'T12:00:00');
   h += '<div class="xc" style="margin-top:12px"><div class="no">THIS TIME / 這一場</div><h3>' + esc(s0.theme) + '</h3>' +
-    '<dl class="ef">' + (s0.items || []).map(function (x) { return '<dt>' + esc(x[0] || '・') + '</dt><dd><b>' + esc(x[1]) + '</b><br>' + esc(x[2]) + '</dd>'; }).join('') + '</dl>' +
+    '<dl class="ef">' + (s0.items || []).map(function (x) { return '<dt>' + esc(x[0] || '・') + '</dt><dd>' + (x[3] ? '<img src="' + esc(x[3]) + KV_V + '" alt="" style="float:right;width:64px;height:64px;border-radius:50%;object-fit:cover;margin:0 0 6px 10px">' : '') + '<b>' + esc(x[1]) + '</b><br>' + esc(x[2]) + '</dd>'; }).join('') + '</dl>' +
     ((s0.fit || []).length ? '<div class="lb">適合您，如果您</div><div class="tg">' + s0.fit.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
     '<div class="xc" style="margin-top:10px"><div class="no">INFO / 資訊</div><dl class="ef">' +
     '<dt>日期</dt><dd>' + (d.getMonth() + 1) + '/' + d.getDate() + '（' + W.charAt(d.getDay()) + '）' + esc(s0.start) + (s0.end ? '–' + esc(s0.end) : '') + '</dd>' +
