@@ -253,7 +253,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .ml-row b{display:block;font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.35;margin:1px 0}.ml-row em{display:block;font-style:normal;font-size:13px;color:#a2643f}
 .ml-pm{width:32px;height:32px;border-radius:50%;border:1px solid var(--ink);background:none;color:var(--ink);font-size:18px;line-height:1;flex:none;padding:0}
 .ml-card{display:none;padding:14px 0 20px;border-bottom:1px solid var(--line)}.ml-row.open+.ml-card{display:block}
-.ml-art{width:100%;max-width:420px;margin:0 auto;aspect-ratio:1/1;border-radius:18px;overflow:hidden;background:#e9e4da;box-shadow:0 10px 30px rgba(23,51,47,.12)}
+.ml-art{width:100%;max-width:420px;margin:0 auto;aspect-ratio:5/4;border-radius:18px;overflow:hidden;background:#e9e4da;box-shadow:0 10px 30px rgba(23,51,47,.12)}
 .ml-art img{width:100%;height:100%;object-fit:cover;display:block}
 .ml-card .ds{margin:14px 2px 12px;line-height:1.8}.ml-card .btn{display:block;max-width:420px;margin:0 auto}
 .ml-card .xc{margin-top:12px}
@@ -790,8 +790,9 @@ function evKey(x) {
   return x.tag === '籌備中' ? '3' : '2';
 }
 function evHref(x) { return x.id === 'oil' ? '#/join/oil' : '#/events/' + x.id; }
-/* ---------- 清單＋展開（跟 Moon Bar 同一套）：小方圖是主視覺的關鍵圖案，展開後大圖一律 1:1（跟 Moon Bar 一樣） ---------- */
+/* ---------- 清單＋展開（跟 Moon Bar 同一套）：小方圖是主視覺的關鍵圖案，展開後大圖一律 5:4 橫式；海報用 POS 對準主角 ---------- */
 var TH = {love1206: 'ev_love1206', oil: 'ev_oil', moon: 'events', mens: 'ev_mens', g_oil: 'oil', g_indiba: 'indiba', g_sumei: 'gift_sumei', g_mens: 'perk'};
+var POS = {love1206: '50% 30%', oil: '50% 55%', mens: '50% 28%', g_sumei: '50% 45%'};
 function thumb(k, big) { return TH[k] ? 'kv/th_' + TH[k] + '.jpg' + KV_V : big; }
 function mlList(rows) {
   return '<div class="ml">' + rows.map(function (r) {
@@ -809,7 +810,7 @@ function vEvents() {
   var list = EVENTS.filter(function (x) { return !x.off && (EV.f === '全部' || x.kind === EV.f); }).map(function (x, i) { return [evKey(x), i, x]; }).sort(function (a, b) { return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : a[1] - b[1]; }).map(function (a) { return a[2]; });
   page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。每一堂都有自己的故事，點開簡章看完整內容。</p>' +
     '<div class="sv-tabs ev-tabs">' + ['全部', '嶼祭', '課程'].map(function (t) { return '<button type="button" data-evf="' + t + '" class="' + (t === EV.f ? 'on' : '') + '">' + t + '</button>'; }).join('') + '</div>' +
-    mlList(list.map(function (x) { var big = x.poster ? x.poster + KV_V : img(x.img); return {id: x.id, th: thumb(x.id, big), big: big, pos: x.poster ? '50% 0%' : '50% 50%', sub: x.kind + '・' + x.tag, title: x.title, em: (x.when || '').split('｜')[0] || '敬請期待', desc: x.sub, href: evHref(x), cta: '看完整簡章／報名', soon: x.tag === '籌備中'}; })) +
+    mlList(list.map(function (x) { var big = x.poster ? x.poster + KV_V : img(x.img); return {id: x.id, th: thumb(x.id, big), big: big, pos: POS[x.id] || '50% 50%', sub: x.kind + '・' + x.tag, title: x.title, em: (x.when || '').split('｜')[0] || '敬請期待', desc: x.sub, href: evHref(x), cta: '看完整簡章／報名', soon: x.tag === '籌備中'}; })) +
     '<p class="note" style="margin:14px 2px 0">名額由島主確認後才算完成報名。</p>');
 }
 function vEvent(id) {
@@ -845,7 +846,7 @@ function giftCard(g, ix) {
 function vGifts() {
   // 一張卡一個項目：點哪一張，就只打開那一張的內容和預約，不會一次全部跳出來
   page('gifts', 'ISLAND GIFTS', '<div class="eyebrow">Discover / Pause Space</div><h1>遇島有禮</h1><p class="lead">島上的限定體驗與專屬提案。點一張，看那一項的內容與預約方式。</p>' +
-    mlList(GIFTS.map(function (g) { var big = g.poster ? g.poster + KV_V : img(g.img); return {id: g.id, th: thumb('g_' + g.id, big), big: big, pos: g.poster ? '50% 0%' : '50% 50%', sub: g.tag, title: g.title, em: g.price || '', desc: g.sub || '', href: '#/gifts/' + g.id, cta: '看內容與預約', soon: /規劃中/.test(g.tag)}; })) +
+    mlList(GIFTS.map(function (g) { var big = g.poster ? g.poster + KV_V : img(g.img); return {id: g.id, th: thumb('g_' + g.id, big), big: big, pos: POS['g_' + g.id] || '50% 50%', sub: g.tag, title: g.title, em: g.price || '', desc: g.sub || '', href: '#/gifts/' + g.id, cta: '看內容與預約', soon: /規劃中/.test(g.tag)}; })) +
     '<p class="note" style="margin-top:14px">限定資格、招募名額與時段由島主透過官方 LINE 確認，收到確認後預約才正式成立。</p>');
 }
 function vGift(id) {
