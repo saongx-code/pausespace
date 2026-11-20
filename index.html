@@ -907,7 +907,9 @@ function vJoin(id) {
       (c.sessions.length ? '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
       '<label>場次</label><div class="jn-s">' + c.sessions.map(function (s, i) { var d = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (d.getMonth() + 1) + '/' + d.getDate() + '（' + W[d.getDay()] + '）</b> ' + s.start + '</span></label>'; }).join('') + '</div>' +
       '<label for="jnN">姓名</label><input id="jnN" autocomplete="name"><label for="jnP">手機</label><input id="jnP" inputmode="tel" placeholder="09xxxxxxxx">' +
-      '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您"><label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
+      '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您">' +
+    '<label for="jnF">請問您如何知道此活動？</label><select id="jnF"><option value="">請選擇</option>' + ['Threads', 'Instagram', 'Facebook', 'Google 搜尋／地圖', '官方 LINE', '朋友推薦', '講師介紹（Chris／羊大／島主）', '其他'].map(function (t) { return '<option>' + t + '</option>'; }).join('') + '</select>' +
+    '<label for="jnR">請問您的推薦人是？（可不填）</label><input id="jnR" placeholder="推薦人的名字"><label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
       '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>'
       : '<div class="panel"><p>目前沒有開放中的場次，<a href="' + lineMsg('我想詢問「' + c.name + '」下一次開課') + '">LINE 島主</a> 登記下一次。</p></div>');
   }).catch(function () { $('app').innerHTML = '<div class="loading">暫時讀不到，<a href="javascript:location.reload()">重新整理</a>。</div>'; });
@@ -933,7 +935,10 @@ function joinGeneric(id, c) {
   else h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
     '<label>場次</label><div class="jn-s">' + c.sessions.filter(function (s) { return s.left !== 0; }).map(function (s, i) { var dd = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (dd.getMonth() + 1) + '/' + dd.getDate() + '（' + W.charAt(dd.getDay()) + '）' + esc(s.start) + '</b> ' + esc((s.theme || '').split('｜')[0]) + '</span></label>'; }).join('') + '</div>' +
     '<label for="jnN">姓名</label><input id="jnN" autocomplete="name"><label for="jnP">手機</label><input id="jnP" inputmode="tel" placeholder="09xxxxxxxx">' +
-    '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您"><label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
+    '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您">' +
+    '<label for="jnF">請問您如何知道此活動？</label><select id="jnF"><option value="">請選擇</option>' + ['Threads', 'Instagram', 'Facebook', 'Google 搜尋／地圖', '官方 LINE', '朋友推薦', '講師介紹（Chris／羊大／島主）', '其他'].map(function (t) { return '<option>' + t + '</option>'; }).join('') + '</select>' +
+    '<label for="jnR">請問您的推薦人是？（可不填）</label><input id="jnR" placeholder="推薦人的名字">' +
+    '<label for="jnM">想問的或備註（可不填）</label><input id="jnM">' +
     (c.prepay ? '<p class="note">送出後會看到匯款帳號。匯款 NT$' + c.price + ' 並回報末五碼，島主核對後，報名才算正式成功。</p>' : '<p class="note">費用 ' + esc(c.pay || ('NT$' + c.price)) + '，當天到場再付就好。</p>') +
     '<p class="err" id="jnE" hidden></p><button type="button" class="btn coral" id="jnGo" data-jn="' + esc(id) + '">送出報名</button></fieldset>';
   $('app').innerHTML = h;
@@ -1012,7 +1017,8 @@ function oilSend(b) {
 }
 function joinSend(b) {
   var e = $('jnE'), sel = document.querySelector('input[name=jnS]:checked');
-  var p = {course: b.dataset.jn, date: sel ? sel.value : '', name: $('jnN').value.trim(), phone: $('jnP').value.trim(), lineName: $('jnL').value.trim(), note: $('jnM').value.trim()};
+  var p = {course: b.dataset.jn, date: sel ? sel.value : '', name: $('jnN').value.trim(), phone: $('jnP').value.trim(), lineName: $('jnL').value.trim(), note: $('jnM').value.trim(), source: $('jnF') ? $('jnF').value : '', referrer: $('jnR') ? $('jnR').value.trim() : ''};
+  if ($('jnF') && !p.source) { e.hidden = false; e.textContent = '請選擇您如何知道此活動'; return; }
   if (!p.name) { e.hidden = false; e.textContent = '請填寫姓名'; return; }
   b.disabled = true; b.textContent = '送出中…';
   api('courseJoin', [p]).then(function (r) {
