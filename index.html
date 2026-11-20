@@ -256,7 +256,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 .ml-art{width:100%;max-width:420px;margin:0 auto;aspect-ratio:5/4;border-radius:18px;overflow:hidden;background:#e9e4da;box-shadow:0 10px 30px rgba(23,51,47,.12)}
 .ml-art img{width:100%;height:100%;object-fit:cover;display:block}
 .ml-card .ds{margin:14px 2px 12px;line-height:1.8}.ml-card .btn{display:block;max-width:420px;margin:0 auto}
-.ml-card .xc{margin-top:12px}
+.ml-card .xc{margin-top:12px}.ml .tg{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 0}.ml .tg span{font-size:12px;border:1px solid #b9c7c1;border-radius:999px;padding:1px 9px;background:#fbfaf6}
 </style>
 </head>
 <body>
@@ -796,8 +796,8 @@ var POS = {love1206: '50% 30%', oil: '50% 55%', mens: '50% 28%', g_sumei: '50% 4
 function thumb(k, big) { return TH[k] ? 'kv/th_' + TH[k] + '.jpg' + KV_V : big; }
 function mlList(rows) {
   return '<div class="ml">' + rows.map(function (r) {
-    return '<div class="ml-row' + (r.soon ? ' soon' : '') + (r.open ? ' open' : '') + '" data-ml="' + esc(r.id) + '"><img src="' + r.th + '" alt="" loading="lazy"><div class="t"><small>' + esc(r.sub || '') + '</small><b>' + esc(r.title) + '</b>' + (r.em ? '<em>' + esc(r.em) + '</em>' : '') + '</div><button type="button" class="ml-pm" aria-label="展開">' + (r.open ? '−' : '+') + '</button></div>' +
-      '<div class="ml-card"><div class="ml-art"><img src="' + r.big + '" alt="' + esc(r.title) + '" loading="lazy" style="object-position:' + (r.pos || '50% 30%') + '"></div>' + (r.desc ? '<p class="ds">' + esc(r.desc) + '</p>' : '') + (r.more || '') + (r.href ? '<a class="btn coral" href="' + r.href + '">' + esc(r.cta || '看完整內容／報名') + ' →</a>' : '') + '</div>';
+    return '<div class="ml-row' + (r.soon ? ' soon' : '') + (r.open ? ' open' : '') + '" data-ml="' + esc(r.id) + '"><img src="' + r.th + '" alt="" loading="lazy"><div class="t"><small>' + esc(r.sub || '') + '</small><b>' + esc(r.title) + '</b>' + (r.em ? '<em>' + esc(r.em) + '</em>' : '') + (r.tags ? '<div class="tg">' + r.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') + '</div><button type="button" class="ml-pm" aria-label="展開">' + (r.open ? '−' : '+') + '</button></div>' +
+      '<div class="ml-card">' + (r.tags ? '<div class="tg" style="margin:0 0 12px">' + r.tags.map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' : '') + '<div class="ml-art"><img src="' + r.big + '" alt="' + esc(r.title) + '" loading="lazy" style="object-position:' + (r.pos || '50% 30%') + '"></div>' + (r.desc ? '<p class="ds">' + esc(r.desc) + '</p>' : '') + (r.more || '') + (r.href ? '<a class="btn coral" href="' + r.href + '">' + esc(r.cta || '看完整內容／報名') + ' →</a>' : '') + '</div>';
   }).join('') + '</div>';
 }
 document.addEventListener('click', function (ev) {
@@ -810,7 +810,7 @@ function vEvents() {
   var list = EVENTS.filter(function (x) { return !x.off && (EV.f === '全部' || x.kind === EV.f); }).map(function (x, i) { return [evKey(x), i, x]; }).sort(function (a, b) { return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : a[1] - b[1]; }).map(function (a) { return a[2]; });
   page('events', 'ISLAND DAYS', '<div class="eyebrow">Island Days / Pause Space</div><h1>島日嶼祭</h1><p class="lead">島主的課程與島上的祭典。每一堂都有自己的故事，點開簡章看完整內容。</p>' +
     '<div class="sv-tabs ev-tabs">' + ['全部', '嶼祭', '課程'].map(function (t) { return '<button type="button" data-evf="' + t + '" class="' + (t === EV.f ? 'on' : '') + '">' + t + '</button>'; }).join('') + '</div>' +
-    mlList(list.map(function (x) { var big = x.poster ? x.poster + KV_V : img(x.img); return {id: x.id, th: thumb(x.id, big), big: x.wide ? x.wide + KV_V : big, pos: x.wide ? '50% 50%' : (POS[x.id] || '50% 50%'), sub: x.kind + '・' + x.tag, title: x.title, em: (x.when || '').split('｜')[0] || '敬請期待', desc: x.sub, href: evHref(x), cta: '看完整簡章／報名', soon: x.tag === '籌備中'}; })) +
+    mlList(list.map(function (x) { var big = x.poster ? x.poster + KV_V : img(x.img); return {id: x.id, th: thumb(x.id, big), big: x.wide ? x.wide + KV_V : big, pos: x.wide ? '50% 50%' : (POS[x.id] || '50% 50%'), sub: x.kind + '・' + x.tag, tags: EV_TAGS[x.id], title: x.title, em: (x.when || '').split('｜')[0] || '敬請期待', desc: x.sub, href: evHref(x), cta: '看完整簡章／報名', soon: x.tag === '籌備中'}; })) +
     '<p class="note" style="margin:14px 2px 0">名額由島主確認後才算完成報名。</p>');
 }
 var EV_TAGS = {love1206: ['#占卜創業', '#個人品牌', '#自媒體行銷', '#技術變現', '#教練陪跑', '#斜槓創業']};
