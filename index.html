@@ -277,8 +277,8 @@ var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset
 var EN = {beauty: 'Beauty・身', reset: 'RESET・心', soul: 'Soul・靈', metime: 'Me Time', pick: 'Skin Care'};
 
 var EVENTS = [
-  {id: 'love1206', dates: ['2026-12-06'], kind: '課程', tag: '分享會・20 人', typo: ['冬季戀歌', '精油抓周 × 10 張塔羅', '12.06 SUN'], title: '冬季戀歌｜精油抓周 × 10 張塔羅分享會', sub: '冬天，最適合聊心事。用三支精油和 10 張塔羅牌談占卜與情感，再聽羊大分享怎麼用 Threads 行銷收單。', when: '12/6（日）14:00–18:00', price: 'NT$500（現場付款）', place: 'PAUSE SPACE 島上・1F 交誼廳', cap: '20 人', who: '島主項項 × Chris × 羊大', fit: ['對占卜、精油、情感話題好奇', '想找一個可以變現的副業', '想認識島上的人'],
-    body: '<p><b>精油抓周｜島主項項</b><br>三支精油，聊聊此刻的自己，現場體驗</p><p><b>10 張牌的塔羅｜Chris</b><br>冬天的心事，用 10 張牌說說占卜與情感</p><p><b>Threads 行銷與收單｜羊大</b><br>怎麼把一個體驗，變成在 Threads 上收得到單的副業</p><p class="note">報名當天截止，名額 20 人，額滿就關閉。</p>', cta: ['立即報名', ''], href: '#/join/love1206'},
+  {id: 'love1206', dates: ['2026-12-06'], poster: 'kv/ev_love1206.jpg', kind: '課程', tag: '分享課・限 20 位', title: '冬季戀歌｜你的第 2 桶金', sub: '雙占卜商業模式分享課：從技術到自媒體行銷，體驗快速陪跑變現。', when: '12/6（日）14:00–16:00', price: 'NT$500／人（現場付款）', place: '空白空拍｜台北市大安區瑞安街 180 巷 3 號', cap: '限 20 位', who: '城市薩滿 島主項項 × 情感教練 Chris Chen', fit: ['對占卜、精油、情感話題好奇', '想找一個可以變現的副業', '想學自媒體行銷'],
+    body: '<p><b>三支精油，陪你找回魅力｜城市薩滿 島主項項</b><br>精油抓周現場體驗，聊聊此刻的自己</p><p><b>十張牌，教你看懂男人｜情感教練 Chris Chen</b><br>用 10 張塔羅牌談占卜與情感</p><p><b>雙占卜商業模式</b><br>從技術到自媒體行銷，體驗快速陪跑變現</p><p class="note">名額 20 位，額滿就關閉。</p>', cta: ['立即報名', ''], href: '#/join/love1206'},
   {id: 'oil', dates: ['2026-11-18'], img: 'oil', poster: 'kv/ev_oil.jpg', kind: '課程', tag: '每班 12 人', title: '精油抓周｜READ THE AIR', sub: '從對面，坐到旁邊。一堂結合植物、氣味、輕斷食與走心溝通的課程，連續兩晚、共 5 小時。', when: '11/18（三）＋11/19（四）19:00–21:30（連續兩晚，共 5 小時）', price: '單人 NT$6,800・雙人同行 NT$6,000／人（不需另購精油；學員可用 5.5 折加購）', place: 'PAUSE SPACE 島上', cap: '每班 12 人', who: '島主項項', fit: ['想更懂身邊的人', '對精油好奇', '想讓關心更走心'],
     body: '<p><b>DAY 1｜回到自己</b><br>輕斷食 × 植物 × 氣味</p><p><b>DAY 2｜走近一個人</b><br>精油抓周 × 提問 × 傾聽</p><p>使用艾薇丹 AD VITAM 十二款能量香氛精油。不需要芳療或輕斷食經驗。附贈 NT$600 SPA 會館抵用券。</p>', cta: ['立即報名', ''], href: '#/join/oil'},
   {id: 'moon', dates: ['2026-11-25', '2026-12-24'], img: 'moon', kind: '嶼祭', tag: '自由隨喜', when: '每月滿月 20:00｜11/25（三）海狸月・12/24（四）冷月', price: '自由隨喜', place: 'PAUSE SPACE 島上', fit: ['想為自己停一下', '喜歡儀式感', '想認識島上的人'], title: '滿月儀式・2026 在光裡相遇', sub: '每次滿月都有專屬主題，與島上的人一起在月光下，為自己留出一段安靜的時間。',
@@ -915,7 +915,7 @@ function vJoin(id) {
 function joinGeneric(id, c) {
   var W = '日一二三四五六', s0 = c.sessions[0];
   var h = '<a class="back" href="#/events">← 島日嶼祭</a><div class="eyebrow">Island Event / Pause Space</div><h1>' + esc(c.name.split('｜')[0]) + (c.name.indexOf('｜') > 0 ? '<br><small style="font-size:.55em;letter-spacing:.04em">' + esc(c.name.split('｜').slice(1).join('｜')) + '</small>' : '') + '</h1>' +
-    '<div class="ev-ty" style="border-radius:18px;max-width:560px;margin-bottom:14px"><small>PAUSE SPACE × ISLAND EVENT</small><b>' + esc(c.name.split('｜')[0]) + '</b><span>' + esc(c.name.split('｜').slice(1).join('｜') || '敬請期待') + '</span><em>' + (s0 ? s0.date.slice(5).replace('-', '.') : '') + '</em></div>' +
+    (EVENTS.filter(function (x) { return x.id === id && x.poster; }).map(function (x) { return '<img class="heroimg" src="' + x.poster + KV_V + '" alt="' + esc(c.name) + '" style="max-width:560px">'; })[0] || '<div class="ev-ty" style="border-radius:18px;max-width:560px;margin-bottom:14px"><small>PAUSE SPACE × ISLAND EVENT</small><b>' + esc(c.name.split('｜')[0]) + '</b><span>' + esc(c.name.split('｜').slice(1).join('｜') || '敬請期待') + '</span><em>' + (s0 ? s0.date.slice(5).replace('-', '.') : '') + '</em></div>') +
     '<p class="lead">' + esc(c.intro) + '</p>';
   if (!s0) return ($('app').innerHTML = h + '<div class="panel"><p>下一場還在準備中，<a href="' + lineMsg('我想登記下一場「' + c.name + '」') + '">LINE 島主</a> 先登記，開放報名時通知您。</p></div>');
   var d = new Date(s0.date + 'T12:00:00');
