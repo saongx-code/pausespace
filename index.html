@@ -310,6 +310,7 @@ var EVENTS = [
   {id: 'heal', off: true, img: 'heal', kind: '課程', tag: '籌備中', title: 'Reset no.3｜Heal 癒', sub: '療癒師創業陪跑。療癒服務、個人定位、創業準備。', body: '<p>陪跑內容、期間與參與方式將另行公告，目前尚未開放報名。</p>', cta: ['想先收到開課通知', '我想收到 Heal 癒 課程的開課通知']}
 ];
 var GIFTS = [
+  {id: 'liunian', img: 'soul', price: 'NT$600', len: '60 分鐘', who: '歲末限定 12/1–1/30', fit: ['想回頭看看這一年', '想知道下一年該往哪裡去', '年底想送自己一份禮物'], tag: '歲末年終感恩慶・12/1–1/30', title: '歲末年終感恩慶｜讀流年', sub: '一年要結束了，看看走過的這一年，也看看下一年要往哪裡去。', body: '<p><b>讀流年｜60 分鐘｜NT$600</b></p><p>歲末限定，只開放 12/1–1/30 預約，免付訂金。</p>', svc: 'liunian'},
   {id: 'oil', img: 'oil', price: '免費（現場點一杯飲料）', who: '名額由島主確認', fit: ['想聊聊此刻的自己', '對精油好奇'], tag: '免費體驗招募', title: '100 人精油抓周', sub: '讓直覺帶路，從聞香與選擇裡，聊聊此刻的自己。這不是 SPA 療程，是一場小小的氣味占卜。', body: '<p>體驗免費，現場只需點一杯飲料｜名額由島主確認</p><p>不用先想好答案，帶著此刻的自己來。</p><p class="note">直覺選香 → 感受與分享 → 整理這次的發現</p>', svc: 'oil'},
   {id: 'indiba', img: 'indiba', price: 'NT$999／次（腿部左右各一次，共 2 次）', len: '10 分鐘／次', fit: ['第一次接觸 INDIBA', '肩頸或腰臀緊繃', '想先試試溫熱感'], tag: '體驗', title: 'INDIBA 體驗｜局部放鬆 10 分鐘', sub: '第一次接觸 INDIBA？先用 10 分鐘，在肩頸、腰臀或腿部感受它的溫熱感。喜歡的話，島主會為您安排完整療程：深層睡眠、臉部保養，或局部溶脂雕塑，細節可在官方 LINE 詢問。', body: '<p>10 分鐘／次｜NT$999／次（腿部左右各一次，共 2 次）</p><p class="note">確認當日狀況 → 依您選的部位操作 → 感受確認，介紹適合您的完整療程。懷孕、體內有金屬植入物或心律調節器，預約時請先告知島主。</p>', svc: 'indiba'},
   {id: 'sumei', img: 'sumei', poster: 'kv/gift_sumei.jpg', price: '肌膚檢測 NT$200・護膚體驗 NT$399', fit: ['每天都在保養，卻不確定適不適合', '想認識自己的肌膚', '想先輕鬆體驗護膚'], tag: '肌膚公益體驗・開放預約', title: 'Su 美・島計畫', sub: '每天都在保養，您真的了解自己的皮膚嗎？從一次肌膚檢測或護膚體驗開始，認識自己的肌膚，把適合的照顧帶回生活。', body: '<p><b>肌膚檢測｜NT$200</b><br>了解您目前的膚況與保養習慣，帶走您的肌膚檢測單。</p><p><b>護膚體驗｜NT$399</b><br>肌膚檢測 → SPA 護膚體驗 → 整理適合您的保養建議。</p><p class="note">加入官方 LINE，了解活動、預約體驗。</p>', svc: 'sumei'},
@@ -459,7 +460,8 @@ document.addEventListener('click', function (ev) {
 /* ---------- 預約流程 ---------- */
 function vBook(key) {
   var s = svc(key); if (!s || !s.online) return go('#/services');
-  ST = {svc: s, date: ST.svc === s && ST.date ? ST.date : B.dates[0].date, start: null};
+  var sd = svDates(s);
+  ST = {svc: s, date: ST.svc === s && ST.date ? ST.date : (sd[0] || B.dates[0]).date, start: null};
   var back = s.cat === 'benefit' ? '#/gifts' : '#/services/' + s.cat;
   page(s.cat === 'benefit' ? 'gifts' : 'services', 'BOOKING',
     '<a class="back" href="' + back + '">← 回上一頁</a>' +
@@ -468,8 +470,14 @@ function vBook(key) {
     '<div id="formBox" hidden></div>');
   drawDates(); loadTimes();
 }
+// 限定期間的項目（例如歲末讀流年 12/1–1/30）：只列出開放期間內的日期
+function svDates(s) {
+  return B.dates.filter(function (d) { return !s || ((!s.from || d.date >= s.from) && (!s.to || d.date <= s.to)); });
+}
 function drawDates() {
-  $('dates').innerHTML = B.dates.map(function (d) { return '<button type="button" class="dt' + (d.date === ST.date ? ' on' : '') + '" data-d="' + d.date + '">週' + d.dow + '<b>' + d.label.split('/')[1] + '</b>' + d.label.split('/')[0] + '月</button>'; }).join('');
+  var ds = svDates(ST.svc);
+  if (!ds.length) { $('dates').innerHTML = '<p class="note">這個項目開放 ' + ST.svc.from.slice(5).replace('-', '/') + ' 起預約，目前還選不到日期，過幾天再回來看看。</p>'; $('times').innerHTML = ''; return; }
+  $('dates').innerHTML = ds.map(function (d) { return '<button type="button" class="dt' + (d.date === ST.date ? ' on' : '') + '" data-d="' + d.date + '">週' + d.dow + '<b>' + d.label.split('/')[1] + '</b>' + d.label.split('/')[0] + '月</button>'; }).join('');
   var on = $('dates').querySelector('.on'); if (on) on.scrollIntoView({inline: 'center', block: 'nearest'});
 }
 var SVC_FROM = '12:00'; // 島主療程最早 12:00 開始（空間租借、Moon Bar 不受影響）
