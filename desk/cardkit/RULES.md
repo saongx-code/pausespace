@@ -11,6 +11,18 @@
 - Canva 產圖的風格參考：先用 upload-asset-from-url 上傳 https://raw.githubusercontent.com/saongx-code/pausespace/main/desk/cardkit/ref_v4_art.jpg（只取畫面、沒有字），拿到 media id 放進 imageReferences；舊的 MAHauCcplIM 不要再用。
 - 提示詞範本（英文給產圖工具）：「single-color risograph / screen print on cream paper, one muted indigo-gray ink only, visible print grain and halftone texture, slightly soft ink edges, misty atmosphere, [主體] in sharp focus at center, surrounded by strong motion blur streaks of [故事裡的元素] rushing past on both sides, long-exposure ghost trails, faded [遠景] in fog converging to a vanishing point, lots of negative space, bottom 45% fades into plain cream paper, no text」
 
+- **墨水糊掉**：灰藍墨水印刷時微微暈開、糊掉的感覺（ink bleed），邊緣不銳利；只有主體稍微清楚，其他都是糊開的墨。
+
+## 安全線（出血框）：重要的東西一律放在安全線內（島主 11/21）
+- 卡片 1080×1920。安全線：左右各留 90px、上方留 150px、下方留 170px。
+- 主體、主題字、詩句、落款都要在安全線內；放到線外，整張比例就會失衡、在手機上也會被裁到或被介面擋住。
+- 所以整塊文字往上移（落款底部在 1780px 以內），插畫主體也不要貼邊。只有動態模糊、霧氣這些「氣氛」可以延伸出去。
+
+## 畫面要畫出客人「內心最深處的渴望」（島主 11/21）
+- 先從逐字稿找出這位客人**最深的渴望**（例：想被陪伴、想被接住、想自由、想被看見），主題字和畫面都要讓人一眼感受到那個渴望被滿足的「感覺」，不是只畫故事裡出現的物件。
+- 例：欣芮的渴望是「不再一個人、有人陪」。只畫一艘船和一群人看起來很冷、像出征；要畫出**陪伴與溫暖**：身體靠近、手搭肩、有人替他擋風、一盞小燈的光、彼此看著對方。
+- 交卡前自問：看到這張圖的第一秒，會不會感受到那個渴望？感受不到就重畫。
+
 ## v4 文字（poem.py 已改好，照 spec 寫就會是這個樣子）
 - 關鍵字：粗宋體、輕微斑駁；細字：黑體（不是宋體）。
 - 整塊詩句比 v3 高一點，主題字更大（七個字約占畫面寬度七成）。
