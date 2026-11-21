@@ -1,4 +1,25 @@
-# 抓周卡 v3（島主 2026-11-13 定稿）
+# 抓周卡 v4（島主 2026-11-21 定稿；範例：desk/cardkit/ref_v4_full.jpg「孤狼」卡）
+**以 v4 為準**。下面 v3 的 Canva 母版、文字層流程照用，但「畫風」和「文字樣式」改成 v4：
+
+## v4 畫風（插畫）
+- **水墨＋炭筆的霧感插畫**，不是銅版畫、不是細線素描：灰藍墨色（深靛灰 #1f2b45 到淡灰藍），米白紙底，大量霧氣與留白。
+- **只有主體是清楚的**：主角（人／動物／物件）放在畫面中央偏上，線條清楚、有質感。
+- **四周是強烈的動態模糊**：和故事有關的元素（人群、車流、浪、風、鳥群…只要是故事裡有的）從主體兩側高速掠過，像長曝光的拖影，越靠近畫面邊緣越模糊，可以一路延伸到畫面下方、壓在文字區的兩側邊緣。
+- **遠景淡淡的**：城市、海平線、山…在霧裡只剩輪廓，往中央消失點收過去，製造縱深。
+- 畫面上沒有任何文字。上方約 55% 是主要畫面，往下自然淡進米白紙。
+- 不要：亮鈷藍色、整齊排排站（像軍隊）、細到像版畫的線條、每個角落都畫滿。
+- Canva 產圖的風格參考：先用 upload-asset-from-url 上傳 https://raw.githubusercontent.com/saongx-code/pausespace/main/desk/cardkit/ref_v4_art.jpg（只取畫面、沒有字），拿到 media id 放進 imageReferences；舊的 MAHauCcplIM 不要再用。
+- 提示詞範本（英文給產圖工具）：「ink wash and charcoal illustration on cream paper, muted indigo-gray monochrome, misty atmosphere, [主體] in sharp focus at center, surrounded by strong motion blur streaks of [故事裡的元素] rushing past on both sides, long-exposure ghost trails, faded [遠景] in fog converging to a vanishing point, lots of negative space, bottom 45% fades into plain cream paper, no text」
+
+## v4 文字（poem.py 已改好，照 spec 寫就會是這個樣子）
+- 關鍵字：粗宋體、輕微斑駁；細字：黑體（不是宋體）。
+- 整塊詩句比 v3 高一點，主題字更大（七個字約占畫面寬度七成）。
+- 墨色灰藍 #1f2b45，不是亮藍。
+- 落款：島主的親筆簽名＋「｜精油抓周」。
+
+---
+
+# （舊版紀錄）抓周卡 v3（島主 2026-11-13 定稿）
 同一種風格、版面、顏色；內容（插畫意象、詩句、主題字）每位客人都依精油抓周的逐字稿重新設計。
 
 ## Canva（Julialangosh403 的團隊）
@@ -6,10 +27,10 @@
 - 頁 PBMl7rpb6QnmLZvg：背景＝插畫（update_fill locator＝頁 id）
 - 文字層 PBMl7rpb6QnmLZvg-LBCYn2sKMx7JD2hJ（整頁透明 PNG；update_fill 後 crop_media 0,0,1080,1920）
 - 卡片上沒有客人名字；落款固定「島主項項｜精油抓周」（在文字層裡）
-- 插畫風格參考 media：MAHauCcplIM（v3 範例插畫）
+- 插畫風格參考：改用 v4（見最上面），MAHauCcplIM 停用
 
 ## 版面
-- 上方約六成：插畫。深藍單色印刷感、米白紙；一個清楚的主體（通常是一個人或一個物件，站在畫面中上方，腳要高於畫面 58% 的位置）＋各式各樣、大小方向不規則、有的清楚有的動態模糊的元素（速度感，不要排得像軍隊）。往下慢慢淡進米白紙。不要任何文字。
+- 上方約六成：插畫（畫風以上面 v4 為準）。深藍單色印刷感、米白紙；一個清楚的主體（通常是一個人或一個物件，站在畫面中上方，腳要高於畫面 58% 的位置）＋各式各樣、大小方向不規則、有的清楚有的動態模糊的元素（速度感，不要排得像軍隊）。往下慢慢淡進米白紙。不要任何文字。
 - 下方約四成：文字層（poem.py 自動排）
   - 詩句 3–5 行：從島主在逐字稿裡真的說過的話延伸；每行 1 個粗斑駁關鍵字（"b"）＋細字（"r"），也可以整行細字。關鍵字通常是主題字裡的詞（重複出現有節奏感）
   - 第一行後、最後一行後各一條淡虛線（自動）

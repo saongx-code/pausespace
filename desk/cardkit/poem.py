@@ -4,15 +4,21 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import os
 D=os.path.dirname(os.path.abspath(__file__))+'/'
 NOTO='/usr/share/fonts/opentype/noto/'
-FONTS={'bold':(NOTO+'NotoSerifCJK-Black.ttc',3),'semi':(NOTO+'NotoSerifCJK-Bold.ttc',3),'reg':(NOTO+'NotoSerifCJK-Regular.ttc',3),'hand':(D+'YujiMai-Regular.ttf',0)}
+FONTS={'bold':(NOTO+'NotoSerifCJK-Black.ttc',3),'semi':(NOTO+'NotoSerifCJK-Bold.ttc',3),'reg':(NOTO+'NotoSerifCJK-Regular.ttc',3),'hand':(D+'YujiMai-Regular.ttf',0),
+       'sans':(D+'NotoSansTC.ttf',0)}  # v4：細字改黑體（島主 2026-11-21 給的範例）
 if not os.path.exists(NOTO+'NotoSerifCJK-Regular.ttc'):  # 沒裝 Noto CJK 的機器：改用 repo 裡的思源宋體（粗細用同一套）
     _alt=D+'../../tools/journey/NotoSerifTC[wght].ttf'
     FONTS.update({'bold':(_alt,0),'semi':(_alt,0),'reg':(_alt,0)})
 SIG=D+'signature.png'  # 島主親手寫的「島主項項」簽名（白字＝墨水的灰階圖，sig.py 產生）；有這個檔就用它當落款
-INK=(0x22,0x34,0x5e); W,H=1080,1920; S=2
+INK=(0x1f,0x2b,0x45); W,H=1080,1920; S=2  # v4：灰藍墨色（比 v3 暗、不亮藍）
 rng=np.random.default_rng(int(sys.argv[2]) if len(sys.argv)>2 else 11)
+WGT={'bold':900,'semi':700,'reg':400,'sans':400}
 def F(k,size):
-    p,i=FONTS[k]; return ImageFont.truetype(p,size*S,index=i)
+    p,i=FONTS[k]; f=ImageFont.truetype(p,size*S,index=i)
+    try:  # 可變字重的字型（repo 裡的備用字）：照用途設粗細
+        if k in WGT and f.get_variation_axes(): f.set_variation_by_axes([WGT[k]])
+    except Exception: pass
+    return f
 def noise(w,h,sc,lo,hi):
     a=rng.random((max(2,h//sc),max(2,w//sc)))
     return lo+(hi-lo)*np.asarray(Image.fromarray((a*255).astype('uint8')).resize((w,h),Image.BICUBIC),dtype=float)/255
@@ -52,9 +58,9 @@ def render(spec,out):
     o=Image.new('RGBA',(W,H),INK+(0,)); o.putalpha(A); o.save(out)
 
 
-# ---------- 自動排版（v3 母版）----------
-# spec: {"out":"x.png","title":"你值得自由","lines":[[["自由","b"],["不用一直飛","r"]], ...3–5 行], "seed":7}
-# b = 粗斑駁關鍵字（58px），r = 細字（30px）。行會左右錯開、往下排，第一行後和最後一行後各一條淡虛線。
+# ---------- 自動排版 v4（島主 2026-11-21 範例：孤狼卡）----------
+# spec: {"out":"x.png","title":"當一個安定的人","lines":[[["孤狼","b"],["也很好","r"]], ...3–5 行], "seed":7}
+# b = 粗宋體關鍵字（52px，輕微斑駁），r = 黑體細字（30px）。整塊文字比 v3 高、主題字更大；第一行後、最後一行後各一條淡虛線。
 def auto(spec):
     from PIL import Image as I, ImageDraw as DD
     global rng
@@ -63,35 +69,34 @@ def auto(spec):
     def width(runs):
         t=0
         for txt,k,size in runs:
-            f=F(k,size); t+=sum(d.textlength(c,font=f)+2*S for c in txt)/S+6
-        return t-6
+            f=F(k,size); t+=sum(d.textlength(c,font=f)+2*S for c in txt)/S+8
+        return t-8
     def put(runs,base,x):
         nonlocal cv
         for txt,k,size in runs:
-            amt=1.0 if k=='bold' else 0
-            cv,x=run_text(cv,x,base-size*1.08,txt,k,size,amt,2); x+=6
-    rows=[[(t,'bold' if k=='b' else 'reg',58 if k=='b' else 30) for t,k in ln] for ln in spec['lines']]
-    gaps=[78 if any(k=='bold' for _,k,_ in r) else 66 for r in rows]
-    if len(rows)>2: gaps[1]+=34  # 第一行後的虛線留空間
-    end=1588; ys=[]; y=end
-    for g in reversed(gaps): ys.insert(0,y); y-=g
-    offs=[-40,-90,-60,-20,-50,10]
+            amt=0.55 if k=='bold' else 0
+            cv,x=run_text(cv,x,base-size*1.08,txt,k,size,amt,2); x+=8
+    rows=[[(t,'bold' if k=='b' else 'sans',56 if k=='b' else 30) for t,k in ln] for ln in spec['lines']]
+    gaps=[84 if any(k=='bold' for _,k,_ in r) else 72 for r in rows]
+    end=1480; ys=[0]*len(rows); ys[-1]=end
+    for j in range(len(rows)-1,0,-1): ys[j-1]=ys[j]-gaps[j]-(44 if j==1 and len(rows)>2 else 0)
+    offs=[-20,-40,-25,5,-10,10]
     for i,(r,b) in enumerate(zip(rows,ys)):
-        x=540-width(r)/2+offs[i%len(offs)]+30; put(r,b,x)
-        if i==0 and len(rows)>2: cv=dashes(cv,290,800,b+30)
-    cv=dashes(cv,330,770,end+38)
-    tsize=spec.get('title_size',120 if len(spec['title'])<=5 else max(80,int(600/len(spec['title']))))
+        x=540-width(r)/2+offs[i%len(offs)]; put(r,b,x)
+        if i==0 and len(rows)>2: cv=dashes(cv,300,800,b+30,0.5)
+    cv=dashes(cv,300,800,end+50,0.5)
+    n=len(spec['title']); tsize=spec.get('title_size',min(124,int(760/max(1,n))) if n>4 else 124)
     tr=[(spec['title'],'bold',tsize)]; x=540-width(tr)/2
-    cv,_=run_text(cv,x,1790-tsize*1.08,spec['title'],'bold',tsize,1.3,2)
-    tail=[('｜','reg',28),('精油抓周','reg',26)]
+    cv,_=run_text(cv,x,1655-tsize*1.08,spec['title'],'bold',tsize,0.9,2)
+    tail=[('｜','sans',28),('精油抓周','sans',26)]
     if os.path.exists(SIG):  # 用島主的親筆簽名
-        sig=I.open(SIG).convert('L'); sh=int(84*S); sw=int(sig.width*sh/sig.height); sig=sig.resize((sw,sh),I.LANCZOS)
-        x=540-(sw/S+10+width(tail))/2; X,Y=int(x*S),int(1826*S)
-        cv[Y:Y+sh,X:X+sw]=np.maximum(cv[Y:Y+sh,X:X+sw],np.asarray(sig,dtype=float)/255); x+=sw/S+10
+        sig=I.open(SIG).convert('L'); sh=int(86*S); sw=int(sig.width*sh/sig.height); sig=sig.resize((sw,sh),I.LANCZOS)
+        x=540-(sw/S+14+width(tail))/2; X,Y=int(x*S),int(1694*S)
+        cv[Y:Y+sh,X:X+sw]=np.maximum(cv[Y:Y+sh,X:X+sw],np.asarray(sig,dtype=float)/255); x+=sw/S+14
     else:
-        sg=[('島主項項','hand',56)]+tail; x=540-width(sg)/2; tail=sg
+        sg=[('島主項項','hand',52)]+tail; x=540-width(sg)/2; tail=sg
     for txt,k,size in tail:
-        cv,x=run_text(cv,x,1876-size*1.08,txt,k,size,0,2); x+=6
+        cv,x=run_text(cv,x,1752-size*1.08,txt,k,size,0,2); x+=8
     A=I.fromarray((np.clip(cv,0,1)*255).astype('uint8')).resize((W,H),I.LANCZOS)
     o=I.new('RGBA',(W,H),INK+(0,)); o.putalpha(A); o.save(spec['out'])
 
