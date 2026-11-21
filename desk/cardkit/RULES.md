@@ -2,14 +2,14 @@
 **以 v4 為準**。下面 v3 的 Canva 母版、文字層流程照用，但「畫風」和「文字樣式」改成 v4：
 
 ## v4 畫風（插畫）
-- **水墨＋炭筆的霧感插畫**，不是銅版畫、不是細線素描：灰藍墨色（深靛灰 #1f2b45 到淡灰藍），米白紙底，大量霧氣與留白。
+- **單色印刷**（島主 11/21 確認）：整張只用一個墨色（灰藍 #1f2b45），像孔版印刷／絹印印在米白紙上：墨色有深淺、顆粒與網點、邊緣微微暈開、偶爾輕微錯版，沒有第二種顏色。霧氣、動態模糊也都是同一個墨色的深淺表現。不是銅版畫、不是細線素描、不是彩色水彩。大量留白。
 - **只有主體是清楚的**：主角（人／動物／物件）放在畫面中央偏上，線條清楚、有質感。
 - **四周是強烈的動態模糊**：和故事有關的元素（人群、車流、浪、風、鳥群…只要是故事裡有的）從主體兩側高速掠過，像長曝光的拖影，越靠近畫面邊緣越模糊，可以一路延伸到畫面下方、壓在文字區的兩側邊緣。
 - **遠景淡淡的**：城市、海平線、山…在霧裡只剩輪廓，往中央消失點收過去，製造縱深。
 - 畫面上沒有任何文字。上方約 55% 是主要畫面，往下自然淡進米白紙。
 - 不要：亮鈷藍色、整齊排排站（像軍隊）、細到像版畫的線條、每個角落都畫滿。
 - Canva 產圖的風格參考：先用 upload-asset-from-url 上傳 https://raw.githubusercontent.com/saongx-code/pausespace/main/desk/cardkit/ref_v4_art.jpg（只取畫面、沒有字），拿到 media id 放進 imageReferences；舊的 MAHauCcplIM 不要再用。
-- 提示詞範本（英文給產圖工具）：「ink wash and charcoal illustration on cream paper, muted indigo-gray monochrome, misty atmosphere, [主體] in sharp focus at center, surrounded by strong motion blur streaks of [故事裡的元素] rushing past on both sides, long-exposure ghost trails, faded [遠景] in fog converging to a vanishing point, lots of negative space, bottom 45% fades into plain cream paper, no text」
+- 提示詞範本（英文給產圖工具）：「single-color risograph / screen print on cream paper, one muted indigo-gray ink only, visible print grain and halftone texture, slightly soft ink edges, misty atmosphere, [主體] in sharp focus at center, surrounded by strong motion blur streaks of [故事裡的元素] rushing past on both sides, long-exposure ghost trails, faded [遠景] in fog converging to a vanishing point, lots of negative space, bottom 45% fades into plain cream paper, no text」
 
 ## v4 文字（poem.py 已改好，照 spec 寫就會是這個樣子）
 - 關鍵字：粗宋體、輕微斑駁；細字：黑體（不是宋體）。
