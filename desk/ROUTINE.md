@@ -90,7 +90,7 @@ before.txt：{skin:[膚質類別], marks:[{x,y,label}] 臉上標記, concern:[�
 1. 在收件夾的案件資料夾裡，找「有 草稿.json、也有 潤飾.json、沒有 已送出.json」的案件（一次最多 5 件）。
 2. 潤飾.json：{at, fields:{欄位名:{ai:"你原本寫的", owner:"島主寫的重點"}}}，欄位可能是 words（給客人的話）、next（下一步推薦）、notes（重點筆記）、homework、week。
 3. 每個欄位：以島主寫的重點為準（他要推薦什麼、想說什麼），參考你原本寫的、案件的逐字稿與 草稿.json 的 keep，寫成完整、溫暖的一段話；用「您」，島主的口吻，長度跟原本那格差不多。例：島主在 next 只寫「潛意識探索」→ 寫成「潛意識探索：……（一句說為什麼適合這位客人，連到他這次的故事）」。島主寫的內容一個字都不要違背，也不要多推薦別的。
-4. 把 草稿.json 讀出來，只換掉這些欄位，其他欄位一字不改；先 trash_file 舊的 草稿.json，再用 create_file 建新的 草稿.json（application/json、disableConversionToGoogleType=true）。最後 trash_file 潤飾.json。順好的會自動回到控台「待您確認」。
+4. 把 草稿.json 讀出來，只換掉這些欄位，其他欄位一字不改，再加一個欄位 "polished"，值＝潤飾.json 裡的 at（一字不差）；先 trash_file 舊的 草稿.json，再用 create_file 建新的 草稿.json（application/json、disableConversionToGoogleType=true）。潤飾.json 不用刪（系統看到 polished 會自己收掉）。順好的會自動回到控台「待您確認」。
 
 # 第二部分：🏭 自媒體工廠訂單（島主在控台「自媒體 → 工廠下單」送出的）
 
