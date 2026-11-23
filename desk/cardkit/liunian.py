@@ -11,12 +11,17 @@ G=hexc(spec.get('green','#1f3d33')); C=hexc(spec.get('coral','#e8644f'))
 g=np.zeros((H*S,W*S)); c=np.zeros((H*S,W*S))
 def tw(t,k,size):
     f=poem.F(k,size); return sum(f.getlength(ch) for ch in t)/S
-# 讖語：置中，粗宋
-y=1050
+# 讖語：壓在畫面裡（spec 的 motto_y 決定高度），字後面墊一層淡淡的米白光暈讓字清楚
+m=np.zeros((H*S,W*S)); y=spec.get('motto_y',1050)
 for i,line in enumerate(spec['motto']):
-    sz=min(70,int(860/max(1,len(line))))
-    x=(W-tw(line,'bold',sz))/2; g,_=poem.run_text(g,x,y,line,'bold',sz,0.5); y+=int(sz*1.35)
-y+=18; c=poem.dashes(c,180,W-180,y,0.9); y+=46
+    sz=min(70,int(820/max(1,len(line))))
+    x=(W-tw(line,'bold',sz))/2; m,_=poem.run_text(m,x,y,line,'bold',sz,0.5); y+=int(sz*1.35)
+g=np.maximum(g,m)
+from PIL import ImageFilter
+halo=np.asarray(I.fromarray((np.clip(m*3,0,1)*255).astype('uint8')).filter(ImageFilter.MaxFilter(17)).filter(ImageFilter.GaussianBlur(14*S)),dtype=float)/255
+halo=np.clip(halo*1.6,0,1)*0.8
+y=spec.get('tips_y',y+18)
+c=poem.dashes(c,180,W-180,y,0.9); y+=46
 # 四個建議：左欄珊瑚色（季度＋力量動物），右欄墨綠建議
 for q,who,tip in spec['tips']:
     c,_=poem.run_text(c,100,y,q,'bold',34,0.3); c,_=poem.run_text(c,100,y+44,who,'semi',26,0.2)
@@ -35,5 +40,7 @@ g,_=poem.run_text(g,X/S+sw/S+10,Y/S+20,tag,'sans',30,0)
 print('bottom y',Y/S+sh/S)
 a=np.clip(g+c,0,1); wc=np.where(a>0,c/np.maximum(a,1e-6),0)[...,None]
 rgb=(np.array(G)*(1-wc)+np.array(C)*wc)
-img=np.dstack([rgb,a*255]).astype('uint8')
+CR=np.array(hexc(spec.get('paper','#efe6d2'))); A=a+halo*(1-a)
+rgb=np.where(A[...,None]>0,(rgb*a[...,None]+CR*(halo*(1-a))[...,None])/np.maximum(A,1e-6)[...,None],0)
+img=np.dstack([rgb,A*255]).astype('uint8')
 I.fromarray(img,'RGBA').resize((W,H),I.LANCZOS).save(spec['out'])
