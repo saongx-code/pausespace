@@ -276,7 +276,7 @@ var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_
 var LINE_ID = '@010ievox';
 var GRACE_URL = 'https://lin.ee/OWfpkuz';
 var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
-var KV_V = '?v=6';
+var KV_V = '?v=7';
 var IMG = {
   beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
   mens: 'L:kv/mens.jpg', perk: 'L:kv/perk.jpg', oil: 'L:kv/oil.jpg', indiba: 'L:kv/indiba.jpg', sumei: 'L:kv/sumei.jpg',
@@ -440,7 +440,7 @@ function svList(ret) {
 function vServices(k0) {
   var rows = SV_ORDER.map(function (k, ix) {
     var m = SV_CAT[k]; SV.i = ix; var more = svList(true);
-    return {id: k, th: 'kv/th_series_' + k + '.jpg' + KV_V, big: IMG['series_' + k] || 'kv/series_' + k + '.jpg' + KV_V, pos: '50% 50%', sub: m.en + '・' + SV.n + ' 項', title: m.zh, em: m.line, more: '<div style="margin-top:6px">' + more + '</div>', open: k === k0};
+    return {id: k, th: 'kv/th_series_' + k + '.jpg' + KV_V, big: 'kv/series_' + k + '.jpg' + KV_V, pos: '50% 50%', sub: m.en + '・' + SV.n + ' 項', title: m.zh, em: m.line, more: '<div style="margin-top:6px">' + more + '</div>', open: k === k0};
   });
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
