@@ -48,13 +48,18 @@ function fail(msg) {
 }
 
 // 控台瘦身：記住每一頁上次的畫面，打開時先秒出現；新的畫面在背景下載，下次打開就是新的
+// 記住的畫面超過 6 小時就不用（iPad 這種久久開一次的裝置，舊畫面會按不動、格子不能填），改抓新的
 var CACHED = KEY ? store('shell:' + PAGE) : null;
+if (CACHED && Date.now() - (+store('shellAt:' + PAGE) || 0) > 6 * 3600 * 1000) {
+  CACHED = null;
+  try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('rc:') === 0) localStorage.removeItem(k); }); } catch (e) {}
+}
 if (!KEY) {
   fail('這支手機還沒有鑰匙。請用 Claude 給你的「第一次打開」連結開啟。');
 } else if (CACHED) {
   setTimeout(function () { mount(CACHED, true); }, 0);  // 等下面的 SHIM 準備好
 } else {
-  api({api: 'shell', page: PAGE, key: KEY}).then(function (j) { store('shell:' + PAGE, j.html); mount(j.html, false); }).catch(function (e) {
+  api({api: 'shell', page: PAGE, key: KEY}).then(function (j) { store('shell:' + PAGE, j.html); store('shellAt:' + PAGE, String(Date.now())); mount(j.html, false); }).catch(function (e) {
     fail(/key|鑰匙|權限|Unauthorized|不正確/i.test(String(e)) ? '鑰匙不對，請用 Claude 給你的「第一次打開」連結重新開啟。' : '讀取失敗，往下拉重新整理。');
   });
 }
@@ -95,7 +100,15 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
     ev.preventDefault(); location.href = HERE + '?p=' + pg + '#key=' + encodeURIComponent(KEY);
   }, true);
   // 背景下載最新的畫面，存起來給下次用（這次先用記住的，秒開）
-  if (FROM_CACHE) fetch(EXEC + '?api=shell&page=' + PAGE + '&key=' + encodeURIComponent(KEY)).then(function (r) { return r.json(); }).then(function (j) { if (j && j.html) st('shell:' + PAGE, j.html); }).catch(function () {});
+  if (FROM_CACHE) fetch(EXEC + '?api=shell&page=' + PAGE + '&key=' + encodeURIComponent(KEY)).then(function (r) { return r.json(); }).then(function (j) {
+    if (!j || !j.html) return;
+    var changed = j.html !== st('shell:' + PAGE);
+    st('shell:' + PAGE, j.html); st('shellAt:' + PAGE, String(Date.now()));
+    // 畫面有改版：上方出現一條「點我更新」，不會突然跳掉打斷您正在打的字
+    if (changed) { var bar = document.createElement('div'); bar.textContent = '🔄 控台有新版本，點這裡更新';
+      bar.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;background:#4f7a5a;color:#fff;text-align:center;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;font-size:15px;cursor:pointer';
+      bar.onclick = function () { location.reload(); }; (document.body || document.documentElement).appendChild(bar); }
+  }).catch(function () {});
   // 右下角小按鈕 💡：點進靈感箱（Claude 上的獨立頁面，用島主自己的 Google 權限存檔；原始檔在 tools/inbox/inbox.html）
   document.addEventListener('DOMContentLoaded', function () {
     var a = document.createElement('a');
