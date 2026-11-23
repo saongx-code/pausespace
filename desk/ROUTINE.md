@@ -144,5 +144,10 @@ before.txt：{skin:[膚質類別], marks:[{x,y,label}] 臉上標記, concern:[�
    - 短：2–5 句。不寫療效、不亂給價格；價格只用官網上有的。
 5. 用 create_file 在同一個資料夾建「草稿_列號.json」（application/json、disableConversionToGoogleType=true）：{"reply":"要傳給客人的完整回覆","why":"一句話說明：你判斷他是什麼狀況、為什麼這樣回、鉤子是什麼（給島主看，不會傳給客人）"}。
 
+# 第五部分：⭐ Google 商家評論（每天只做一次：在台北時間 10 點這一輪做，其他時段跳過）
+1. 用 Windsor 連接器 get_data（connector google_my_business，fields：review_id、review_create_time、review_reviewer、review_star_rating、review_comment、review_reply_comment，date_preset last_7d）讀最近 7 天的評論。試用版只能讀 30 天內，不要讀更早。
+2. 還沒回覆（review_reply_comment 空白）的評論，**4～5 星而且內容正常**：用 execute_action（action reply_to_review，account locations/3612443311198318537）直接回覆。回覆要官方、有禮貌、簡短（2–3 句）：謝謝對方、具體提到他寫到的服務或感受、歡迎再回島上。用「您」，署名「PAUSE SPACE 空白空拍」。不提價格、不寫療效、不寫客人的個資。
+3. **特殊情況一律不要回，留給島主**：3 星以下、抱怨或負評、提到身體不適或療效、提到其他人的名字或個資、看不懂或像廣告／惡意的評論。把這些在最後一行回報裡寫出來（評論者、星數、內容摘要），島主手機會收到通知。
+
 # 最後
-只回報一行：整理了哪幾位客人（或「沒有新案件」）；潤飾了哪幾位；工廠完成了哪幾張訂單（或「沒有新訂單」）；寫了哪幾位客人的故事貼文（或「沒有」）；擬了幾則留言回覆。
+只回報一行：整理了哪幾位客人（或「沒有新案件」）；潤飾了哪幾位；回了幾則 Google 評論、有沒有特殊評論要島主看；工廠完成了哪幾張訂單（或「沒有新訂單」）；寫了哪幾位客人的故事貼文（或「沒有」）；擬了幾則留言回覆。
