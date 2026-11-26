@@ -499,7 +499,7 @@ function drawForm() {
     '<label for="fPhone">手機</label><input id="fPhone" inputmode="tel" autocomplete="tel" value="' + esc(ME ? ME.phone || '' : '') + '">' +
     '<label for="fLine">LINE 名稱（方便我們對上您）</label><input id="fLine">' +
     '<label for="fType">您是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass"' + (window.PREPASS ? ' selected' : '') + '>岩盤浴套票</option>' : '') + '</select>' +
-    (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric" value="' + esc(ST.preCode || '') + '"><p class="note" style="margin:4px 0 10px">完課後收到的小卡上有您的專屬密碼；請用報名型男研究所時的手機預約。</p>' : '') +
+
     '<label for="fNote">想讓島主先知道的事（身體狀況、近期醫美、懷孕等）</label><textarea id="fNote"></textarea>' +
     '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>' + (s.depAmt && s.depAmt >= s.price ? '預約時全額預付' : '預約訂金（當天折抵療程費）') + '</span><b>' + money(s.depAmt || B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
     '<p class="note">按下確認後是「送出預約申請」，島主核對' + (dep ? '訂金與' : '') + '時段後，預約才正式成立。</p>' +
