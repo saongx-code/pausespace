@@ -65,7 +65,7 @@ if (!KEY) {
 }
 
 // 把 google.script.run 換成「打電話回 Google」，控台原本的程式不用改
-var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
+var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, ALL, FROM_CACHE) {
   var READS = {adminList: 1, todaySummary: 1, calRange: 1, todoList: 1, deskList: 1, deskBookings: 1, bar1fPending: 1, ledgerList: 1, mediaList: 1};
   function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   function clearReads() { try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('rc:') === 0) localStorage.removeItem(k); }); } catch (e) {} }
@@ -109,6 +109,22 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
       bar.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;background:#4f7a5a;color:#fff;text-align:center;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;font-size:15px;cursor:pointer';
       bar.onclick = function () { location.reload(); }; (document.body || document.documentElement).appendChild(bar); }
   }).catch(function () {});
+  // 秒開：這一頁打開 3 秒後，背景一頁一頁把其他分頁和常用資料先載好，之後點哪一格都直接出現
+  setTimeout(function () {
+    var q = ALL.filter(function (p) { return p !== PAGE && Date.now() - (+st('shellAt:' + p) || 0) > 3600 * 1000; });
+    (function next() {
+      var p = q.shift();
+      if (!p) {
+        ['todaySummary', 'adminList', 'deskList', 'deskBookings', 'mediaList', 'bar1fPending'].forEach(function (fn, i) {
+          setTimeout(function () { try { window.google.script.run.withSuccessHandler(function () {})[fn](KEY); } catch (e) {} }, i * 1500);
+        });
+        return;
+      }
+      fetch(EXEC + '?api=shell&page=' + p + '&key=' + encodeURIComponent(KEY)).then(function (r) { return r.json(); }).then(function (j) {
+        if (j && j.html) { st('shell:' + p, j.html); st('shellAt:' + p, String(Date.now())); }
+      }).catch(function () {}).then(function () { setTimeout(next, 400); });
+    })();
+  }, 3000);
   // 右下角小按鈕 💡：點進靈感箱（Claude 上的獨立頁面，用島主自己的 Google 權限存檔；原始檔在 tools/inbox/inbox.html）
   document.addEventListener('DOMContentLoaded', function () {
     var a = document.createElement('a');
@@ -118,7 +134,7 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
     a.style.cssText = 'position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:80;width:46px;height:46px;border-radius:50%;background:#2b2a26;color:#fff;font-size:22px;line-height:46px;text-align:center;text-decoration:none;box-shadow:0 3px 10px rgba(0,0,0,.18)';
     document.body.appendChild(a);
   });
-} + ')(' + JSON.stringify(EXEC) + ',' + JSON.stringify(KEY) + ',' + JSON.stringify(location.pathname) + ',' + JSON.stringify(PAGE) + ',';
+} + ')(' + JSON.stringify(EXEC) + ',' + JSON.stringify(KEY) + ',' + JSON.stringify(location.pathname) + ',' + JSON.stringify(PAGE) + ',' + JSON.stringify(Object.keys(PAGES)) + ',';
 
 function mount(html, fromCache) {
   var head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">' +
