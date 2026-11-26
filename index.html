@@ -1185,6 +1185,7 @@ document.addEventListener('click', function (ev) {
 window.addEventListener('hashchange', route);
 (function () {
   var g = (location.search.match(/[?&]go=(\w+)/) || [])[1];
+  if (g === 'services' && /utm_medium=maps(&|$)/.test(location.search)) g = 'start';  // Google 地圖「預約」按鈕：先分流療程／共享空間
   if (g && !location.hash) { history.replaceState(null, '', location.pathname + '#/' + (g === 'benefits' ? 'gifts' : g)); }
   route();
   try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}
