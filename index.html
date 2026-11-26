@@ -542,6 +542,15 @@ function drawFit(fit) {
   }).join('') || '<div class="svc"><div class="d">這段空檔太短，換一個時間看看。</div></div>') + '</div>';
   $('fitBox').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
+// 📍 Google 地圖「預約」按鈕進來的分流頁：先分清楚是來做療程，還是來租共享空間
+var RENT_URL = EXEC + '?rent';
+function vStart() {
+  var card = function (href, ext, em, t, d, cta) { return '<a href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' style="display:block;text-decoration:none;color:inherit;background:#fffdf8;border:1px solid #e3dccd;border-radius:18px;padding:18px 18px 16px;margin:0 0 14px"><div style="font-size:30px;line-height:1">' + em + '</div><h2 style="margin:8px 0 4px;font-size:22px">' + t + '</h2><p style="margin:0 0 12px;color:#7a7468">' + d + '</p><span class="btn coral" style="display:inline-block">' + cta + '</span></a>'; };
+  page('services', 'WELCOME', '<div class="eyebrow">Welcome / 歡迎上島</div><h1>您想預約哪一種？</h1><p class="note" style="margin:-4px 0 16px">點一下，直接進到對的預約頁</p>' +
+    card('#/time', false, '🌿', '療程預約', '岩盤浴、護膚、煥膚、INDIBA、Reset 身心整合、潛意識探索、薩滿占讀…<br>給來島上放鬆、被照顧的您。', '預約療程') +
+    card(RENT_URL, true, '🏠', '共享空間・場地租借', '老師、治療師帶自己的客人來使用療程室；或租場地辦課程、工作坊、小活動。', '預約空間') +
+    '<p class="note">不確定要選哪個？<a href="' + lineMsg('我想問預約') + '">LINE 問島主</a></p>');
+}
 // 🎫 買套票：選方案 → 填資料 → 匯款資訊 → 回報末五碼（島主確認後開通，LINE 通知）
 var PK = {plan: '', order: null};
 function vPkg(a) {
@@ -1123,6 +1132,7 @@ function route() {
   if (r === 'card') return vCard(a);
   if (r === 'join') return vJoin(a);
   if (r === 'pkg') return vPkg(a);
+  if (r === 'start') return vStart();
   if (r === 'events') return a ? vEvent(a) : vEvents();
   if (!B) { needBoot(); return; }
   if (r === 'services') return a ? vCategory(a) : vServices();
