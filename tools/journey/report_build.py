@@ -21,15 +21,15 @@ K.view = _view
 def wrap(txt, size, width=860, wght=400):
     f = K.serif(size, wght); out = []
     for para in txt.split('\n'):
-        cur = ''
+        lines = ['']
         for ch in para:
+            cur = lines[-1]
             if f.getlength(cur + ch) > width and cur:
-                # 標點不放行首
-                if ch in '，。、；：！？」』）…':
-                    cur += ch; out.append(cur); cur = ''; continue
-                out.append(cur); cur = ch
-            else: cur += ch
-        out.append(cur)
+                if ch in '，。、；：！？」』）…':   # 標點不放行首：黏在上一行
+                    lines[-1] = cur + ch
+                else: lines.append(ch)
+            else: lines[-1] = cur + ch
+        out += lines
     return '\n'.join(out)
 
 def prep(pg):
