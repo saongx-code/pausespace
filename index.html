@@ -265,7 +265,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 <main id="app"><div class="loading">上島中…</div></main>
 <footer class="foot">
   <span>PAUSE SPACE 空白空拍<br><a class="addr" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E7%91%9E%E5%AE%89%E8%A1%97180%E5%B7%B73%E8%99%9F">台北市大安區瑞安街 180 巷 3 號</a></span>
-  <a class="btn sm ghost" href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">租借空間（共享空間・療程室）</a>
+  <a class="btn sm ghost" href="#/rent">租借空間（共享空間・療程室）</a>
   <a class="btn sm" href="https://line.me/R/ti/p/@010ievox">回到官方 LINE</a>
   <button type="button" class="fb-open" id="fbOpen">網站用起來有問題？告訴島主</button>
 </footer>
@@ -273,7 +273,6 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
 var GRACE_URL = 'https://lin.ee/OWfpkuz';
-var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
 var KV_V = '?v=6';
 var IMG = {
   beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
@@ -282,7 +281,7 @@ var IMG = {
   hero_services: 'L:kv/page_services.jpg', hero_events: 'L:kv/page_events.jpg', hero_gifts: 'L:kv/page_gifts.jpg', hero_member: 'L:kv/page_member.jpg',
   coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/mb_cover.jpg', bar_coupe: 'L:bar/mb_coupe.jpg', bar_fizz: 'L:bar/mb_fizz.jpg', bar_highball: 'L:bar/mb_highball.jpg', bar_rocks: 'L:bar/mb_rocks.jpg', 'bar_milk-tea': 'L:bar/mb_milktea.jpg', bar_coffee: 'L:bar/mb_coffee.jpg', bar_tea: 'L:bar/mb_tea.jpg', bar_icecream: 'L:bar/mb_icecream.jpg', bar_wings: 'L:bar/mb_wings.jpg', series_beauty: '', series_reset: '', series_soul: '', series_metime: '', series_pick: ''
 };
-function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
+function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : (v ? v : ''); }
 
 /* ---------- 內容（GPT 網站搬過來的文字） ---------- */
 var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset: ['情緒堆積', '承接他人', '說不出口'], soul: ['人生迷路', '內在空白', '反覆卡關'], metime: ['身體疲憊', '需要暫停', '想獨處'], pick: ['不懂保養', '懶得研究', '需要方法']};
@@ -543,13 +542,24 @@ function drawFit(fit) {
   $('fitBox').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
 // 📍 Google 地圖「預約」按鈕進來的分流頁：先分清楚是來做療程，還是來租共享空間
-var RENT_URL = EXEC + '?rent';
+var RENT_URL = '#/rent';
 function vStart() {
   var card = function (href, ext, em, t, d, cta) { return '<a href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' style="display:block;text-decoration:none;color:inherit;background:#fffdf8;border:1px solid #e3dccd;border-radius:18px;padding:18px 18px 16px;margin:0 0 14px"><div style="font-size:30px;line-height:1">' + em + '</div><h2 style="margin:8px 0 4px;font-size:22px">' + t + '</h2><p style="margin:0 0 12px;color:#7a7468">' + d + '</p><span class="btn coral" style="display:inline-block">' + cta + '</span></a>'; };
   page('services', 'WELCOME', '<div class="eyebrow">Welcome / 歡迎上島</div><h1>您想預約哪一種？</h1><p class="note" style="margin:-4px 0 16px">點一下，直接進到對的預約頁</p>' +
     card('#/time', false, '🌿', '療程預約', '岩盤浴、護膚、煥膚、INDIBA、Reset 身心整合、潛意識探索、薩滿占讀…<br>給來島上放鬆、被照顧的您。', '預約療程') +
-    card(RENT_URL, true, '🏠', '共享空間・場地租借', '老師、治療師帶自己的客人來使用療程室；或租場地辦課程、工作坊、小活動。', '預約空間') +
+    card('#/rent', false, '🏠', '共享空間・場地租借', '老師、治療師帶自己的客人來使用療程室；或租場地辦課程、工作坊、小活動。', '預約空間') +
+    card('#/bar1f', false, '🍵', '預約喝茶', '一樓沐吧，選好日期和時間，幫您把位子留著。', '預約喝茶') +
     '<p class="note">不確定要選哪個？<a href="' + lineMsg('我想問預約') + '">LINE 問島主</a></p>');
+}
+// 🏠 空間預約：獨立頁面（價格與空間資訊）；實際送出申請仍走島主自己的申請表
+function vRent() {
+  page('services', 'SPACE', '<a class="back" href="#/start">← 回到預約分流</a><div class="eyebrow">Space / 共享空間</div><h1>空間預約</h1>' +
+    '<p class="note" style="margin:-4px 0 14px">老師、治療師帶自己的客人來使用，或租場地辦課程、工作坊、小活動。</p>' +
+    '<div class="list"><div class="sv-end" style="text-align:left"><b>1F 交誼廳</b>　NT$1,500／時（週一至週四）・NT$3,000／時（週五至週日）・整日 NT$20,000</div>' +
+    '<div class="sv-end" style="text-align:left"><b>2F 單人房</b>　NT$400／時（3 小時以上整段 8 折）・月租 NT$5,000</div>' +
+    '<div class="sv-end" style="text-align:left"><b>2F 雙人房</b>　NT$700／時（3 小時以上整段 8 折）・最多 6 人</div></div>' +
+    '<p class="note">地址：台北市大安區瑞安街 180 巷 3 號。全程請輕聲細語，謝謝您。</p>' +
+    '<p style="margin:14px 0 4px"><a class="btn coral" target="_blank" rel="noopener" href="' + EXEC + '?rent">填寫租借申請</a></p>');
 }
 // 🎫 買套票：選方案 → 填資料 → 匯款資訊 → 回報末五碼（島主確認後開通，LINE 通知）
 var PK = {plan: '', order: null};
@@ -646,7 +656,7 @@ function chMove(b) {
 var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
 var BAR_PHOTO = ["morning-citrus", "sweet-orange-tea", "mei-gao-mei", "mulled-wine", "taurus", "blue-peach-hiss", "harvest-festival", "peachy-fizz", "mint-iced-tea", "tea-champagne", "dingbu-milk-tea", "fitness-icecream", "peppercorn-wings"];
 function itemArt(i) { return BAR_PHOTO.indexOf(i.id) >= 0 ? 'bar/p_' + i.id + '.jpg' + KV_V : barArt(i.illustration); }
-function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
+function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : ('bar/mb_cover.jpg' + KV_V); }
 function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
 function bKey(i) { return i.id + (i.choices ? '|' + (MB.choice[i.id] || i.choices[0]) : ''); }
 function bQty(i) { var n = 0; Object.keys(CART).forEach(function (k) { if (k.split('|')[0] === i.id) n += CART[k]; }); return n; }
@@ -1133,6 +1143,7 @@ function route() {
   if (r === 'join') return vJoin(a);
   if (r === 'pkg') return vPkg(a);
   if (r === 'start') return vStart();
+  if (r === 'rent') return vRent();
   if (r === 'events') return a ? vEvent(a) : vEvents();
   if (!B) { needBoot(); return; }
   if (r === 'services') return a ? vCategory(a) : vServices();
