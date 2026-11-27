@@ -67,7 +67,10 @@ if (!KEY) {
 // 把 google.script.run 換成「打電話回 Google」，控台原本的程式不用改
 var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, ALL, FROM_CACHE) {
   var READS = {adminList: 1, todaySummary: 1, calRange: 1, todoList: 1, deskList: 1, deskBookings: 1, bar1fPending: 1, ledgerList: 1, mediaList: 1, quickAsk: 1, taskList: 1, guestMsgList: 1, pkgOrders: 1, checkoutInfo: 1, deskPkgs: 1, courseInfo: 1};
-  function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  // 手機的暫存空間滿了存不進去時：清掉記住的舊資料再存一次；還是不行就把這筆舊的丟掉，免得每次都先看到過期的畫面
+  function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) {
+    if (v !== undefined) { try { clearReads(); localStorage.setItem(k, v); } catch (e2) { try { localStorage.removeItem(k); } catch (e3) {} } }
+    return null; } }
   function clearReads() { try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('rc:') === 0) localStorage.removeItem(k); }); } catch (e) {} }
   function make(ok, bad) {
     return new Proxy({}, {get: function (_, name) {
