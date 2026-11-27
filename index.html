@@ -297,7 +297,7 @@ var EVENTS = [
       '<table class="moon"><tr><td>10/26<br><span class="note">已結束</span></td><td><b>獵人月</b><br><span class="note">精準聚焦：清理雜訊，追逐暖光</span></td></tr>' +
       '<tr><td>11/25</td><td><b>海狸月・超級滿月</b><br><span class="note">靈魂避難所：打造內在的防禦容器</span></td></tr>' +
       '<tr><td>12/24</td><td><b>冷月・平安夜</b><br><span class="note">營火守望：擁抱黑暗中的光芒</span></td></tr></table>' +
-      '<p class="note">活動日期依島主公告為準。</p>', cta: ['詢問滿月儀式', '我想詢問滿月儀式']},
+      '<p class="note">每場限 20 位，線上報名後馬上知道有沒有報到。</p>', cta: ['報名滿月儀式（限 20 位）', ''], href: '#/join/moon'},
   {id: 'photo', off: true, dates: [], img: 'photo', poster: 'kv/ev_photo.jpg', kind: '課程', tag: '四人成班', when: '11 月場｜Coming soon', price: 'NT$1,000／人・兩人同行 NT$1,800', place: 'PAUSE SPACE 島上', cap: '4 人開班・最多 15 人', fit: ['不敢入鏡', '想拍出自己的樣子', '想用手機記錄生活'], title: 'NO UGLY PEOPLE 手機攝影課', sub: '從看見自己開始，練習用手機記錄光線、生活與眼前的人。',
     body: '<ul class="steps"><li>看自己：自拍、姿勢與站進畫面</li><li>看世界：光線、背景與構圖</li><li>五感散步：從感受中找到畫面</li><li>拍陌生人：聽一件心事，拍一張照片</li></ul>' +
       '<p>11 月場：Coming soon（日期即將公布）｜NT$1,000／人<br>4 人開班、最多 15 人。<br>另約場：湊齊四人可申請其他時間，由島主確認。</p><p class="note">報名後不退費、可轉讓；若取消開課全額退費。</p>', cta: ['先登記 11 月場', '我想登記手機攝影課 11 月場，日期公布時通知我'], cta2: ['登記另約場・四人成班', '我想登記手機攝影課另約場（四人成班）']},
@@ -1008,7 +1008,7 @@ function joinGeneric(id, c) {
     '<dt>報名截止</dt><dd>活動當天開始前，額滿就關閉</dd></dl></div>';
   if (s0.left === 0) h += '<div class="panel" style="margin-top:14px"><p>這一場已經額滿。<a href="' + lineMsg('我想登記下一場「' + c.name + '」') + '">LINE 島主</a> 登記下一場。</p></div>';
   else h += '<fieldset class="mb-form" style="margin-top:14px"><legend>報名資料</legend>' +
-    '<label>場次</label><div class="jn-s">' + c.sessions.filter(function (s) { return s.left !== 0; }).map(function (s, i) { var dd = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (dd.getMonth() + 1) + '/' + dd.getDate() + '（' + W.charAt(dd.getDay()) + '）' + esc(s.start) + '</b> ' + esc((s.theme || '').split('｜')[0]) + '</span></label>'; }).join('') + '</div>' +
+    '<label>場次</label><div class="jn-s">' + c.sessions.filter(function (s) { return s.left !== 0; }).map(function (s, i) { var dd = new Date(s.date + 'T12:00:00'); return '<label class="jn-o"><input type="radio" name="jnS" value="' + s.date + '"' + (i ? '' : ' checked') + '><span><b>' + (dd.getMonth() + 1) + '/' + dd.getDate() + '（' + W.charAt(dd.getDay()) + '）' + esc(s.start) + '</b> ' + esc((s.theme || '').split('｜')[0]) + (s.left != null ? '<small style="display:block;color:#c86b4a">剩 ' + s.left + ' 位</small>' : '') + '</span></label>'; }).join('') + '</div>' +
     '<label for="jnN">姓名</label><input id="jnN" autocomplete="name"><label for="jnP">手機</label><input id="jnP" inputmode="tel" placeholder="09xxxxxxxx">' +
     '<label for="jnL">LINE 名稱</label><input id="jnL" placeholder="方便島主找到您">' +
     '<label for="jnF">請問您如何知道此活動？</label><select id="jnF"><option value="">請選擇</option>' + ['Threads', 'Instagram', 'Facebook', 'Google 搜尋／地圖', '官方 LINE', '朋友推薦', '講師介紹（Chris／羊大／島主）', '其他'].map(function (t) { return '<option>' + t + '</option>'; }).join('') + '</select>' +
@@ -1107,6 +1107,13 @@ function joinSend(b) {
         '<div class="panel"><p class="note">' + r.hours + ' 小時內沒有回報，名額會自動釋放給其他人。還沒加官方 LINE 的話先加一下，才收得到成功通知。</p></div>' +
         '<a class="btn ghost" href="https://line.me/R/ti/p/' + LINE_ID + '">加官方 LINE</a>';
       $('jrGo').onclick = function () { var bt = this, l5 = $('jrL').value.trim(); if (!/^\d{5}$/.test(l5)) { $('jrE').hidden = false; $('jrE').textContent = '請填 5 位數字'; return; } report(r.code, p.phone, l5, $('jrE'), bt, function () { $('jrO').hidden = false; bt.style.display = 'none'; }); };
+      window.scrollTo(0, 0); return;
+    }
+    if (r.confirmed) {
+      $('app').innerHTML = '<div class="eyebrow" style="margin-top:20px">CONFIRMED</div><h1>報名成功 🌕</h1><p class="lead">' + esc(r.course) + '｜' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + r.start + (r.end ? '–' + r.end : '') + (r.theme ? '<br>' + esc(r.theme) : '') + '<br>' + esc(r.where) + '</p>' +
+        '<div class="panel"><p><b>✓ 名額已經幫您保留好了</b>' + (r.cap ? '（這一場還剩 ' + Math.max(0, r.left) + ' 位）' : '') + '</p>' + (r.pay ? '<p>費用：' + esc(r.pay) + '</p>' : '') + '<p class="note">報名編號：' + esc(r.code) + (r.again ? '（您之前已經報名過了）' : '') + '</p>' +
+        '<p class="note">' + (r.pushed ? '成功通知也傳到您的官方 LINE 了。' : '加官方 LINE 並傳手機號碼，就收得到活動前提醒。') + '</p></div>' +
+        (r.pushed ? '' : '<a class="btn coral" href="https://line.me/R/ti/p/' + LINE_ID + '">加官方 LINE</a>') + '<a class="btn ghost" style="margin-top:10px" href="#/events">回島日嶼祭</a>';
       window.scrollTo(0, 0); return;
     }
     $('app').innerHTML = '<div class="eyebrow" style="margin-top:20px">REGISTERED</div><h1>報名收到了 🌙</h1><p class="lead">' + esc(r.course) + '｜' + (d.getMonth() + 1) + '/' + d.getDate() + ' ' + r.start + '<br>' + esc(r.where) + '</p>' +
