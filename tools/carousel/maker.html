@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f4efe6">
+<title>輪播製作｜島主控台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;900&family=Noto+Sans+TC:wght@400;700;900&family=LXGW+WenKai+TC:wght@400;700&family=Huninn&display=swap">
+<style>
+:root{--bg:#f4efe6;--card:#fffdf8;--ink:#2b2a26;--muted:#7a7468;--line:#e3dccd;--acc:#c86b4a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+main{max-width:680px;margin:0 auto;padding:14px 14px calc(40px + env(safe-area-inset-bottom))}
+a.back{color:var(--muted);text-decoration:none;font-size:14px}
+h1{font-size:22px;margin:6px 0 2px}.sub{color:var(--muted);font-size:13px;margin:0 0 12px}
+.box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.box h2{font-size:17px;margin:0 0 8px}
+label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px}
+textarea,select,input[type=text]{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:10px;padding:10px;background:#fff;color:var(--ink)}
+textarea{min-height:150px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+button{font:inherit}
+.btn{border:0;border-radius:12px;padding:11px 16px;font-size:15px;background:var(--ink);color:#fff}
+.btn.acc{background:var(--acc)}.btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.styles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st{border:2px solid transparent;border-radius:12px;padding:4px;background:#fff;text-align:center;font-size:13px}
+.st.on{border-color:var(--acc)}.st canvas{width:100%;border-radius:8px;display:block}
+.thumbs{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.thumbs img{width:62px;height:62px;object-fit:cover;border-radius:8px}
+.pg{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}.pg textarea{min-height:90px}
+.prev{display:grid;grid-template-columns:1fr 1fr;gap:10px}.prev figure{margin:0}.prev canvas{width:100%;border-radius:10px;display:block;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.prev figcaption{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:4px}
+.note{font-size:13px;color:var(--muted)}.msg{font-size:14px;color:#3f6b4b;min-height:1em}
+.cols{display:flex;gap:8px}.cols>*{flex:1}
+input[type=color]{width:100%;height:40px;border:1px solid var(--line);border-radius:10px;background:#fff}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="../../admin/?p=media">← 回自媒體</a>
+<h1>🎨 輪播製作</h1>
+<p class="sub">① 文案 → ② 照片 → ③ 風格 → ④ 每頁改字 → ⑤ 存進相簿。做到一半離開也會記住。</p>
+
+<div class="box">
+<h2>① 文案</h2>
+<label>從內容庫挑一則（可不挑）</label>
+<select id="lib"><option value="">讀取中…</option></select>
+<label>或直接貼上文案（空一行＝換一頁；每頁第一行是標題；想變色的字用【】框起來）</label>
+<textarea id="src" placeholder="運氣好的人都有【宇宙偏愛症】&#10;可以後天練習 👉 滑動看怎麼做&#10;&#10;第一步｜先看見好事&#10;每天睡前寫下一件小幸運"></textarea>
+<div class="row"><button class="btn" id="split">分頁 →</button><span class="note" id="pgn"></span></div>
+</div>
+
+<div class="box">
+<h2>② 照片（可以多張，會依序放到每一頁）</h2>
+<input type="file" id="ph" accept="image/*" multiple>
+<div class="thumbs" id="phs"></div>
+<div class="row"><button class="btn ghost" id="phClear">清除照片</button></div>
+</div>
+
+<div class="box">
+<h2>③ 風格</h2>
+<div class="styles" id="sty"></div>
+<label>字體</label>
+<div class="chips" id="fonts"></div>
+<label>尺寸</label>
+<div class="chips" id="sizes"></div>
+<div class="cols">
+<div><label>強調色（【】裡的字）</label><input type="color" id="accent"></div>
+<div><label>頁尾署名</label><input type="text" id="sign" placeholder="例：@pausespace.tw"></div>
+</div>
+</div>
+
+<div class="box">
+<h2>④ 每頁改字</h2>
+<div id="pages"><p class="note">先在 ① 貼文案，按「分頁」。</p></div>
+</div>
+
+<div class="box">
+<h2>⑤ 預覽、存進相簿</h2>
+<div class="row"><button class="btn acc" id="saveAll">📥 全部存進相簿</button></div>
+<p class="msg" id="msg"></p>
+<div class="prev" id="prev"></div>
+</div>
+</main>
+<script>
+var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
+var $ = function (id) { return document.getElementById(id); };
+function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+var KEY = st('bk');
+
+var FONTS = {serif: ['宋體', '"Noto Serif TC"', 900, 500], sans: ['黑體', '"Noto Sans TC"', 900, 400], kai: ['手寫文楷', '"LXGW WenKai TC"', 700, 400], round: ['粉圓', '"Huninn"', 400, 400]};
+var SIZES = {p45: ['4:5 貼文', 1080, 1350], sq: ['1:1 方形', 1080, 1080], st: ['9:16 限動', 1080, 1920]};
+// 風格：島主風格手冊的兩種＋朋友工具那幾種
+var STYLES = {
+  sunset: {name: '日落占卜', bg: 'paper', paper: '#ecebe7', title: '#1c1c1c', body: '#3a3a3a', accent: '#c8372d', layout: 'top', photo: 'corner', bw: true, rule: true},
+  sage: {name: '知識型・鼠尾草', bg: 'paper', paper: '#dfe6dc', title: '#2f3d36', body: '#3f4d46', accent: '#c86b4a', layout: 'top', photo: 'corner', rule: true},
+  pink: {name: '照片疊字・粉白', bg: 'photo', shade: 'rgba(20,18,18,.45)', title: '#ffffff', body: '#f4f1ee', accent: '#f6a6b8', layout: 'top', rule: true},
+  milk: {name: '奶茶手帳', bg: 'photo', shade: 'rgba(246,236,222,.72)', title: '#5b4030', body: '#6d5444', accent: '#c46b5a', layout: 'top', rule: true},
+  gold: {name: '黑金質感', bg: 'photo', shade: 'rgba(10,10,10,.62)', title: '#e9cf8f', body: '#f2eadb', accent: '#e9b84f', layout: 'center'},
+  big: {name: '大字報', bg: 'photo', shade: 'rgba(0,0,0,.5)', title: '#ffffff', body: '#ffffff', accent: '#ffd24a', layout: 'big'},
+  card: {name: '白卡片', bg: 'photo', shade: 'rgba(0,0,0,.15)', title: '#2b2a26', body: '#3d3a35', accent: '#d9534f', layout: 'card'},
+  mini: {name: '極簡置中', bg: 'photo', shade: 'rgba(0,0,0,.42)', title: '#ffffff', body: '#eeeeee', accent: '#ffcf9e', layout: 'center'}
+};
+var S = {style: 'sunset', font: 'serif', size: 'p45', accent: '', sign: '', pages: [], src: ''};
+try { var sv = JSON.parse(st('cm_state') || 'null'); if (sv) S = Object.assign(S, sv); } catch (e) {}
+var PH = [];  // 照片（dataURL→Image），不存，太大
+function save() { st('cm_state', JSON.stringify(S)); }
+
+// ---------- 內容庫 ----------
+function api(fn, args) {
+  return fetch(EXEC + '?api=call&key=' + encodeURIComponent(KEY || '') + '&fn=' + fn + '&args=' + encodeURIComponent(JSON.stringify(args || []))).then(function (r) { return r.json(); }).then(function (j) { if (j.error) throw new Error(j.error); return j.result; });
+}
+var LIB = [];
+if (KEY) api('mediaList', []).then(function (r) {
+  LIB = (r.items || []).filter(function (x) { return x.status !== '已發布' && x.plat !== '限動'; });
+  $('lib').innerHTML = '<option value="">（不挑，直接貼）</option>' + LIB.map(function (x, i) { return '<option value="' + i + '">' + esc(x.plat + '｜' + x.title) + '</option>'; }).join('');
+}).catch(function () { $('lib').innerHTML = '<option value="">（讀不到內容庫，請直接貼）</option>'; });
+else $('lib').innerHTML = '<option value="">（請從控台打開這頁才讀得到內容庫）</option>';
+$('lib').onchange = function () {
+  var x = LIB[+this.value]; if (!x) return;
+  var body = String(x.script || '').replace(/\r/g, '');
+  // 輪播原稿常是「每張一行」：一行就當一頁
+  if (!/\n\s*\n/.test(body)) body = body.split('\n').filter(function (l) { return l.trim(); }).join('\n\n');
+  $('src').value = (x.title ? x.title + '\n\n' : '') + body + (x.cta ? '\n\n' + x.cta : '');
+  S.src = $('src').value; save();
+};
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); }
+
+// ---------- 分頁 ----------
+$('src').value = S.src || '';
+$('src').oninput = function () { S.src = this.value; save(); };
+$('split').onclick = function () {
+  var t = $('src').value.replace(/\r/g, '').trim(); if (!t) return;
+  S.pages = t.split(/\n\s*\n/).map(function (b) { return b.trim(); }).filter(String);
+  save(); drawPages(); render();
+};
+
+// ---------- 照片 ----------
+$('ph').onchange = function () {
+  var fs = [].slice.call(this.files || []); this.value = '';
+  Promise.all(fs.map(function (f) { return new Promise(function (ok) { var u = URL.createObjectURL(f), im = new Image(); im.onload = function () { ok(im); }; im.onerror = function () { ok(null); }; im.src = u; }); }))
+    .then(function (l) { PH = PH.concat(l.filter(Boolean)); drawThumbs(); render(); });
+};
+$('phClear').onclick = function () { PH = []; drawThumbs(); render(); };
+function drawThumbs() { $('phs').innerHTML = PH.map(function (im) { return '<img src="' + im.src + '">'; }).join(''); }
+
+// ---------- 風格 ----------
+function drawStyles() {
+  $('sty').innerHTML = Object.keys(STYLES).map(function (k) { return '<div class="st' + (k === S.style ? ' on' : '') + '" data-s="' + k + '"><canvas width="216" height="270"></canvas>' + STYLES[k].name + '</div>'; }).join('');
+  [].forEach.call($('sty').querySelectorAll('.st'), function (d) {
+    var c = d.querySelector('canvas');
+    paint(c, {title: '身邊有【兩種人】', body: '一種人總是在等好運\n一種人每天練習看見好事'}, 0, 3, d.dataset.s, 216, 270);
+  });
+  $('fonts').innerHTML = Object.keys(FONTS).map(function (k) { return '<button class="chip' + (k === S.font ? ' on' : '') + '" data-f="' + k + '" style="font-family:' + FONTS[k][1].replace(/"/g, '') + '">' + FONTS[k][0] + '</button>'; }).join('');
+  $('sizes').innerHTML = Object.keys(SIZES).map(function (k) { return '<button class="chip' + (k === S.size ? ' on' : '') + '" data-z="' + k + '">' + SIZES[k][0] + '</button>'; }).join('');
+  $('accent').value = S.accent || STYLES[S.style].accent;
+  $('sign').value = S.sign || '';
+}
+document.addEventListener('click', function (e) {
+  var s = e.target.closest('[data-s]'); if (s) { S.style = s.dataset.s; S.accent = ''; save(); drawStyles(); render(); return; }
+  var f = e.target.closest('[data-f]'); if (f) { S.font = f.dataset.f; save(); drawStyles(); render(); return; }
+  var z = e.target.closest('[data-z]'); if (z) { S.size = z.dataset.z; save(); drawStyles(); render(); return; }
+  var d = e.target.closest('[data-dl]'); if (d) { saveFiles([+d.dataset.dl]); return; }
+  var x = e.target.closest('[data-del]'); if (x) { S.pages.splice(+x.dataset.del, 1); save(); drawPages(); render(); return; }
+  var a = e.target.closest('[data-add]'); if (a) { S.pages.splice(+a.dataset.add + 1, 0, '新的一頁'); save(); drawPages(); render(); return; }
+});
+$('accent').oninput = function () { S.accent = this.value; save(); render(); };
+$('sign').oninput = function () { S.sign = this.value; save(); render(); };
+
+// ---------- 每頁改字 ----------
+function drawPages() {
+  if (!S.pages.length) { $('pages').innerHTML = '<p class="note">先在 ① 貼文案，按「分頁」。</p>'; $('pgn').textContent = ''; return; }
+  $('pgn').textContent = '共 ' + S.pages.length + ' 頁';
+  $('pages').innerHTML = S.pages.map(function (p, i) { return '<div class="pg"><b>第 ' + (i + 1) + ' 頁</b>' + (i === 0 ? '（封面）' : '') + '<textarea data-i="' + i + '">' + esc(p) + '</textarea><div class="row"><button class="btn ghost" data-add="' + i + '">＋ 後面加一頁</button><button class="btn ghost" data-del="' + i + '">刪掉這頁</button></div></div>'; }).join('');
+}
+var rt = null;
+document.addEventListener('input', function (e) { var t = e.target.closest('[data-i]'); if (!t) return; S.pages[+t.dataset.i] = t.value; save(); clearTimeout(rt); rt = setTimeout(render, 400); });
+
+// ---------- 畫圖 ----------
+function runs(text) { // 【】裡的字變強調色
+  var out = [], re = /【([^】]*)】/g, last = 0, m;
+  while ((m = re.exec(text))) { if (m.index > last) out.push([text.slice(last, m.index), 0]); out.push([m[1], 1]); last = re.lastIndex; }
+  if (last < text.length) out.push([text.slice(last), 0]);
+  return out;
+}
+function wrap(ctx, text, maxW) { // 中文逐字換行，保留【】標記
+  var lines = [];
+  String(text).split('\n').forEach(function (para) {
+    var cur = [], w = 0;
+    runs(para).forEach(function (r) {
+      Array.from(r[0]).forEach(function (ch) {
+        var cw = ctx.measureText(ch).width;
+        if (w + cw > maxW && cur.length) { lines.push(cur); cur = []; w = 0; }
+        cur.push([ch, r[1], cw]); w += cw;
+      });
+    });
+    lines.push(cur);
+  });
+  return lines;
+}
+function drawLines(ctx, lines, x, y, lh, color, accent, align, W) {
+  lines.forEach(function (ln, i) {
+    var lw = ln.reduce(function (t, c) { return t + c[2]; }, 0), cx = align === 'center' ? (W - lw) / 2 : x;
+    ln.forEach(function (c) { ctx.fillStyle = c[1] ? accent : color; ctx.fillText(c[0], cx, y + i * lh); cx += c[2]; });
+  });
+  return y + lines.length * lh;
+}
+function cover(ctx, im, x, y, w, h, bw) {
+  var s = Math.max(w / im.width, h / im.height), iw = im.width * s, ih = im.height * s;
+  ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+  if (bw) ctx.filter = 'grayscale(1) contrast(1.05)';
+  ctx.drawImage(im, x + (w - iw) / 2, y + (h - ih) / 2, iw, ih); ctx.restore(); ctx.filter = 'none';
+}
+function paint(c, pg, i, n, styleKey, W, H) {
+  var sty = STYLES[styleKey || S.style], F = FONTS[S.font], ctx = c.getContext('2d'), k = W / 1080, acc = (styleKey ? sty.accent : (S.accent || sty.accent));
+  var im = PH.length ? PH[i % PH.length] : null, pad = 90 * k;
+  ctx.clearRect(0, 0, W, H); ctx.textBaseline = 'top';
+  if (sty.bg === 'paper') {
+    ctx.fillStyle = sty.paper; ctx.fillRect(0, 0, W, H);
+    if (im) cover(ctx, im, W * 0.38, H * 0.46, W * 0.62, H * 0.54, sty.bw);
+  } else {
+    if (im) cover(ctx, im, 0, 0, W, H, false); else { ctx.fillStyle = '#6b6259'; ctx.fillRect(0, 0, W, H); }
+    ctx.fillStyle = sty.shade; ctx.fillRect(0, 0, W, H);
+  }
+  var lines0 = String(pg.title || '').trim(), body = String(pg.body || '').trim(), isCover = i === 0;
+  var tSize = (sty.layout === 'big' ? (isCover ? 128 : 96) : (isCover ? 96 : 72)) * k, bSize = (sty.layout === 'big' ? 52 : 44) * k;
+  var maxW = W - pad * 2, x = pad, y = (sty.layout === 'top' ? 150 : 0) * k, align = (sty.layout === 'center' || sty.layout === 'big') ? 'center' : 'left';
+  var cardBox = null;
+  if (sty.layout === 'card') { cardBox = [pad * 0.7, H * 0.2, W - pad * 1.4, H * 0.6]; maxW = cardBox[2] - pad; x = cardBox[0] + pad / 2; }
+  ctx.font = F[2] + ' ' + tSize + 'px ' + F[1]; var tl = wrap(ctx, lines0, maxW);
+  ctx.font = F[3] + ' ' + bSize + 'px ' + F[1]; var bl = body ? wrap(ctx, body, maxW) : [];
+  var th = tl.length * tSize * 1.3, bh = bl.length * bSize * 1.7, gap = body ? 60 * k : 0, total = th + gap + bh;
+  if (sty.layout === 'center' || sty.layout === 'big') y = (H - total) / 2;
+  if (cardBox) {
+    var ch = Math.max(cardBox[3], total + pad * 1.2); cardBox[1] = (H - ch) / 2; cardBox[3] = ch;
+    ctx.fillStyle = 'rgba(255,255,255,.95)'; roundRect(ctx, cardBox[0], cardBox[1], cardBox[2], cardBox[3], 24 * k); ctx.fill();
+    y = cardBox[1] + (ch - total) / 2;
+  }
+  ctx.font = F[2] + ' ' + tSize + 'px ' + F[1];
+  var y2 = drawLines(ctx, tl, x, y, tSize * 1.3, sty.title, acc, align, W);
+  if (sty.rule && body) { ctx.fillStyle = acc; ctx.fillRect(align === 'center' ? W / 2 - 160 * k : x, y2 + 20 * k, 320 * k, 5 * k); }
+  ctx.font = F[3] + ' ' + bSize + 'px ' + F[1];
+  drawLines(ctx, bl, x, y2 + gap, bSize * 1.7, sty.body, acc, align, W);
+  // 頁尾：署名＋頁碼
+  ctx.font = '400 ' + 30 * k + 'px ' + F[1]; ctx.fillStyle = sty.bg === 'paper' ? '#7a7468' : 'rgba(255,255,255,.85)';
+  if (S.sign) { var sw = ctx.measureText(S.sign).width; ctx.fillText(S.sign, (W - sw) / 2, H - 80 * k); }
+  if (n > 1) { var pn = (i + 1) + ' / ' + n, pw = ctx.measureText(pn).width; ctx.fillText(pn, W - pad - pw, 60 * k); }
+}
+function roundRect(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+function pageOf(t) { var ls = String(t).split('\n'); return {title: ls[0] || '', body: ls.slice(1).join('\n')}; }
+var CV = [];
+function render() {
+  var Z = SIZES[S.size], n = S.pages.length; CV = [];
+  $('prev').innerHTML = S.pages.map(function (p, i) { return '<figure><canvas width="' + Z[1] + '" height="' + Z[2] + '" data-c="' + i + '"></canvas><figcaption>第 ' + (i + 1) + ' 頁<button class="chip" data-dl="' + i + '">存這張</button></figcaption></figure>'; }).join('');
+  [].forEach.call($('prev').querySelectorAll('canvas'), function (c) { var i = +c.dataset.c; paint(c, pageOf(S.pages[i]), i, n, null, Z[1], Z[2]); CV[i] = c; });
+}
+function blobOf(c) { return new Promise(function (ok) { c.toBlob(ok, 'image/jpeg', 0.92); }); }
+function saveFiles(idx) {
+  if (!CV.length) { $('msg').textContent = '還沒有頁面'; return; }
+  idx = idx || CV.map(function (_, i) { return i; });
+  $('msg').textContent = '準備圖片中…';
+  Promise.all(idx.map(function (i) { return blobOf(CV[i]).then(function (b) { return new File([b], '輪播_' + (i + 1) + '.jpg', {type: 'image/jpeg'}); }); })).then(function (files) {
+    if (navigator.canShare && navigator.canShare({files: files})) {
+      navigator.share({files: files}).then(function () { $('msg').textContent = '✓ 在分享選單選「儲存 ' + files.length + ' 張影像」就會進相簿'; }).catch(function () { $('msg').textContent = ''; });
+    } else {
+      files.forEach(function (f) { var a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); a.remove(); });
+      $('msg').textContent = '✓ 已下載 ' + files.length + ' 張';
+    }
+  });
+}
+$('saveAll').onclick = function () { saveFiles(); };
+drawStyles(); drawPages();
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { drawStyles(); render(); });
+render();
+</script>
+</body>
+</html>
