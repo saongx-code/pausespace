@@ -267,7 +267,7 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 <main id="app"><div class="loading">上島中…</div></main>
 <footer class="foot">
   <span>PAUSE SPACE 空白空拍<br><a class="addr" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80%E7%91%9E%E5%AE%89%E8%A1%97180%E5%B7%B73%E8%99%9F">台北市大安區瑞安街 180 巷 3 號</a></span>
-  <a class="btn sm ghost" href="https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec?rent">租借空間（共享空間・療程室）</a>
+  <a class="btn sm ghost" href="#/rent">租借空間（共享空間・療程室）</a>
   <a class="btn sm" href="https://line.me/R/ti/p/@010ievox">回到官方 LINE</a>
   <button type="button" class="fb-open" id="fbOpen">網站用起來有問題？告訴島主</button>
 </footer>
@@ -275,7 +275,6 @@ body.mbmode{background:#ece3d6;background-image:radial-gradient(rgba(120,90,60,.
 var EXEC = 'https://script.google.com/macros/s/AKfycbyvrueVSHIvLrRh_g-guanQgFqs_i6ih_El0nZsVu4iSXyQfT628P3nWqzcI18Vv0MZ/exec';
 var LINE_ID = '@010ievox';
 var GRACE_URL = 'https://lin.ee/OWfpkuz';
-var IMG_BASE = 'https://pause-space-services.saongx.chatgpt.site/';
 var KV_V = '?v=7';
 var IMG = {
   beauty: 'L:kv/beauty.jpg', reset: 'L:kv/reset.jpg', soul: 'L:kv/soul.jpg', metime: 'L:kv/metime.jpg', pick: 'L:kv/pick.jpg', tools: 'L:kv/tools.jpg',
@@ -284,7 +283,7 @@ var IMG = {
   hero_services: 'L:kv/page_services.jpg', hero_events: 'L:kv/page_events.jpg', hero_gifts: 'L:kv/page_gifts.jpg', hero_member: 'L:kv/page_member.jpg',
   coupe: 'L:bar/coupe.jpg', dalgona: 'L:bar/dalgona.jpg', coffee: 'L:bar/coffee.jpg', leaf: 'L:bar/leaf.jpg', sorghum: 'L:bar/sorghum.jpg', whisky: 'L:bar/whisky.jpg', icecream: 'L:bar/icecream.jpg', barcover: 'L:bar/mb_cover.jpg', bar_coupe: 'L:bar/mb_coupe.jpg', bar_fizz: 'L:bar/mb_fizz.jpg', bar_highball: 'L:bar/mb_highball.jpg', bar_rocks: 'L:bar/mb_rocks.jpg', 'bar_milk-tea': 'L:bar/mb_milktea.jpg', bar_coffee: 'L:bar/mb_coffee.jpg', bar_tea: 'L:bar/mb_tea.jpg', bar_icecream: 'L:bar/mb_icecream.jpg', bar_wings: 'L:bar/mb_wings.jpg', series_beauty: '', series_reset: '', series_soul: '', series_metime: '', series_pick: ''
 };
-function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : IMG_BASE + v; }
+function img(k) { var v = IMG[k] || ''; return /^https?:/.test(v) ? v : (v.indexOf('L:kv/') === 0 || v.indexOf('L:bar/mb_') === 0) ? v.slice(2) + KV_V : v.indexOf('L:') === 0 ? v.slice(2) : (v ? v : ''); }
 
 /* ---------- 內容（GPT 網站搬過來的文字） ---------- */
 var CAT_CHIPS = {beauty: ['身體疲憊', '肌膚狀態', '想變好看'], reset: ['情緒堆積', '承接他人', '說不出口'], soul: ['人生迷路', '內在空白', '反覆卡關'], metime: ['身體疲憊', '需要暫停', '想獨處'], pick: ['不懂保養', '懶得研究', '需要方法']};
@@ -445,7 +444,7 @@ function vServices(k0) {
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
     '<p class="sv-intro">五種照顧，從外到內：<b>身</b>是肌膚與身體照護、<b>心</b>是岩盤浴與身心放鬆、<b>靈</b>是潛意識探索與占讀；只想休息選<b>獨處</b>（岩盤浴、花草精靈浴），日常保養交給<b>島主選配</b>。點一項，展開看療程。</p>' +
-    mlList(rows) + '<div class="sv-bar" id="svBar"><span>送出後由島主確認</span><a href="#/time">先挑時段<i>↗</i></a></div>');
+    mlList(rows) + '<p style="margin:14px 0 4px"><a class="btn" href="#/pkg">🎫 買套票（岩盤浴 10 次、酵素煥膚 8 次）</a></p><div class="sv-bar" id="svBar"><span>送出後由島主確認</span><a href="#/time">先挑時段<i>↗</i></a></div>');
   if (k0) { var r = document.querySelector('.ml-row.open'); if (r) setTimeout(function () { window.scrollTo({top: r.getBoundingClientRect().top + window.scrollY - 70}); }, 50); }
 }
 function vCategory(k) { return vServices(k); }
@@ -505,7 +504,7 @@ function drawForm() {
     '<label for="fPhone">手機</label><input id="fPhone" inputmode="tel" autocomplete="tel" value="' + esc(ME ? ME.phone || '' : '') + '">' +
     '<label for="fLine">LINE 名稱（方便我們對上您）</label><input id="fLine">' +
     '<label for="fType">您是</label><select id="fType"><option value="new">第一次上島</option><option value="back">回訪客人</option><option value="member">儲值會員</option>' + (s.key === 'stone60' ? '<option value="pass"' + (window.PREPASS ? ' selected' : '') + '>岩盤浴套票</option>' : '') + '</select>' +
-    (s.key === 'mens' ? '<label for="fCode">學生專屬密碼</label><input id="fCode" inputmode="numeric" value="' + esc(ST.preCode || '') + '"><p class="note" style="margin:4px 0 10px">完課後收到的小卡上有您的專屬密碼；請用報名型男研究所時的手機預約。</p>' : '') +
+
     '<label for="fNote">想讓島主先知道的事（身體狀況、近期醫美、懷孕等）</label><textarea id="fNote"></textarea>' +
     '<div style="margin-top:14px">' + (dep ? '<div class="sum"><span>療程原價</span><b>' + priceText(s) + '</b></div><div class="sum"><span>' + (s.depAmt && s.depAmt >= s.price ? '預約時全額預付' : '預約訂金（當天折抵療程費）') + '</span><b>' + money(s.depAmt || B.deposit) + '</b></div>' : '<div class="sum"><span>費用</span><b>' + priceText(s) + '</b></div>') + '</div>' +
     '<p class="note">按下確認後是「送出預約申請」，島主核對' + (dep ? '訂金與' : '') + '時段後，預約才正式成立。</p>' +
@@ -548,6 +547,61 @@ function drawFit(fit) {
   }).join('') || '<div class="svc"><div class="d">這段空檔太短，換一個時間看看。</div></div>') + '</div>';
   $('fitBox').scrollIntoView({behavior: 'smooth', block: 'start'});
 }
+// 📍 Google 地圖「預約」按鈕進來的分流頁：先分清楚是來做療程，還是來租共享空間
+var RENT_URL = '#/rent';
+function vStart() {
+  var card = function (href, ext, em, t, d, cta) { return '<a href="' + href + '"' + (ext ? ' target="_blank" rel="noopener"' : '') + ' style="display:block;text-decoration:none;color:inherit;background:#fffdf8;border:1px solid #e3dccd;border-radius:18px;padding:18px 18px 16px;margin:0 0 14px"><div style="font-size:30px;line-height:1">' + em + '</div><h2 style="margin:8px 0 4px;font-size:22px">' + t + '</h2><p style="margin:0 0 12px;color:#7a7468">' + d + '</p><span class="btn coral" style="display:inline-block">' + cta + '</span></a>'; };
+  page('services', 'WELCOME', '<div class="eyebrow">Welcome / 歡迎上島</div><h1>您想預約哪一種？</h1><p class="note" style="margin:-4px 0 16px">點一下，直接進到對的預約頁</p>' +
+    card('#/time', false, '🌿', '療程預約', '岩盤浴、護膚、煥膚、INDIBA、Reset 身心整合、潛意識探索、薩滿占讀…<br>給來島上放鬆、被照顧的您。', '預約療程') +
+    card('#/rent', false, '🏠', '共享空間・場地租借', '老師、治療師帶自己的客人來使用療程室；或租場地辦課程、工作坊、小活動。', '預約空間') +
+    card('#/bar1f', false, '🍵', '預約喝茶', '一樓沐吧，選好日期和時間，幫您把位子留著。', '預約喝茶') +
+    '<p class="note">不確定要選哪個？<a href="' + lineMsg('我想問預約') + '">LINE 問島主</a></p>');
+}
+// 🏠 空間預約：獨立頁面（價格與空間資訊）；實際送出申請仍走島主自己的申請表
+function vRent() {
+  page('services', 'SPACE', '<a class="back" href="#/start">← 回到預約分流</a><div class="eyebrow">Space / 共享空間</div><h1>空間預約</h1>' +
+    '<p class="note" style="margin:-4px 0 14px">老師、治療師帶自己的客人來使用，或租場地辦課程、工作坊、小活動。</p>' +
+    '<div class="list"><div class="sv-end" style="text-align:left"><b>1F 交誼廳</b>　NT$1,500／時（週一至週四）・NT$3,000／時（週五至週日）・整日 NT$20,000</div>' +
+    '<div class="sv-end" style="text-align:left"><b>2F 單人房</b>　NT$400／時（3 小時以上整段 8 折）・月租 NT$5,000</div>' +
+    '<div class="sv-end" style="text-align:left"><b>2F 雙人房</b>　NT$700／時（3 小時以上整段 8 折）・最多 6 人</div></div>' +
+    '<p class="note">地址：台北市大安區瑞安街 180 巷 3 號。全程請輕聲細語，謝謝您。</p>' +
+    '<p style="margin:14px 0 4px"><a class="btn coral" target="_blank" rel="noopener" href="' + EXEC + '?rent">填寫租借申請</a></p>');
+}
+// 🎫 買套票：選方案 → 填資料 → 匯款資訊 → 回報末五碼（島主確認後開通，LINE 通知）
+var PK = {plan: '', order: null};
+function vPkg(a) {
+  if (a) PK.plan = a;
+  page('services', 'PACKAGES', '<a class="back" href="#/services">← 島上服務</a><div class="eyebrow">Packages / 套票</div><h1>買套票</h1><div id="pkBox"><p class="note">讀取中…</p></div>');
+  api('pkgPlans', []).then(function (r) {
+    var b = $('pkBox'); if (!b) return;
+    if (PK.order) return pkDone(r);
+    if (!r.plans.length) { b.innerHTML = '<p class="note">套票目前請直接 LINE 島主。</p>'; return; }
+    if (!PK.plan || !r.plans.some(function (x) { return x.id === PK.plan; })) PK.plan = r.plans[0].id;
+    b.innerHTML = '<div class="panel">' + r.plans.map(function (x) { return '<label class="jn-o"><input type="radio" name="pkP" value="' + x.id + '"' + (x.id === PK.plan ? ' checked' : '') + '><span><b>' + esc(x.name) + '｜NT$' + x.price.toLocaleString() + '</b><br><small>' + esc(x.desc) + '</small></span></label>'; }).join('') +
+      '<label for="pkN">姓名</label><input id="pkN" autocomplete="name"><label for="pkPh">手機</label><input id="pkPh" inputmode="tel" placeholder="09xxxxxxxx"><label for="pkL">LINE 名稱</label><input id="pkL" placeholder="方便島主找到您">' +
+      '<p class="note">送出後會看到匯款資訊；匯款完填末五碼，島主確認收款就幫您開通，官方 LINE 會通知您。</p><p class="err" id="pkErr" hidden></p><button class="btn coral" id="pkSend" type="button" style="margin-top:12px">送出，看匯款資訊</button></div>';
+  }).catch(function () { var b = $('pkBox'); if (b) b.innerHTML = '<p class="err">讀取失敗，請重新整理。</p>'; });
+}
+function pkDone(r) {
+  var o = PK.order, b = $('pkBox');
+  b.innerHTML = '<div class="panel"><p><b>訂單收到了！</b><br>' + esc(o.plan) + '｜NT$' + Number(o.price).toLocaleString() + '<br><small>編號 ' + esc(o.code) + '</small></p>' +
+    '<p>請匯款到：</p><pre id="bank" style="white-space:pre-wrap;font:inherit;background:#f7f3ec;border-radius:10px;padding:10px">' + esc(o.bank) + '</pre><button class="btn" id="copyBank" type="button">複製帳號</button>' +
+    '<label for="pkL5" style="margin-top:12px">匯款帳號末五碼</label><input id="pkL5" inputmode="numeric" maxlength="5"><p class="err" id="pkErr" hidden></p><p class="note" id="pkOk" hidden>收到了！島主確認收款後會幫您開通，官方 LINE 會通知您。</p><button class="btn coral" id="pkRep" type="button" style="margin-top:12px">我已匯款，送出</button></div>';
+}
+document.addEventListener('change', function (ev) { if (ev.target.name === 'pkP') PK.plan = ev.target.value; });
+document.addEventListener('click', function (ev) {
+  var t = ev.target.closest && ev.target.closest('#pkSend,#pkRep'); if (!t) return;
+  var er = $('pkErr'); er.hidden = true; t.disabled = true;
+  if (t.id === 'pkSend') {
+    api('pkgOrder', [{plan: PK.plan, name: $('pkN').value, phone: $('pkPh').value, lineName: $('pkL').value}]).then(function (r) {
+      t.disabled = false; if (!r.ok) { er.hidden = false; er.textContent = r.error; return; } PK.order = r; pkDone(); window.scrollTo(0, 0);
+    }).catch(function () { t.disabled = false; er.hidden = false; er.textContent = '送出失敗，請再試一次。'; });
+  } else {
+    api('pkgReport', [{code: PK.order.code, last5: $('pkL5').value}]).then(function (r) {
+      t.disabled = false; if (!r.ok) { er.hidden = false; er.textContent = r.error; return; } $('pkOk').hidden = false; t.hidden = true;
+    }).catch(function () { t.disabled = false; er.hidden = false; er.textContent = '送出失敗，請再試一次。'; });
+  }
+});
 function vReport() {
   page('services', 'BOOKING', '<a class="back" href="#/services">← 島上服務</a><h1>回報匯款</h1><div class="panel">' +
     '<label for="rCode">預約編號</label><input id="rCode" autocapitalize="characters" placeholder="例如 PS261025-1400-AB3">' +
@@ -608,7 +662,7 @@ function chMove(b) {
 var CART = {}, BARCAT = '醒', MB = {open: 'morning-citrus', choice: {}, spa: false, name: '', seat: '', y: 0};
 var BAR_PHOTO = ["morning-citrus", "sweet-orange-tea", "mei-gao-mei", "mulled-wine", "taurus", "blue-peach-hiss", "harvest-festival", "peachy-fizz", "mint-iced-tea", "tea-champagne", "dingbu-milk-tea", "fitness-icecream", "peppercorn-wings"];
 function itemArt(i) { return BAR_PHOTO.indexOf(i.id) >= 0 ? 'bar/p_' + i.id + '.jpg' + KV_V : barArt(i.illustration); }
-function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : (IMG_BASE + 'moonbar-art/' + x + '.webp'); }
+function barArt(k) { var x = BAR.art[k] || k; return IMG['bar_' + x] ? img('bar_' + x) : ('bar/mb_cover.jpg' + KV_V); }
 function bItem(id) { return BAR.items.filter(function (x) { return x.id === id; })[0]; }
 function bKey(i) { return i.id + (i.choices ? '|' + (MB.choice[i.id] || i.choices[0]) : ''); }
 function bQty(i) { var n = 0; Object.keys(CART).forEach(function (k) { if (k.split('|')[0] === i.id) n += CART[k]; }); return n; }
@@ -895,7 +949,7 @@ function vMember() {
 function drawMe() {
   var m = ME, u = function (x, l) { return '<div class="stat"><span>' + l + '</span><b>' + (x ? (x.active ? '使用中' : '已到期') + '<small>' + esc(x.date) + '</small>' : '<small>未開通</small>') + '</b></div>'; };
   page('member', 'ISLAND MEMBER', '<div class="eyebrow">Welcome back</div><h1>' + esc(m.name) + '</h1>' +
-    (m.sessionsLeft != null ? '<div class="panel"><h3>我的套票</h3><div class="stat" style="border-top:0"><span>♨️ 岩盤浴套票</span><b>剩 ' + m.sessionsLeft + ' 堂</b></div>' + (m.resetUp != null ? '<div class="stat"><span>✨ 其中可升級成 Reset</span><b>還有 ' + Math.min(m.resetUp, m.sessionsLeft) + ' 次</b></div>' : '') + (m.sessionsLeft > 0 ? '<a class="btn coral" href="#/book/stone60" onclick="PREPASS=1" style="margin-top:10px">用套票預約岩盤浴</a>' : '<p class="note">套票已用完，想續購請 <a href="' + lineMsg('我想續購岩盤浴套票') + '">LINE 島主</a>。</p>') + '</div>' : '') + ((m.journeys || []).length ? '<div class="panel"><h3>📖 我的旅程冊</h3>' + m.journeys.map(function (j) { return '<a class="rec" style="text-decoration:none;color:inherit" target="_blank" rel="noopener" href="' + esc(j.url) + '"><div><small>' + esc(j.date) + '</small><b>' + esc(j.title || '內在旅程冊') + '</b></div><span>打開 ↗</span></a>'; }).join('') + '</div>' : '') + '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
+    (m.sessionsLeft != null ? '<div class="panel"><h3>我的套票</h3><div class="stat" style="border-top:0"><span>♨️ 岩盤浴套票</span><b>剩 ' + m.sessionsLeft + ' 堂</b></div>' + (m.resetUp != null ? '<div class="stat"><span>✨ 其中可升級成 Reset</span><b>還有 ' + Math.min(m.resetUp, m.sessionsLeft) + ' 次</b></div>' : '') + (m.sessionsLeft > 0 ? '<a class="btn coral" href="#/book/stone60" onclick="PREPASS=1" style="margin-top:10px">用套票預約岩盤浴</a>' : '<p class="note">套票已用完了。</p><a class="btn coral" href="#/pkg/rock10" style="margin-top:6px">🎫 續購岩盤浴 10 次套票</a>') + '</div>' : '') + ((m.journeys || []).length ? '<div class="panel"><h3>📖 我的旅程冊</h3>' + m.journeys.map(function (j) { return '<a class="rec" style="text-decoration:none;color:inherit" target="_blank" rel="noopener" href="' + esc(j.url) + '"><div><small>' + esc(j.date) + '</small><b>' + esc(j.title || '內在旅程冊') + '</b></div><span>打開 ↗</span></a>'; }).join('') + '</div>' : '') + '<div class="panel"><div class="stat" style="border-top:0"><span>儲值餘額</span><b>' + money(m.balance) + '</b></div>' + u(m.discount, '八折效期') + u(m.ask, '隨時問事') + (m.note ? '<p class="note">服務留意：' + esc(m.note) + '</p>' : '') + '</div>' +
     (m.ask && m.ask.active ? '<div class="panel"><h3>🔮 隨時問事</h3><p class="note" style="margin-top:0">會員期間內免費。把您想問的寫下來送給島主，島主收到後會為您抽牌，一邊錄一段語音解說，再用官方 LINE 傳給您。</p><textarea id="askQ" rows="4" placeholder="例如：最近在考慮換工作，想知道該注意什麼？"></textarea><p class="err" id="askErr" hidden></p><button class="btn coral" id="askSend" type="button" style="margin-top:10px">送出問題給島主</button></div>' : '') +
     '<div class="panel"><h3>儲值與消費明細</h3>' + (m.records.length ? m.records.map(function (x) {
       return '<div class="rec"><div><small>' + esc(x.date) + '</small><b>' + esc(x.item) + '</b>' + (x.detail ? '<small>' + esc(x.detail) + '</small>' : '') + '</div><span class="amt' + (x.amount > 0 ? ' plus' : '') + '">' + (x.amount > 0 ? '+' : '') + money(x.amount) + '</span></div>';
@@ -1091,6 +1145,9 @@ function route() {
   if (r === 'bar1f') return a === 'c' ? vB1Card(h[2], h[3] === 'new') : vB1f();
   if (r === 'card') return vCard(a);
   if (r === 'join') return vJoin(a);
+  if (r === 'pkg') return vPkg(a);
+  if (r === 'start') return vStart();
+  if (r === 'rent') return vRent();
   if (r === 'events') return a ? vEvent(a) : vEvents();
   if (!B) { needBoot(); return; }
   if (r === 'services') return a ? vCategory(a) : vServices();
@@ -1143,6 +1200,7 @@ document.addEventListener('click', function (ev) {
 window.addEventListener('hashchange', route);
 (function () {
   var g = (location.search.match(/[?&]go=(\w+)/) || [])[1];
+  if (g === 'services' && /utm_medium=maps(&|$)/.test(location.search)) g = 'start';  // Google 地圖「預約」按鈕：先分流療程／共享空間
   if (g && !location.hash) { history.replaceState(null, '', location.pathname + '#/' + (g === 'benefits' ? 'gifts' : g)); }
   route();
   try { var cached = JSON.parse(localStorage.getItem('ps_boot') || 'null'); if (cached && cached.d && Date.now() - cached.t < 864e5) { B = cached.d; if (B.images) Object.keys(B.images).forEach(function (k) { if (String(IMG[k]||'').indexOf('L:')) IMG[k] = B.images[k]; }); var today = new Date(Date.now() + 8 * 36e5).toISOString().slice(0, 10); B.dates = (B.dates || []).filter(function (x) { return x.date >= today; }); route(); } } catch (e) {}

@@ -65,8 +65,8 @@ if (!KEY) {
 }
 
 // 把 google.script.run 換成「打電話回 Google」，控台原本的程式不用改
-var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
-  var READS = {adminList: 1, todaySummary: 1, calRange: 1, todoList: 1, deskList: 1, deskBookings: 1, bar1fPending: 1, ledgerList: 1, mediaList: 1};
+var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, ALL, FROM_CACHE) {
+  var READS = {adminList: 1, todaySummary: 1, calRange: 1, todoList: 1, deskList: 1, deskBookings: 1, bar1fPending: 1, ledgerList: 1, mediaList: 1, quickAsk: 1, taskList: 1, guestMsgList: 1, pkgOrders: 1, checkoutInfo: 1, deskPkgs: 1, courseInfo: 1};
   function st(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   function clearReads() { try { Object.keys(localStorage).forEach(function (k) { if (k.indexOf('rc:') === 0) localStorage.removeItem(k); }); } catch (e) {} }
   function make(ok, bad) {
@@ -109,6 +109,22 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
       bar.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99;background:#4f7a5a;color:#fff;text-align:center;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;font-size:15px;cursor:pointer';
       bar.onclick = function () { location.reload(); }; (document.body || document.documentElement).appendChild(bar); }
   }).catch(function () {});
+  // 秒開：這一頁打開 3 秒後，背景一頁一頁把其他分頁和常用資料先載好，之後點哪一格都直接出現
+  setTimeout(function () {
+    var q = ALL.filter(function (p) { return p !== PAGE && Date.now() - (+st('shellAt:' + p) || 0) > 3600 * 1000; });
+    (function next() {
+      var p = q.shift();
+      if (!p) {
+        ['todaySummary', 'adminList', 'deskList', 'deskBookings', 'mediaList', 'bar1fPending'].forEach(function (fn, i) {
+          setTimeout(function () { try { window.google.script.run.withSuccessHandler(function () {})[fn](KEY); } catch (e) {} }, i * 1500);
+        });
+        return;
+      }
+      fetch(EXEC + '?api=shell&page=' + p + '&key=' + encodeURIComponent(KEY)).then(function (r) { return r.json(); }).then(function (j) {
+        if (j && j.html) { st('shell:' + p, j.html); st('shellAt:' + p, String(Date.now())); }
+      }).catch(function () {}).then(function () { setTimeout(next, 400); });
+    })();
+  }, 3000);
   // 右下角小按鈕 💡：點進靈感箱（Claude 上的獨立頁面，用島主自己的 Google 權限存檔；原始檔在 tools/inbox/inbox.html）
   document.addEventListener('DOMContentLoaded', function () {
     var a = document.createElement('a');
@@ -117,8 +133,49 @@ var SHIM = '(' + function (EXEC, KEY, HERE, PAGE, FROM_CACHE) {
     a.textContent = '💡'; a.setAttribute('aria-label', '靈感箱');
     a.style.cssText = 'position:fixed;right:14px;bottom:calc(86px + env(safe-area-inset-bottom));z-index:80;width:46px;height:46px;border-radius:50%;background:#2b2a26;color:#fff;font-size:22px;line-height:46px;text-align:center;text-decoration:none;box-shadow:0 3px 10px rgba(0,0,0,.18)';
     document.body.appendChild(a);
+    // 🎙 交辦：用說的交代事情，AI 整理員每小時處理，做好放回這裡
+    var t = document.createElement('button');
+    t.type = 'button'; t.textContent = '🎙'; t.setAttribute('aria-label', '交辦');
+    t.style.cssText = 'position:fixed;right:14px;bottom:calc(142px + env(safe-area-inset-bottom));z-index:80;width:46px;height:46px;border-radius:50%;border:0;background:#c86b4a;color:#fff;font-size:22px;line-height:46px;text-align:center;box-shadow:0 3px 10px rgba(0,0,0,.18)';
+    var dot = document.createElement('span'); dot.style.cssText = 'position:absolute;top:2px;right:2px;width:12px;height:12px;border-radius:50%;background:#2f8a4f;border:2px solid #fff;display:none'; t.appendChild(dot);
+    document.body.appendChild(t);
+    var E = function (x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function (c) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]; }); };
+    var run = function (fn) { var a = [].slice.call(arguments, 1); return new Promise(function (ok, bad) { window.google.script.run.withSuccessHandler(ok).withFailureHandler(bad)[fn].apply(null, [KEY].concat(a)); }); };
+    var list = function (box) {
+      run('taskList').then(function (l) {
+        dot.style.display = l.some(function (x) { return x.done && !x.seen; }) ? 'block' : 'none';
+        if (!box) return;
+        box.innerHTML = l.length ? l.map(function (x) {
+          return '<div style="border-top:1px solid #eee5d6;padding:10px 0"><div style="font-size:12px;color:#7a7468">' + E(x.at) + (x.done ? '｜✓ 好了 ' + E(x.doneAt) : '｜⏳ 處理中（AI 每小時 :07 會處理）') + '</div><div style="margin:4px 0;color:#7a7468">「' + E(x.text) + '」</div>' +
+            (x.done ? '<div style="white-space:pre-wrap;background:#f7f3ec;border-radius:10px;padding:10px;font-size:15px">' + E(x.result) + '</div>' + (x.links || []).map(function (u) { return '<a href="' + E(u.url || u) + '" target="_blank" style="display:block;margin-top:4px;font-size:14px">' + E(u.name || u.url || u) + '</a>'; }).join('') + (x.seen ? '' : '<button type="button" data-tseen="' + E(x.id) + '" style="margin-top:6px;border:1px solid #d9d0bf;background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13px">看過了</button>') : '') + '</div>';
+        }).join('') : '<p style="color:#7a7468">還沒有交辦過事情</p>';
+      }).catch(function () { if (box) box.innerHTML = '<p style="color:#a0453a">讀取失敗，等一下再試</p>'; });
+    };
+    setTimeout(function () { list(null); }, 5000);
+    t.onclick = function () {
+      var w = document.createElement('div');
+      w.style.cssText = 'position:fixed;inset:0;z-index:95;background:rgba(0,0,0,.3)';
+      w.innerHTML = '<div style="position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:#fffdf8;border-radius:20px 20px 0 0;padding:16px 16px calc(20px + env(safe-area-inset-bottom));max-width:640px;margin:0 auto;font:15px/1.6 -apple-system,\'PingFang TC\',sans-serif;color:#2b2a26">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">🎙 交辦給 AI 助理</b><button type="button" data-tclose="1" style="border:0;background:none;font-size:22px">✕</button></div>' +
+        '<p style="color:#7a7468;font-size:13px;margin:4px 0 8px">點下面的框，按鍵盤上的麥克風用說的就好。AI 每小時 :07 處理，做好會出現在下面，🎙 會亮綠點。</p>' +
+        '<textarea id="tText" rows="4" style="width:100%;box-sizing:border-box;font:inherit;font-size:16px;padding:10px;border:1px solid #e3dccd;border-radius:12px" placeholder="例：幫我寫一篇冬季戀歌的 Threads 文／查一下最近大家在聊的療癒話題／幫我想 12 月滿月儀式的主題"></textarea>' +
+        '<button type="button" data-tsend="1" style="width:100%;margin-top:8px;border:0;border-radius:12px;padding:13px;font:inherit;font-size:16px;background:#c86b4a;color:#fff">送出交辦</button>' +
+        '<a href="https://claude.ai/projects" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:8px;border:1px solid #d9d0bf;border-radius:12px;padding:12px;color:#2b2a26;text-decoration:none">💬 現在就想聊：打開「島主助理」專案</a><p id="tMsg" style="font-size:14px;color:#4f7a5a;margin:6px 0 0"></p>' +
+        '<div style="margin-top:12px"><b>最近交辦</b><div id="tList"><p style="color:#7a7468">讀取中…</p></div></div></div>';
+      document.body.appendChild(w);
+      list(document.getElementById('tList'));
+      w.addEventListener('click', function (ev) {
+        if (ev.target === w || ev.target.closest('[data-tclose]')) { w.remove(); return; }
+        var s = ev.target.closest('[data-tsend]');
+        if (s) { var v = document.getElementById('tText').value.trim(); if (!v) return; s.disabled = true; s.textContent = '送出中…';
+          run('taskAdd', v).then(function (r) { s.disabled = false; s.textContent = '送出交辦'; if (r && r.ok) { document.getElementById('tText').value = ''; document.getElementById('tMsg').textContent = '✓ 收到了，AI 下次整點 :07 會處理'; list(document.getElementById('tList')); } else document.getElementById('tMsg').textContent = (r && r.error) || '沒有成功'; }).catch(function (e) { s.disabled = false; s.textContent = '送出交辦'; document.getElementById('tMsg').textContent = '沒有成功：' + e.message; });
+          return; }
+        var k = ev.target.closest('[data-tseen]');
+        if (k) { k.disabled = true; run('taskSeen', k.getAttribute('data-tseen')).then(function () { list(document.getElementById('tList')); }); }
+      });
+    };
   });
-} + ')(' + JSON.stringify(EXEC) + ',' + JSON.stringify(KEY) + ',' + JSON.stringify(location.pathname) + ',' + JSON.stringify(PAGE) + ',';
+} + ')(' + JSON.stringify(EXEC) + ',' + JSON.stringify(KEY) + ',' + JSON.stringify(location.pathname) + ',' + JSON.stringify(PAGE) + ',' + JSON.stringify(Object.keys(PAGES)) + ',';
 
 function mount(html, fromCache) {
   var head = '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">' +
