@@ -442,7 +442,7 @@ function vServices(k0) {
   page('services', 'ISLAND SERVICE',
     '<div class="eyebrow">Island Services / Pause Space</div><h1>島上服務</h1>' +
     '<p class="sv-intro">五種照顧，從外到內：<b>身</b>是肌膚與身體照護、<b>心</b>是岩盤浴與身心放鬆、<b>靈</b>是潛意識探索與占讀；只想休息選<b>獨處</b>（岩盤浴、花草精靈浴），日常保養交給<b>島主選配</b>。點一項，展開看療程。</p>' +
-    mlList(rows) + '<p style="margin:14px 0 4px"><a class="btn" href="#/pkg">🎫 買套票</a></p><div class="sv-bar" id="svBar"><span>送出後由島主確認</span><a href="#/time">先挑時段<i>↗</i></a></div>');
+    mlList(rows) + '<p style="margin:14px 0 4px;display:flex;gap:8px"><a class="btn" href="#/pkg">🎫 買套票</a><a class="btn coral" href="#/member">🌙 會員陪跑</a></p><div class="sv-bar" id="svBar"><span>送出後由島主確認</span><a href="#/time">先挑時段<i>↗</i></a></div>');
   if (k0) { var r = document.querySelector('.ml-row.open'); if (r) setTimeout(function () { window.scrollTo({top: r.getBoundingClientRect().top + window.scrollY - 70}); }, 50); }
 }
 function vCategory(k) { return vServices(k); }
@@ -570,11 +570,17 @@ function pkName(n) { return /煥膚/.test(n) ? '完全煥膚（煥膚 8 次，�
 var PK = {plan: '', order: null};
 function vPkg(a) {
   if (a) PK.plan = a;
-  page('services', 'PACKAGES', '<a class="back" href="#/services">← 島上服務</a><div class="eyebrow">Packages / 套票</div><h1>買套票</h1><div id="pkBox"><p class="note">讀取中…</p></div>');
+  var MEM = !!PK.mem;
+  page('services', MEM ? 'MEMBERSHIP' : 'PACKAGES', '<a class="back" href="#/services">← 島上服務</a>' + (MEM ?
+    '<div class="eyebrow">Membership / 會員陪跑</div><h1>不用一個人撐</h1><div class="panel"><p>卡住的地方，先看見，再讓它流動。<br>每個月固定回島上一次：用占讀看見卡在哪裡，用療程讓身體重新流動；中間有什麼事，直接 LINE 島主，看到就回。</p>' +
+    '<p><b>適合你，如果：</b><br>・最近常覺得累、內耗，卻說不出原因<br>・試過很多方法，想要有人固定陪你走一段<br>・想照顧自己，但總是排不出時間</p>' +
+    '<p class="note">一期三個月一次付清；每月的次數當月使用，不累積。預約時告訴島主你是會員就好。</p></div>'
+    : '<div class="eyebrow">Packages / 套票</div><h1>買套票</h1>') + '<div id="pkBox"><p class="note">讀取中…</p></div>');
   api('pkgPlans', []).then(function (r) {
     var b = $('pkBox'); if (!b) return;
     if (PK.order) return pkDone(r);
-    if (!r.plans.length) { b.innerHTML = '<p class="note">套票目前請直接 LINE 島主。</p>'; return; }
+    r.plans = r.plans.filter(function (x) { return !!x.member === MEM; });
+    if (!r.plans.length) { b.innerHTML = '<p class="note">目前請直接 LINE 島主。</p>'; return; }
     if (!PK.plan || !r.plans.some(function (x) { return x.id === PK.plan; })) PK.plan = r.plans[0].id;
     b.innerHTML = '<div class="panel">' + r.plans.map(function (x) { return '<label class="jn-o"><input type="radio" name="pkP" value="' + x.id + '"' + (x.id === PK.plan ? ' checked' : '') + '><span><b>' + esc(pkName(x.name)) + '｜NT$' + x.price.toLocaleString() + '</b><br><small>' + esc(x.desc) + '</small></span></label>'; }).join('') +
       '<label for="pkN">姓名</label><input id="pkN" autocomplete="name"><label for="pkPh">手機</label><input id="pkPh" inputmode="tel" placeholder="09xxxxxxxx"><label for="pkL">LINE 名稱</label><input id="pkL" placeholder="方便島主找到您">' +
@@ -1153,7 +1159,8 @@ function route() {
   if (r === 'bar1f') return a === 'c' ? vB1Card(h[2], h[3] === 'new') : vB1f();
   if (r === 'card') return vCard(a);
   if (r === 'join') return vJoin(a);
-  if (r === 'pkg') return vPkg(a);
+  if (r === 'pkg') { PK.mem = false; return vPkg(a); }
+  if (r === 'member') { PK.mem = true; return vPkg(a); }
   if (r === 'start') return vStart();
   if (r === 'rent') return vRent();
   if (r === 'events') return a ? vEvent(a) : vEvents();
